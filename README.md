@@ -1,4 +1,4 @@
-# stem-portal
+# STEM Portal
 
 ## Project setup
 ```
