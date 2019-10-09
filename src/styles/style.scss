@@ -1,5 +1,6 @@
 
 @import 'fonts';
+@import 'mixins';
 
 * {
   margin: 0;
@@ -9,4 +10,23 @@
 body,
 #app {
   font-family: 'Manrope';
+}
+
+.logo {
+  font-size: 1.5 rem;
+}
+
+a {
+  @include trans-duration(500ms);
+  text-decoration: none;
+  outline: none;
+  font-size: 14px;
+  color: #000 !important;
+
+  &:hover {
+    @include trans-duration(500ms);
+    text-decoration: none;
+    outline: none;
+    color: #1976d2 !important;
+  }
 }
