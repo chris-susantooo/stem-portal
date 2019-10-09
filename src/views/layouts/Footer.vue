@@ -1,12 +1,9 @@
 <template>
-  <div>
-    Home
-  </div>
+  <div>Footer here</div>
 </template>
 
 <script>
-
 export default {
-  //
+
 }
 </script>
