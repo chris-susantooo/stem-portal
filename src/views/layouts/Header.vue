@@ -2,10 +2,11 @@
   <v-app-bar elevate-on-scroll fixed>
     <div class="container">
       <div class="row">
-        <v-toolbar-title class="logo">STEM Portal</v-toolbar-title>
+          <router-link to="/">
+            <v-toolbar-title class="logo">STEM Portal</v-toolbar-title>
+          </router-link>
         <v-spacer></v-spacer>
         <div v-if="user.type === 'visitor'">
-          <router-link to="/">Home</router-link>
           <router-link to="/about">About</router-link>
           <router-link to="/login">Teachers</router-link>
           <router-link to="/login">Students</router-link>
@@ -13,20 +14,17 @@
           <router-link to="/login">Discussion</router-link>
         </div>
         <div v-else-if="user.type === 'student'">
-            <router-link to="/">Home</router-link>
             <router-link to="/about">About</router-link>
             <router-link to="/login">Students</router-link>
             <router-link to="/login">Games</router-link>
         </div>
         <div v-else-if="user.type === 'teacher'">
-          <router-link to="/">Home</router-link>
           <router-link to="/about">About</router-link>
           <router-link to="/login">Teachers</router-link>
           <router-link to="/login">Materials</router-link>
           <router-link to="/login">Discussion</router-link>
         </div>
         <div v-else-if="user.type === 'parent'">
-          <router-link to="/">Home</router-link>
           <router-link to="/about">About</router-link>
           <router-link to="/login">Parents</router-link>
           <router-link to="/login">Discussion</router-link>
