@@ -23,15 +23,15 @@
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
-    <v-container fill-height>
-      <v-row>
+    <div class="container">
+      <div class="row">
         <v-col>
           <v-card>
             <v-card-title>First</v-card-title>
             <v-card-text>Hi there, I am using Whatsapp!</v-card-text>
           </v-card>
         </v-col>
-        <v-col>
+         <v-col>
           <v-card>
             <v-card-title>Second</v-card-title>
             <v-card-text>Hi there, I am using Facebook!</v-card-text>
@@ -43,8 +43,11 @@
             <v-card-text>Hi there, I am using STEM Portal!</v-card-text>
           </v-card>
         </v-col>
-      </v-row>
-    </v-container>
+      </div>
+      <div class="row">
+        eopgjnwego[pwehnigpweanogvnweagnweognowneg]
+      </div>
+    </div>
   </div>
 </template>
 
