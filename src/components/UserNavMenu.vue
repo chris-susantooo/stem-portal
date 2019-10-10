@@ -5,7 +5,15 @@
     nudge-bottom="30"
   >
     <template v-slot:activator="{ on }">
-      <a v-on="on">{{ user.username }}</a>
+      <a v-on="on">
+        <v-avatar size="30" class="mr-1">
+          <img
+            src="https://cdn.vuetifyjs.com/images/john.jpg"
+            alt="John"
+          >
+        </v-avatar>
+        {{ user.username }}
+      </a>
     </template>
 
     <v-card>
@@ -72,7 +80,3 @@ export default {
   })
 }
 </script>
-
-<style>
-
-</style>

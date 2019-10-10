@@ -65,7 +65,17 @@ export default {
   }),
   methods: {
     login () {
-      this.$store.dispatch('login', { username: this.username })
+      // let login be always success and res is received
+      const res = {
+        token: 'abcd1234',
+        type: this.username, // fake, for demo only
+        username: 'SPAdmin',
+        fullname: 'Ricola Osas'
+      }
+      if (['teacher', 'student', 'parent'].includes(res.type)) {
+        this.$store.commit('setUser', res)
+        this.$router.push({ name: 'home' })
+      }
     },
     register () {
 

@@ -4,7 +4,7 @@
       <div class="row">
         <v-toolbar-title class="logo">STEM Portal</v-toolbar-title>
         <v-spacer></v-spacer>
-        <div v-if="user.type === 'visitor'" class="ml-2 mt-1">
+        <div v-if="user.type === 'visitor'">
           <router-link to="/">Home</router-link>
           <router-link to="/about">About</router-link>
           <router-link to="/login">Teachers</router-link>
@@ -12,8 +12,27 @@
           <router-link to="/login">Parents</router-link>
           <router-link to="/login">Discussion</router-link>
         </div>
+        <div v-else-if="user.type === 'student'">
+            <router-link to="/">Home</router-link>
+            <router-link to="/about">About</router-link>
+            <router-link to="/login">Students</router-link>
+            <router-link to="/login">Games</router-link>
+        </div>
+        <div v-else-if="user.type === 'teacher'">
+          <router-link to="/">Home</router-link>
+          <router-link to="/about">About</router-link>
+          <router-link to="/login">Teachers</router-link>
+          <router-link to="/login">Materials</router-link>
+          <router-link to="/login">Discussion</router-link>
+        </div>
+        <div v-else-if="user.type === 'parent'">
+          <router-link to="/">Home</router-link>
+          <router-link to="/about">About</router-link>
+          <router-link to="/login">Parents</router-link>
+          <router-link to="/login">Discussion</router-link>
+        </div>
         <v-spacer />
-        <div class="mt-1">
+        <div>
           <router-link v-if="user.type === 'visitor'" to="/login">Login / Register</router-link>
           <user-nav-menu v-else :user="user" @logout="logout" />
         </div>
@@ -48,7 +67,7 @@ export default {
 
 <style lang="scss" scoped>
 a {
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>
