@@ -65,7 +65,17 @@ export default {
   }),
   methods: {
     login () {
-      this.$store.dispatch('login', { username: this.username })
+      // let login be always success and res is received
+      const res = {
+        token: 'abcd1234',
+        type: this.username, // fake, for demo only
+        username: 'SPAdmin',
+        fullname: 'Ricola Osas'
+      }
+      if (['teacher', 'student', 'parent'].includes(res.type)) {
+        this.$store.commit('setUser', res)
+        this.$router.push({ name: 'home' })
+      }
     },
     register () {
 
@@ -76,8 +86,8 @@ export default {
 
 <style lang="scss" scoped>
 #login-bg {
-  min-width: 100vw;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   background: url('~@/assets/images/login-bg.jpg');
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -88,7 +98,7 @@ export default {
 .vertical-center {
   margin: 0;
   position: absolute;
-  top: 50%;
+  top:50vh;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }

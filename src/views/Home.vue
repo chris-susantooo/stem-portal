@@ -25,6 +25,9 @@
     </v-carousel>
     <div class="container">
       <div class="row">
+        <p class="font-weight-bold">Recent News</p>
+      </div>
+      <div class="row">
         <v-col>
           <v-card>
             <v-card-title>First</v-card-title>
@@ -43,9 +46,6 @@
             <v-card-text>Hi there, I am using STEM Portal!</v-card-text>
           </v-card>
         </v-col>
-      </div>
-      <div class="row">
-        eopgjnwego[pwehnigpweanogvnweagnweognowneg]
       </div>
     </div>
   </div>
