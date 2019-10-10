@@ -20,7 +20,7 @@
             <v-row justify="center">
             <v-dialog v-model="dialog" persistent max-width="600px">
               <template v-slot:activator="{ on }">
-                <v-btn color="primary" 
+                <v-btn color="primary"
                 dark v-on="on"
                 min-width="300px"
                 >
@@ -92,12 +92,12 @@
                 </v-icon>
               </template>
             </v-rating>
-          </div>    
+          </div>
           <v-card-text class="text-center">
             <h6 class="overline mb-3">
               Role:   Student
             </h6>
-            <h4 class="font-weight-light"> 
+            <h4 class="font-weight-light">
               Name:   Wong Lok Hei
             </h4>
             <p class="font-weight-light text-left">
@@ -162,7 +162,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      label="Adress"
+                      label="Address"
                       value="The University of Hong Kong, Pokfulam"
                     />
                   </v-col>
@@ -203,21 +203,21 @@
                           </v-col>
                           <v-col cols="12">
                             <v-text-field
-                              solo="solo"                      
+                              solo="solo"
                               label="Current Password"
                               hint="Enter your current password to change the Email address or Password."
                               persistent-hint
                               required
-                            ></v-text-field>                         
+                            ></v-text-field>
                           </v-col>
                           <v-col cols="12">
                             <v-text-field
-                              solo="solo"               
+                              solo="solo"
                               label="Email*"
                               hint="A valid email address. All emails from the system will be sent to this address."
                               persistent-hint
                               required
-                            ></v-text-field>  
+                            ></v-text-field>
                           </v-col>
                           <v-col cols="12">
                             <v-card
@@ -327,12 +327,12 @@
                     </v-container>
                     <v-col cols="12">
                       <v-text-field
-                        solo="solo"                      
+                        solo="solo"
                         label="Job Title (Role)"
                         hint="Please also specify your role"
                         persistent-hint
                         required
-                        ></v-text-field>                         
+                        ></v-text-field>
                       </v-col>
                       <v-card-title class="headline">Address</v-card-title>
                       <v-divider
@@ -345,10 +345,10 @@
                           </v-card-text>
                           <v-col cols="12">
                             <v-text-field
-                            solo="solo"                      
+                            solo="solo"
                             label="Address1"
                             required
-                            ></v-text-field>   
+                            ></v-text-field>
                           </v-col>
                         </v-row>
                         <v-row>
@@ -357,10 +357,10 @@
                           </v-card-text>
                           <v-col cols="12">
                             <v-text-field
-                            solo="solo"                      
+                            solo="solo"
                             label="Address2"
                             required
-                            ></v-text-field>   
+                            ></v-text-field>
                           </v-col>
                         </v-row>
                         <v-row>
@@ -369,7 +369,7 @@
                               <span class="headline">District*</span>
                             </v-card-text>
                               <v-text-field
-                              solo="solo"                      
+                              solo="solo"
                               label="District"
                               required
                               ></v-text-field>
@@ -379,7 +379,7 @@
                               <span class="headline">Country*</span>
                             </v-card-text>
                               <v-text-field
-                              solo="solo"                      
+                              solo="solo"
                               label="Country"
                               required
                               ></v-text-field>
@@ -414,26 +414,26 @@ export default {
       dialog: false,
       tabs: null,
       select: [],
-        items: [
-          'Computer Science',
-          'Civil Engineering',
-          'Mechanical Engineering',
-          'Electrical Engineering',
-          'Industrial Engineering',
-          'Mathematics',
-          'Chemistry',
-          'Biology',
-          'Physics',
-          'Latest Technology'
-        ],
-        item2: [
-          'Subsidized School',
-          'Private School',
-          'College',
-          'Parents',
-          'Other',
-          'Unemployment'
-        ]
+      items: [
+        'Computer Science',
+        'Civil Engineering',
+        'Mechanical Engineering',
+        'Electrical Engineering',
+        'Industrial Engineering',
+        'Mathematics',
+        'Chemistry',
+        'Biology',
+        'Physics',
+        'Latest Technology'
+      ],
+      item2: [
+        'Subsidized School',
+        'Private School',
+        'College',
+        'Parents',
+        'Other',
+        'Unemployment'
+      ]
     }
   }
 }
