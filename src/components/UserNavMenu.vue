@@ -58,7 +58,7 @@
       </v-list>
 
       <v-card-actions>
-        <v-btn text :to="{ name: 'settings' }">More settings</v-btn>
+        <v-btn text :to="{ name: 'UserProfile' }">More settings</v-btn>
         <div class="flex-grow-1"></div>
         <v-btn text color="primary" @click="$emit('logout')">Logout</v-btn>
       </v-card-actions>
