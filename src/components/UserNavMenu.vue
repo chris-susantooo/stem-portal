@@ -72,11 +72,12 @@ export default {
     user: {
       type: Object,
       required: true
-    }
+    },
   },
   data: () => ({
     message: true,
-    notification: false
+    notification: false,
+    fav: true
   })
 }
 </script>
