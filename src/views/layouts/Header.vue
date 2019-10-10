@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar elevate-on-scroll>
+  <v-app-bar elevate-on-scroll fixed>
     <div class="container">
       <div class="row">
         <v-toolbar-title class="logo">STEM Portal</v-toolbar-title>
@@ -67,7 +67,7 @@ export default {
 
 <style lang="scss" scoped>
 a {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 </style>
