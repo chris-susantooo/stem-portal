@@ -3,9 +3,9 @@
     <v-carousel
       continuous
       cycle
-      height="600"
       show-arrows-on-hover
       delimiter-icon="mdi-minus"
+      height="70vh"
     >
       <v-carousel-item
         v-for="(slide, i) in slides"
