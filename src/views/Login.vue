@@ -86,8 +86,8 @@ export default {
 
 <style lang="scss" scoped>
 #login-bg {
-  min-width: 100vw;
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   background: url('~@/assets/images/login-bg.jpg');
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -98,7 +98,7 @@ export default {
 .vertical-center {
   margin: 0;
   position: absolute;
-  top: 50%;
+  top:50vh;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }

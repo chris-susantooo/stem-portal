@@ -2,14 +2,14 @@
 @import 'fonts';
 @import 'mixins';
 
-* {
-  margin: 0;
-  padding: 0;
-}
 
+html,
 body,
 #app {
+  margin: 0;
+  padding: 0;
   font-family: 'Manrope';
+  background-color: white;
 }
 
 .logo {
