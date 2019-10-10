@@ -1,9 +1,11 @@
 <template>
   <div>
-      <v-carousel
+    <v-carousel
+      continuous
       cycle
-      height="400"
+      height="600"
       show-arrows-on-hover
+      delimiter-icon="mdi-minus"
     >
       <v-carousel-item
         v-for="(slide, i) in slides"
@@ -54,7 +56,6 @@
 <script>
 
 export default {
-  //
   data: () => ({
     colors: [
       'indigo',
