@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar elevate-on-scroll fixed>
+  <v-app-bar elevate-on-scroll>
     <div class="container">
       <div class="row">
           <router-link to="/">
@@ -17,6 +17,7 @@
             <router-link to="/about">About</router-link>
             <router-link to="/login">Students</router-link>
             <router-link to="/login">Games</router-link>
+            <router-link to="/login">Courses</router-link>
         </div>
         <div v-else-if="user.type === 'teacher'">
           <router-link to="/about">About</router-link>

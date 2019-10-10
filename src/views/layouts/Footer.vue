@@ -10,7 +10,7 @@
         <v-card-text class="white--text text-center">
           STEM Portal is a final year project conducted by a team of undergraduate students from the Department of Computer Science, Faculty of Engineering, The University of Hong Kong.
           By using STEM Portal, you agree to have read and accepted our terms of use, cookie and privacy policy.
-        </v-card-text>       
+        </v-card-text>
       </div>
       <v-divider></v-divider>
 
