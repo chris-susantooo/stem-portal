@@ -1,0 +1,5 @@
+
+@mixin trans-duration($time) {
+  -webkit-transition-duration: $time;
+  transition-duration: $time;
+}
