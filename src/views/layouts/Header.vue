@@ -3,7 +3,10 @@
     <div class="container">
       <div class="row">
         <v-toolbar-title class="logo">STEM Portal</v-toolbar-title>
+        <v-spacer></v-spacer>
         <div v-if="user.type === 'visitor'" class="ml-2 mt-1">
+          <router-link to="/">Home</router-link>
+          <router-link to="/about">About</router-link>
           <router-link to="/login">Teachers</router-link>
           <router-link to="/login">Students</router-link>
           <router-link to="/login">Parents</router-link>
