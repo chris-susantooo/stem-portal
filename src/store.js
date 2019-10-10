@@ -8,7 +8,8 @@ export default new Vuex.Store({
     user: {
       token: localStorage.getItem('token') || '',
       type: localStorage.getItem('type') || 'visitor',
-      name: localStorage.getItem('name') || ''
+      username: localStorage.getItem('username') || '',
+      fullname: localStorage.getItem('fullname') || ''
     }
   },
   mutations: {
@@ -16,7 +17,8 @@ export default new Vuex.Store({
       state.user = user
       localStorage.setItem('token', user.token)
       localStorage.setItem('type', user.type)
-      localStorage.setItem('name', user.name)
+      localStorage.setItem('username', user.username)
+      localStorage.setItem('fullname', user.fullname)
     }
   },
   actions: {
@@ -25,14 +27,15 @@ export default new Vuex.Store({
       const res = {
         token: 'abcd1234',
         type: credentials.username, // fake, for demo only
-        name: 'SPAdmin'
+        username: 'SPAdmin',
+        fullname: 'Ricola Osas'
       }
       if (['teacher', 'student', 'parent'].includes(res.type)) {
         commit('setUser', res)
       }
     },
     logout ({ commit }) {
-      commit('setUser', { token: '', type: 'visitor', name: '' })
+      commit('setUser', { token: '', type: 'visitor', username: '', fullname: '' })
     }
   },
   getters: {
