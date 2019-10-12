@@ -72,7 +72,7 @@ export default {
     user: {
       type: Object,
       required: true
-    },
+    }
   },
   data: () => ({
     message: true,
