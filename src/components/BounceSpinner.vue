@@ -42,6 +42,9 @@ export default {
 </script>
 
 <style scoped>
+div {
+  transition: background-color .5s;
+}
 .spinner {
   width: 40px;
   height: 40px;

@@ -3,7 +3,7 @@
     <transition name="fade">
       <div v-if="isLoading" class="preloader d-flex justify-center align-center defer-500">
         <bounce-spinner :color="spinnerColors[animStep]"/>
-        <span class="text-center mt-12" style="position: fixed;">{{ 'Loading' + '.'.repeat(animStep) }}</span>
+        <span class="text-center mt-12" style="position: fixed;">{{ 'STEM Portal is Loading' + '.'.repeat(animStep) }}</span>
       </div>
     </transition>
     <v-header />
