@@ -6,7 +6,9 @@ import MasterLayout from './views/layouts/Master.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const DEFAULT_TITLE = 'STEM Portal'
+
+const router = new Router({
   mode: 'history',
   scrollBehavior () {
     return { x: 0, y: 0 }
@@ -42,13 +44,14 @@ export default new Router({
           path: '/login',
           name: 'login',
           component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
-        },
-        {
-          path: '/home/student',
-          name: 'student-home',
-          component: () => import(/* webpackChunkName: "student-home" */ './views/StudentHome.vue')
         }
       ]
     }
   ]
+})
+
+export default router
+
+router.afterEach((to, from) => {
+  document.title = to.meta.title || DEFAULT_TITLE
 })

@@ -1,8 +1,8 @@
 <template>
   <div v-if="isLoading">
     <div class="spinner">
-      <div class="double-bounce1" :style="{ backgroundColor: this.color }"></div>
-      <div class="double-bounce2" :style="{ backgroundColor: this.color }"></div>
+      <div class="double-bounce1" :style="styles"></div>
+      <div class="double-bounce2" :style="styles"></div>
     </div>
   </div>
 </template>
@@ -27,10 +27,12 @@ export default {
       default: '40'
     }
   },
-  data () {
-    return {
-      isLoading: this.loading,
-      styles: {
+  computed: {
+    isLoading () {
+      return this.loading
+    },
+    styles () {
+      return {
         backgroundColor: this.color,
         width: this.width + 'px',
         height: this.height + 'px'

@@ -65,17 +65,12 @@ export default {
   }),
   methods: {
     login () {
-      // let login be always success and res is received
-      const res = {
-        token: 'abcd1234',
-        type: this.username, // fake, for demo only
-        username: 'SPAdmin',
-        fullname: 'Ricola Osas'
-      }
-      if (['teacher', 'student', 'parent'].includes(res.type)) {
-        this.$store.commit('setUser', res)
+      this.$store.dispatch('login', {
+        username: this.username,
+        password: this.password
+      }).then(() => {
         this.$router.push({ name: 'home' })
-      }
+      }).catch(err => console.log(err))
     },
     register () {
 

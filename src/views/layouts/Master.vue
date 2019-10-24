@@ -21,19 +21,33 @@ let animInterval = null
 
 export default {
   components: { VHeader, VFooter, BounceSpinner },
+  created () {
+    this.$store.dispatch('fetchUser')
+      .then(() => {
+        this.isFetchingUser = false
+      })
+      .catch(err => {
+        this.isFetchingUser = false
+        console.log(err)
+      })
+  },
   mounted () {
-    window.onload = () => (this.isLoading = false)
+    window.onload = () => (this.isLoadingPage = false)
     animInterval = setInterval(() => (this.animStep = (this.animStep + 1) % 4), 1000)
   },
+  computed: {
+    isLoading () { return this.isLoadingPage || this.isFetchingUser }
+  },
   data: () => ({
-    isLoading: true,
+    isLoadingPage: true,
+    isFetchingUser: true,
     spinnerColors: ['#6789ba', '#ffed78', '#d35656', '#347474'],
     animStep: 0
   }),
   watch: {
-    isLoading () {
-      if (!this.isLoading) {
-        clearInterval(animInterval)
+    isLoading (newVal) {
+      if (newVal) {
+        setTimeout(() => clearInterval(animInterval), 500)
       }
     }
   }

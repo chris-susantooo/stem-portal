@@ -1,21 +1,62 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {
-      token: '',
-      type: 'visitor',
-      username: '',
-      fullname: ''
+    user: {
+      token: localStorage.getItem('token') || ''
     }
   },
   mutations: {
     setUser (state, user) {
       state.user = user
-      localStorage.setItem('user', JSON.stringify(user))
+    }
+  },
+  actions: {
+    login ({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        Axios({ url: '/login', data: user, method: 'POST' })
+          .then(({ data: user }) => {
+            localStorage.setItem('token', user.token)
+            Axios.defaults.headers.common['Authorization'] = user.token
+            commit('setUser', user)
+            resolve(user)
+          })
+          .catch(err => {
+            localStorage.removeItem('token')
+            reject(err)
+          })
+      })
+    },
+    logout ({ commit }) {
+      return new Promise((resolve, reject) => {
+        commit('setUser', { token: '' })
+        localStorage.removeItem('token')
+        delete Axios.defaults.headers.common['Authorization']
+        resolve()
+      })
+    },
+    fetchUser ({ commit, getters }) {
+      return new Promise((resolve, reject) => {
+        if (getters.isLoggedIn) {
+          Axios({ url: '/user', method: 'GET' })
+            .then(({ data: user }) => {
+              commit('setUser', user)
+              resolve(user)
+            })
+            .catch(err => {
+              commit('setUser', { token: '' })
+              localStorage.removeItem('token')
+              delete Axios.defaults.headers.common['Authorization']
+              reject(err)
+            })
+        } else {
+          resolve()
+        }
+      })
     }
   },
   getters: {
@@ -31,11 +72,9 @@ export default new Vuex.Store({
       // }
       return isExpired
     },
-    isLoggedIn (state) {
-      return state.user.type !== 'visitor'
+    isLoggedIn (state, getters) {
+      return !!state.user.token && !getters.isTokenExpired
     },
-    user (state) {
-      return state.user
-    }
+    user: state => state.user
   }
 })
