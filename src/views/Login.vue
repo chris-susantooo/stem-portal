@@ -43,7 +43,7 @@
                 </v-container>
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn color="primary" text @click="true">Register Now</v-btn>
+                  <v-btn color="primary" text @click="register">Register Now</v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { registerUser } from '../utils/http'
+
 export default {
   data: () => ({
     tabs: 0,
@@ -73,7 +75,10 @@ export default {
       }).catch(err => console.log(err))
     },
     register () {
-
+      registerUser({
+        username: this.username,
+        password: this.password
+      })
     }
   }
 }
