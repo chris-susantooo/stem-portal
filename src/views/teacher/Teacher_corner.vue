@@ -18,6 +18,7 @@
       <v-col v-if="filter === 'Maths' || filter === ''">
         <v-card>
           <v-card-title>MATH1851</v-card-title>
+          <v-card-text>Calculus and Ordinary Differiential Equations</v-card-text>
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
@@ -30,6 +31,7 @@
       <v-col v-if="filter === 'Maths' || filter === ''">
         <v-card>
           <v-card-title>MATH1853</v-card-title>
+          <v-card-text>Linear Algebra, Probability and Statistics</v-card-text>
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
@@ -42,6 +44,7 @@
       <v-col v-if="filter === 'Coding' || filter === ''">
         <v-card>
           <v-card-title>ENGG1330</v-card-title>
+          <v-card-text>Computer Programming I</v-card-text>
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
@@ -55,7 +58,8 @@
     <div class="row">
       <v-col v-if="filter === 'Engineering' || filter === ''">
         <v-card>
-          <v-card-title>ENGG1234</v-card-title>
+          <v-card-title>ENGG1310</v-card-title>
+          <v-card-text>Electricity and Electronics</v-card-text>
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
@@ -67,7 +71,8 @@
       </v-col>
       <v-col v-if="filter === 'Physics' || filter === ''">
         <v-card>
-          <v-card-title>PHYS1101</v-card-title>
+          <v-card-title>PHYS1250</v-card-title>
+          <v-card-text>Fundamental Physics</v-card-text>
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
@@ -79,7 +84,8 @@
       </v-col>
       <v-col v-if="filter === 'Chemistry' || filter === ''">
         <v-card>
-          <v-card-title>CHEM1000</v-card-title>
+          <v-card-title>CHEM1041</v-card-title>
+          <v-card-text>Fundamental Chemistry</v-card-text>
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>

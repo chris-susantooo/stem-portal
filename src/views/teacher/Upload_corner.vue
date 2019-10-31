@@ -1,5 +1,5 @@
 <template>
-  <div>FUCK</div>
+  <div></div>
 </template>
 
 <script>
