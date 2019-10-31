@@ -59,6 +59,11 @@ const router = new Router({
           path: '/happy-corner/MATH1853',
           name: 'MATH1853',
           component: () => import(/* webpackChunkName: "MATH1853" */ './views/teacher/MATH1853.vue')
+        },
+        {
+          path: '/teacher/home',
+          name: 'teacher-home',
+          component: () => import(/* webpackChunkName: "teacher-home" */ './views/teacher/Home.vue')
         }
       ]
     }
