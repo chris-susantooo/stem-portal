@@ -44,6 +44,21 @@ const router = new Router({
           path: '/login',
           name: 'login',
           component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
+        },
+        {
+          path: '/happy-corner',
+          name: 'corner',
+          component: () => import(/* webpackChunkName: "corner" */ './views/teacher/Teacher_corner.vue')
+        },
+        {
+          path: '/happy-corner/upload',
+          name: 'upload-corner',
+          component: () => import(/* webpackChunkName: "upload-corner" */ './views/teacher/Upload_corner.vue')
+        },
+        {
+          path: '/happy-corner/MATH1853',
+          name: 'MATH1853',
+          component: () => import(/* webpackChunkName: "MATH1853" */ './views/teacher/MATH1853.vue')
         }
       ]
     }

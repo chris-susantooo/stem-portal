@@ -76,7 +76,7 @@ export default {
     },
     register () {
       registerUser({
-        username: this.username, 
+        username: this.username,
         password: this.password
       })
     }
