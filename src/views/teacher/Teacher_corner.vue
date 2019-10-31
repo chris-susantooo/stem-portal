@@ -35,7 +35,7 @@
           <v-card-text>Here you can find some powerpoint and tutorials...</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn text color="indigo" to="/teacher/MATH1853.vue">
+            <v-btn text color="indigo" to="/happy-corner/MATH1853">
               More
             </v-btn>
           </v-card-actions>

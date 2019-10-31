@@ -70,6 +70,9 @@
           <img src="@/assets/images/badges/icon2.png" alt="icon 2" height="50" class="pl-3">
           <img src="@/assets/images/badges/icon3.png" alt="icon 3" height="50" class="pl-3">
         </div>
+        <div class="row justify-center mt-5">
+          Uploaded at 30/10/2019
+        </div>
       </div>
     </div>
   </div>
