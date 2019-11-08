@@ -7,19 +7,23 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: {
-      token: localStorage.getItem('token') || ''
+      token: ''
     }
   },
   mutations: {
     setUser (state, user) {
       state.user = user
+    },
+    initToken (state) {
+      state.user.token = localStorage.getItem('token') || ''
     }
   },
   actions: {
     login ({ commit }, user) {
       return new Promise((resolve, reject) => {
         Axios({ url: '/login', data: user, method: 'POST' })
-          .then(({ data: user }) => {
+          .then(({ data: { user, token } }) => {
+            user.token = token
             localStorage.setItem('token', user.token)
             Axios.defaults.headers.common['Authorization'] = user.token
             commit('setUser', user)
@@ -62,14 +66,13 @@ export default new Vuex.Store({
   getters: {
     isTokenExpired (state) {
       let isExpired = false
-      // uncomment below after server login is set up
-      // if (state.user.token) {
-      //   const decodedToken = state.user.token.split('.')[1]
-      //   const decodedValue = JSON.parse(window.atob(decodedToken))
-      //   if (decodedValue.exp < new Date().getTime() / 1000) {
-      //     isExpired = true
-      //   }
-      // }
+      if (state.user.token !== '') {
+        const decodedToken = state.user.token.split('.')[1]
+        const decodedValue = JSON.parse(window.atob(decodedToken))
+        if (decodedValue.exp < new Date().getTime() / 1000) {
+          isExpired = true
+        }
+      }
       return isExpired
     },
     isLoggedIn (state, getters) {

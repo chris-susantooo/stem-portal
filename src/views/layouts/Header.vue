@@ -20,7 +20,7 @@
       <router-link to="/login" class="hidden-sm-and-up">Login / Register</router-link>
       <v-app-bar-nav-icon color="black" class="hidden-sm-and-up" />
     </template>
-    <user-menu v-else :user="user" @logout="logout" />
+    <user-menu v-else class="hidden-sm-and-up" :user="rico" @logout="logout" />
   </v-app-bar>
 </template>
 

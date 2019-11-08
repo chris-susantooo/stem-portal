@@ -30,6 +30,7 @@ export default {
         this.isFetchingUser = false
         console.log(err)
       })
+    this.$store.commit('initToken')
   },
   mounted () {
     window.onload = () => (this.isLoadingPage = false)
