@@ -57,7 +57,7 @@
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
         </v-bottom-navigation>
-        <v-card >
+        <v-container >
             <v-card elevation="false">
                     <v-row>
                         <v-spacer></v-spacer>
@@ -131,56 +131,55 @@
                                     cols="12"
                                     md="4"
                                 >
-                                    <v-card  outlined height="100%">
-                                        <v-navigation-drawer>
-                                            <v-list-item>
-                                                <v-list-item-content >
-                                                    <div class="text-center">
-                                                        <v-list-item-title class="title">
-                                                            Posts
-                                                        </v-list-item-title>
-                                                    </div>
-                                                </v-list-item-content>
-                                            </v-list-item>
-                                            <v-divider></v-divider>
-                                            <v-card>
-                                                <v-list
-                                                dense
-                                                nav
-                                                v-model="tab"
-                                                background-color="primary"
-                                                color="basil"
-                                                grow
-                                                >
-                                                    <v-list-item
-                                                    v-for="(item,i) in Trending_Today_card_items"
-                                                        :key="i"
-                                                        link
-                                                    >
-                                                        <v-list-item-avatar :color ="item.color">
-                                                            <span class="white--text headline" v-text ="item.text"></span>
-                                                        </v-list-item-avatar>
-                                                        <v-list-item-content>
-                                                            <v-list-item-title class="headline" v-text="item.title"></v-list-item-title>
-                                                            <v-list-item-subtitle v-text="item.author"></v-list-item-subtitle>
-                                                        </v-list-item-content>
-                                                    </v-list-item>
-                                                </v-list>
-                                            </v-card>
-                                        </v-navigation-drawer>
+                                   <template>
+                                    <v-card>
+                                      <v-navigation-drawer
+                                        v-model="drawer"
+                                        :mini-variant.sync="mini"
+                                        permanent
+                                      >
+                                        <v-list-item>
+                                          <v-list-item-avatar>
+                                            <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+                                          </v-list-item-avatar>
+
+                                          <v-list-item-title>John Leider</v-list-item-title>
+
+                                          <v-btn
+                                            icon
+                                            @click.stop="mini = !mini"
+                                          >
+                                            <v-icon>mdi-chevron-left</v-icon>
+                                          </v-btn>
+                                        </v-list-item>
+
+                                        <v-divider></v-divider>
+
+                                        <v-list dense>
+                                          <v-list-item
+                                            v-for="item in navigation_tems"
+                                            :key="item.title"
+                                            link
+                                          >
+                                            <v-list-item-icon>
+                                              <v-icon>{{ item.icon }}</v-icon>
+                                            </v-list-item-icon>
+
+                                            <v-list-item-content>
+                                              <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                            </v-list-item-content>
+                                          </v-list-item>
+                                        </v-list>
+                                      </v-navigation-drawer>
                                     </v-card>
-                                </v-col>
-                                <v-col
-                                    cols="6"
-                                    md="8"
-                                >
+                                  </template>
                                 </v-col>
                             </v-row>
                         </v-container>
                     </v-col>
                 </v-row>
             </v-card>
-        </v-card>
+        </v-container>
     </div>
 </template>
 <script>
@@ -234,20 +233,13 @@ export default {
         para: 'Strange warping geometry helps to push scientific boundaries.Atomic interactions ...'
       }
     ],
-    navigation_items: [
-      {
-        title: 'Science'
-      },
-      {
-        title: 'Technology'
-      },
-      {
-        title: 'Engineering'
-      },
-      {
-        title: 'Mathematics'
-      }
-    ]
+    drawer: true,
+    navigation_tems: [
+      { title: 'Home', icon: 'mdi-home-city' },
+      { title: 'My Account', icon: 'mdi-account' },
+      { title: 'Users', icon: 'mdi-account-group-outline' }
+    ],
+    mini: true
   }),
   methods: {
     clicky () {
