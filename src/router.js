@@ -69,6 +69,11 @@ const router = new Router({
           path: '/teacher/home',
           name: 'teacher-home',
           component: () => import(/* webpackChunkName: "teacher-home" */ './views/teacher/Home.vue')
+        },
+        {
+          path: '/teacher/course',
+          name: 'online-course',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/teacher/OnlineCurriculum.vue')
         }
       ]
     }
