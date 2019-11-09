@@ -10,6 +10,9 @@
         <div class="row justify-center mt-5 mb-5">
           <h3>Ricola Osas</h3>
         </div>
+        <div class="row justify-center mt-5 mb-2">
+          <h5>Lv.2</h5>
+        </div>
         <div class="row justify-center">
           <div class="col">
             STEM Meter
