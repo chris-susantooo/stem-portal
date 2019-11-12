@@ -77,7 +77,8 @@ export default {
   data: () => ({
     message: true,
     notification: false,
-    fav: true
+    fav: true,
+    menu: false
   })
 }
 </script>

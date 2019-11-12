@@ -1,126 +1,72 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <h3>Create New Course</h3>
-    </div>
-    <br>
-    <form>
-      <v-text-field
-        v-model="title"
-        label="Course title"
-        required
-      ></v-text-field>
-      <v-textarea
-        v-model="description"
-        label="Short description"
-        required
-      ></v-textarea>
-    </form>
-    <div v-for="(section, index) in sections" :key="'s' + index">
-      <div class="row">
-        <h3>Section {{ index + 1 }}</h3>
+  <div class="make-course">
+    <div class="container">
+      <div class="mb-5 text-center">
+        <h1>Create a New Course</h1>
       </div>
-      <form>
-        <v-select
-          :items="types"
-          v-model="sections[index].type"
-          label="type"
-          required
-          :change="addProp(index)"
-        ></v-select>
-        <template v-if="sections[index].type==='section'">
-          <v-text-field
-            v-model="sections[index].detail.heading"
-            label="Heading"
-            required
-          ></v-text-field>
-          <v-textarea
-            v-model="sections[index].detail.introduction"
-            label="Indroduction"
-            required
-          ></v-textarea>
-          <v-textarea
-            v-model="sections[index].detail.content"
-            label="Content"
-            required
-          ></v-textarea>
-        </template>
-        <template v-if="sections[index].type==='quiz'">
-          <!-- <div v-for="(question, j) in sections[index].detail.questions" :key="'s' + index + 'q' + j">
-            <p>Question {{ j + 1 }}</p>
-            <v-text-field
-              v-model="sections[index].detail.questions[j].question"
-              label="Question"
-              required
-            ></v-text-field> -->
-            <!-- <v-radio-group v-model="sections[index].detail.questions[j].answer">
-              <div v-for="(n, i) in ['A', 'B', 'C', 'D']" :key="'s' + index + 'q' + j + 'o' + n">
-                <div class="row">
-                  <v-radio :value="n"></v-radio>
-                  <v-text-field
-                    v-model="sections[index].detail.questions[j].options[i]"
-                    :label="`Option ${n}`"
-                    required
-                  ></v-text-field>
-                </div>
-              </div>
-            </v-radio-group>
-          </div> -->
-          <v-btn @click="addQuestion" text color="indigo">
-            Add new question
-          </v-btn>
-        </template>
-      </form>
+      <br>
+      <v-stepper v-model="currentStep" vertical>
+        <v-stepper-step :complete="currentStep > 1" step="1" editable>
+          Basic information about your course
+          <small class="mt-2">Let us know what is it about</small>
+        </v-stepper-step>
+
+        <v-stepper-content step="1">
+          <v-text-field label="Course title" v-model="course.title" required />
+          <v-textarea label="Short description" v-model="course.description" required />
+          <div class="mb-2">
+            <v-btn color="primary" @click="currentStep = 2">Continue</v-btn>
+            <v-btn class="ml-2" text>Save and exit</v-btn>
+          </div>
+        </v-stepper-content>
+
+        <v-stepper-step :complete="currentStep > 2" step="2" editable>
+          Structure your course with progressive chapters
+          <small class="mt-2">A chapter may contain sections and checkpoints</small>
+        </v-stepper-step>
+
+        <v-stepper-content step="2">
+          <course-content-creator />
+          <div class="mb-2">
+            <v-btn color="primary" @click="currentStep = 3">Continue</v-btn>
+            <v-btn class="ml-2" text>Save and exit</v-btn>
+          </div>
+        </v-stepper-content>
+
+        <v-stepper-step :complete="currentStep > 3" step="3" editable>
+          Review your course details
+          <small class="mt-2">Things to note before you publish to students</small>
+        </v-stepper-step>
+
+        <v-stepper-content step="3">
+          <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
+          <div class="mb-2">
+            <v-btn color="primary" @click="currentStep = 1">Publish</v-btn>
+            <v-btn class="ml-2" text>Save and exit</v-btn>
+          </div>
+        </v-stepper-content>
+      </v-stepper>
     </div>
-    <v-btn @click="addSection" text color="indigo">
-      Add new section
-    </v-btn>
   </div>
 </template>
 
 <script>
+import CourseContentCreator from '@/components/teachers/courses/creator/Creator.vue'
 
 export default {
+  components: { CourseContentCreator },
   data: () => ({
-    title: '',
-    description: '',
-    sections: [{
-      type: ''
-    }],
-    types: ['section', 'quiz']
-  }),
-  methods: {
-    addSection () {
-      this.sections.push({
-        type: '',
-        detail: {}
-      })
+    currentStep: 1,
+    itemTypes: ['section', 'quiz'],
+    course: {
+      title: '',
+      description: '',
+      chapters: []
     },
-    addProp (index) {
-      if (this.sections[index].type === 'section') {
-        this.sections[index].detail = {
-          heading: '',
-          introduction: '',
-          content: ''
-        }
-      } else if (this.sections[index].type === 'quiz') {
-        this.sections[index].detail = {
-          questions: [{
-            question: '',
-            options: ['', '', '', ''],
-            answer: ''
-          }]
-        }
-      }
-    },
-    addQuestion () {
-      const index = this.sections.length - 1
-      this.sections[index].detail.questions.push({
-        question: '',
-        options: ['', '', '', ''],
-        answer: ''
-      })
+    chapterTemplate: {
+      title: '',
+      sections: []
     }
-  }
+  })
 }
 </script>
