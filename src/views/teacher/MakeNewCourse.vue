@@ -27,7 +27,7 @@
 
         <v-stepper-content step="2">
           <course-content-creator />
-          <div class="mb-2">
+          <div class="mt-2 py-2">
             <v-btn color="primary" @click="currentStep = 3">Continue</v-btn>
             <v-btn class="ml-2" text>Save and exit</v-btn>
           </div>
