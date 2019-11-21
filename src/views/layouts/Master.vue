@@ -15,7 +15,7 @@
 <script>
 import VHeader from './Header.vue'
 import VFooter from './Footer.vue'
-import BounceSpinner from '@/components/BounceSpinner.vue'
+import BounceSpinner from '@/components/loader/BounceSpinner.vue'
 
 let animInterval = null
 

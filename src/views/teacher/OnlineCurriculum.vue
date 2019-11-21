@@ -6,9 +6,10 @@
     <div class="row">
       <p>Here you can view your own online courses, and make a new one for your students!</p>
     </div>
+    <br>
     <div class="row">
-      <div class="row">
-        <strong>Completed Online Courses</strong>
+      <div class="row ml-1">
+        <h4>Completed Online Courses</h4>
       </div>
       <div class="row">
         <div class="col">
@@ -62,7 +63,7 @@
       </div>
       <div class="row">
         <div class="flex-grow-1"></div>
-        <v-btn text color="indigo">
+        <v-btn rounded color="light-blue" href="/teacher/makenewcourse">
           Add new courses
         </v-btn>
       </div>
@@ -75,4 +76,3 @@ export default {
 
 }
 </script>
-
