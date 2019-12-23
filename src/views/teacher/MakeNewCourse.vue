@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import CourseContentCreator from '@/components/teachers/courses/creator/Creator.vue'
+import CourseContentCreator from '@/components/teachers/courses/Creator.vue'
 
 export default {
   components: { CourseContentCreator },
