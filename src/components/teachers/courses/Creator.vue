@@ -44,7 +44,7 @@
 <script>
 import Draggable from 'vuedraggable'
 import ToolBar from './ToolBar.vue'
-import TextEditor from './TextEditor.vue'
+import TextEditor from '@/components/text-editor/TextEditor.vue'
 
 export default {
   components: { Draggable, ToolBar, TextEditor },
