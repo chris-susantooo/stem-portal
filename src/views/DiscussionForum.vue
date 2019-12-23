@@ -62,7 +62,7 @@
                     <v-row>
                         <v-spacer></v-spacer>
                         <v-col cols="12" md=8>
-                        <v-card-title style="font-size: 3em">Treanding Today</v-card-title>
+                        <v-card-title style="font-size: 3em">Trending Today</v-card-title>
                         </v-col>
                         <v-spacer></v-spacer>
                     </v-row>
