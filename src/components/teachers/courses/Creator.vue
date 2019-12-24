@@ -30,6 +30,9 @@
                         />
                         <text-editor v-model="section.content.text" />
                       </template>
+                      <template v-else>
+                        <text-editor v-model="section.content.text" />
+                      </template>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </draggable>

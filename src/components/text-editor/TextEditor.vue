@@ -16,30 +16,11 @@
             </v-btn>
           </div>
           <template v-else>
-            <v-btn
-              @click="showLinkMenu(getMarkAttrs('link'))"
-            >
+            <v-btn @click="showLinkMenu(getMarkAttrs('link'))">
               <span>{{ isActive.link() ? 'Update Link' : 'Add Link'}}</span>
               <v-icon color="#FFF">mdi-link-variant-plus</v-icon>
             </v-btn>
           </template>
-          <!-- <form v-if="linkMenuIsActive" @submit.prevent="setLinkUrl(commands.link, linkUrl)">
-            <input type="text" v-model="linkUrl" placeholder="https://" ref="linkInput" @keydown.esc="hideLinkMenu"/>
-            <v-btn color="#FFF" @click="setLinkUrl(commands.link, null)">
-              <v-icon>mdi-link-variant-remove</v-icon>
-            </v-btn>
-          </form>
-
-          <template v-else>
-            <v-btn color="#FFF"
-              class="menububble__button"
-              @click="showLinkMenu(getMarkAttrs('link'))"
-              :class="{ 'is-active': isActive.link() }"
-            >
-              <span>{{ isActive.link() ? 'Update Link' : 'Add Link'}}</span>
-              <v-icon>mdi-link-variant-plus</v-icon>
-            </v-btn>
-          </template> -->
         </v-card>
 
       </div>
@@ -216,15 +197,15 @@ export default {
           Hi there,
         </h2>
         <p>
-          this is a very <em>basic</em> example of section content.
+          this is a very <em>basic</em> example of rich text content.
         </p>
         <pre><code>body { display: none; }</code></pre>
         <ul>
           <li>
-            A regular list
+            Write your content for each section
           </li>
           <li>
-            With regular items
+            Or brief your course-takers on each checkpoint
           </li>
         </ul>
         <blockquote>
