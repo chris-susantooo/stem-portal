@@ -1,6 +1,38 @@
 <template>
   <div class="editor">
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+    <editor-menu-bubble class="menububble" :editor="editor" @hide="hideLinkMenu" v-slot="{ commands, isActive, getMarkAttrs, menu }">
+      <div
+        class="menu-bubble"
+        :style="`left: ${menu.left - 60}px; bottom: ${menu.bottom}px;`"
+      >
+        <v-card v-if="menu.isActive" min-height="0" max-height="40" dark>
+          <div class="d-flex pr-1" v-if="linkMenuIsActive">
+            <v-text-field placeholder="https://your-link.here" ref="linkInput" dense solo flat
+              @keydown.enter.prevent="setLinkUrl(commands.link, linkUrl)"
+              @keydown.esc="hideLinkMenu()"
+              v-model="linkUrl"
+            />
+            <div class="link-btns">
+              <v-btn icon @click="setLinkUrl(commands.link, linkUrl)">
+                <v-icon color="#FFF">mdi-link-variant-plus</v-icon>
+              </v-btn>
+              <v-btn icon @click="setLinkUrl(commands.link, null)">
+                <v-icon color="#FFF">mdi-link-variant-remove</v-icon>
+              </v-btn>
+            </div>
+          </div>
+          <template v-else>
+            <v-btn @click="showLinkMenu(getMarkAttrs('link'))">
+              <span class="ml-n2">{{ isActive.link() ? 'Update Link' : 'Add Link'}}</span>
+              <v-icon class="mr-n2" color="#FFF">mdi-link-variant-plus</v-icon>
+            </v-btn>
+          </template>
+        </v-card>
+
+      </div>
+    </editor-menu-bubble>
+
+    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, getMarkAttrs }">
       <v-toolbar dark dense>
         <v-btn color="#FFF" min-width="0" max-width="40" text
           :class="{ 'is-active': isActive.bold() }"
@@ -80,6 +112,12 @@
         >
           <v-icon>mdi-code-braces-box</v-icon>
         </v-btn>
+        <!-- <v-btn color="#FFF" min-width="0" max-width="40" text
+          :class="{ 'is-active': menu.isActive }"
+          @click="commands.bold"
+        >
+          <v-icon>mdi-link-variant-plus</v-icon>
+        </v-btn> -->
         <v-btn color="#FFF" min-width="0" max-width="40" text
           @click="commands.horizontal_rule"
         >
@@ -98,13 +136,12 @@
         </v-btn>
       </v-toolbar>
     </editor-menu-bar>
-    <div class="py-2" />
-    <editor-content class="editor__content" :editor="editor" autofocus />
+    <editor-content class="editor-content pt-6 mb-n2" :editor="editor" autofocus />
   </div>
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap'
 import {
   Blockquote,
   CodeBlock,
@@ -122,15 +159,23 @@ import {
   Link,
   Strike,
   Underline,
-  History
+  History,
+  Image
 } from 'tiptap-extensions'
 export default {
+  props: ['value'],
   components: {
     EditorContent,
-    EditorMenuBar
+    EditorMenuBar,
+    EditorMenuBubble
   },
   data: () => ({
-    editor: new Editor({
+    editor: null,
+    linkMenuIsActive: false,
+    linkUrl: null
+  }),
+  mounted () {
+    this.editor = new Editor({
       extensions: [
         new Blockquote(),
         new BulletList(),
@@ -148,22 +193,25 @@ export default {
         new Italic(),
         new Strike(),
         new Underline(),
-        new History()
+        new History(),
+        new Image()
       ],
-      content: `
+      onUpdate: ({ getHTML }) => this.$emit('input', getHTML())
+    })
+    this.editor.setContent(this.value || `
         <h2>
           Hi there,
         </h2>
         <p>
-          this is a very <em>basic</em> example of section content.
+          this is a very <em>basic</em> example of rich text content.
         </p>
         <pre><code>body { display: none; }</code></pre>
         <ul>
           <li>
-            A regular list
+            Write your content for each section
           </li>
           <li>
-            With regular items
+            Or brief your course-takers on each checkpoint
           </li>
         </ul>
         <blockquote>
@@ -171,15 +219,49 @@ export default {
           <br />
           – powered by tiptap
         </blockquote>
-      `
-    })
-  }),
+      `)
+  },
   beforeDestroy () {
     this.editor.destroy()
+  },
+  watch: {
+    value (newVal) {
+      if (this.editor && newVal !== this.value) {
+        this.editor.setContent(newVal, true)
+      }
+    }
+  },
+  methods: {
+    showLinkMenu (attrs) {
+      this.linkUrl = attrs.href
+      this.linkMenuIsActive = true
+      this.$nextTick(() => {
+        this.$refs.linkInput.focus()
+      })
+    },
+    hideLinkMenu () {
+      this.linkUrl = null
+      this.linkMenuIsActive = false
+    },
+    setLinkUrl (command, url) {
+      command({ href: url })
+      this.hideLinkMenu()
+    }
   }
 }
 </script>
-<style lang="sass" scoped>
+<style lang="sass">
 .is-active
   background-color: #666
+
+.menu-bubble
+  position: absolute
+  z-index: 100
+
+.editor-content a
+  text-decoration: underline !important
+  font-size: 16px !important
+
+.link-btns
+  margin-top: 2px
 </style>

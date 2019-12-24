@@ -23,12 +23,16 @@
                     </v-expansion-panel-header>
                     <v-expansion-panel-content class="pt-3">
                       <v-text-field :label="section.type + ' name'" v-model="section.title" required />
-                      <v-text-field required
-                        v-if="section.type === 'Section'"
-                        label="YouTube link"
-                        v-model="section.content.video"
-                      />
-                      <text-editor />
+                      <template v-if="section.type === 'Section'">
+                        <v-text-field required
+                          label="YouTube link"
+                          v-model="section.content.video"
+                        />
+                        <text-editor v-model="section.content.text" />
+                      </template>
+                      <template v-else>
+                        <text-editor v-model="section.content.text" />
+                      </template>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </draggable>
