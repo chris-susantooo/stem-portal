@@ -6,19 +6,25 @@
         :style="`left: ${menu.left - 60}px; bottom: ${menu.bottom}px;`"
       >
         <v-card v-if="menu.isActive" min-height="0" max-height="40" dark>
-          <div class="d-flex px-1" v-if="linkMenuIsActive">
-            <v-text-field v-model="linkUrl" placeholder="https://" ref="linkInput" @keydown.enter.prevent="setLinkUrl(commands.link, linkUrl)" @keydown.esc="hideLinkMenu()" dense flat />
-            <v-btn icon @click="setLinkUrl(commands.link, linkUrl)" class="pt-1">
-              <v-icon color="#FFF">mdi-link-variant-plus</v-icon>
-            </v-btn>
-            <v-btn icon @click="setLinkUrl(commands.link, null)" class="pt-1">
-              <v-icon color="#FFF">mdi-link-variant-remove</v-icon>
-            </v-btn>
+          <div class="d-flex pr-1" v-if="linkMenuIsActive">
+            <v-text-field placeholder="https://your-link.here" ref="linkInput" dense solo flat
+              @keydown.enter.prevent="setLinkUrl(commands.link, linkUrl)"
+              @keydown.esc="hideLinkMenu()"
+              v-model="linkUrl"
+            />
+            <div class="link-btns">
+              <v-btn icon @click="setLinkUrl(commands.link, linkUrl)">
+                <v-icon color="#FFF">mdi-link-variant-plus</v-icon>
+              </v-btn>
+              <v-btn icon @click="setLinkUrl(commands.link, null)">
+                <v-icon color="#FFF">mdi-link-variant-remove</v-icon>
+              </v-btn>
+            </div>
           </div>
           <template v-else>
             <v-btn @click="showLinkMenu(getMarkAttrs('link'))">
-              <span>{{ isActive.link() ? 'Update Link' : 'Add Link'}}</span>
-              <v-icon color="#FFF">mdi-link-variant-plus</v-icon>
+              <span class="ml-n2">{{ isActive.link() ? 'Update Link' : 'Add Link'}}</span>
+              <v-icon class="mr-n2" color="#FFF">mdi-link-variant-plus</v-icon>
             </v-btn>
           </template>
         </v-card>
@@ -255,4 +261,7 @@ export default {
 .editor-content a
   text-decoration: underline !important
   font-size: 16px !important
+
+.link-btns
+  margin-top: 2px
 </style>
