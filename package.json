@@ -12,6 +12,7 @@
     "@babylonjs/loaders": "^4.0.3",
     "axios": "^0.19.0",
     "babylonjs": "^4.0.3",
+    "babylonjs-gui": "^4.0.3",
     "core-js": "^2.6.5",
     "phaser": "^3.21.0",
     "tiptap": "^1.26.4",
