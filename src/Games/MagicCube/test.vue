@@ -9,6 +9,8 @@ import * as GUI from 'babylonjs-gui'
 BABYLON.GUI = GUI
 
 const spheres = []
+const transparentSpheres = {}
+console.log(spheres)
 
 function initScene (engine) {
   const scene = new BABYLON.Scene(engine)
@@ -29,7 +31,7 @@ function initUI () {
   return panel
 }
 
-function createSphere (x, y, z, scene, id, material, parent = null) {
+function createSphere (x, y, z, scene, id, material, pickable, parent = null) {
   const sphere = BABYLON.MeshBuilder.CreateSphere(material.id + '-' + id, scene)
 
   if (parent) sphere.parent = parent
@@ -39,7 +41,24 @@ function createSphere (x, y, z, scene, id, material, parent = null) {
   sphere.position.y = y
   sphere.position.z = z
 
+  sphere.isPickable = pickable
+
   return sphere
+}
+
+function createBox (x, y, z, scene, material) {
+  const box = BABYLON.Mesh.CreateBox('transparent-box', 3, scene)
+
+  box.material = material
+
+  box.position.x = x
+  box.position.y = y
+  box.position.z = z
+
+  box.renderingGroupId = 3
+  box.isPickable = false
+
+  return box
 }
 
 function createRotationButton (targetMesh, panel, id, text) {
@@ -64,13 +83,66 @@ function createMaterials (scene) {
   const orangeMaterial = new BABYLON.StandardMaterial('orange', scene)
   const greenMaterial = new BABYLON.StandardMaterial('green', scene)
   const cyanMaterial = new BABYLON.StandardMaterial('cyan', scene)
+  const transparentMaterial = new BABYLON.StandardMaterial('transparent', scene)
   purpleMaterial.emissiveColor = new BABYLON.Color4(0.4, 0, 0.4, 1)
   redMaterial.emissiveColor = new BABYLON.Color4(1, 0, 0, 1)
   yellowMaterial.emissiveColor = new BABYLON.Color4(1, 1, 0, 1)
   orangeMaterial.emissiveColor = new BABYLON.Color4(1, 0.5, 0, 1)
   greenMaterial.emissiveColor = new BABYLON.Color4(0, 1, 0, 1)
   cyanMaterial.emissiveColor = new BABYLON.Color4(0, 1, 1, 1)
-  return { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial }
+  transparentMaterial.diffuseColor = new BABYLON.Color3(0.768, 0.768, 0.768)
+  transparentMaterial.alpha = 0.3
+  return { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial }
+}
+
+function getPos (sphere) {
+  const x = Math.round(sphere.absolutePosition.x)
+  const y = Math.round(sphere.absolutePosition.y)
+  const z = Math.round(sphere.absolutePosition.z)
+
+  return { x, y, z }
+}
+
+function checkValid (spheres) {
+  let counter = 0
+  spheres.forEach(sphere => {
+    const { x, y, z } = getPos(sphere)
+    const targetSphere = (Object.values(transparentSpheres)).find(s => s.position.x === x && s.position.y === y && s.position.z === z)
+    if (targetSphere && transparentSpheres[targetSphere.id.split('-')[1]].isOccupied === false) {
+      counter++
+    }
+  })
+  if (counter === spheres.length) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function isOccupied (s1, s2) {
+  const { x, y, z } = getPos(s2)
+  if (s2.id.split('-')[0] === 'purple') console.log(s2.absolutePosition)
+  if ((s1.absolutePosition.x === x) && (s1.absolutePosition.y === y) && (s1.absolutePosition.z === z)) {
+    return true
+  } else {
+    return false
+  }
+}
+
+function updateOccupancy () {
+  Object.values(transparentSpheres).forEach(s1 => {
+    let occupied = false
+    spheres.forEach(s2 => {
+      if (isOccupied(s1, s2)) {
+        occupied = true
+      }
+    })
+    if (occupied) {
+      transparentSpheres[s1.id.split('-')[1]].isOccupied = true
+    } else {
+      transparentSpheres[s1.id.split('-')[1]].isOccupied = false
+    }
+  })
 }
 
 export default {
@@ -82,56 +154,61 @@ export default {
     camera.attachControl(this.$refs['render-canvas'], false)
     camera.setTarget(BABYLON.Vector3.Zero())
 
-    const light = new BABYLON.PointLight('light', new BABYLON.Vector3(10, 10, 0), scene)
-    light.setEnabled = false
+    const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(1, 1, 0), scene)
+    light.setEnabled = true
 
     const panel = initUI()
 
-    const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial } = createMaterials(scene)
+    const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial } = createMaterials(scene)
 
-    // var box = BABYLON.Mesh.CreateBox('box', 2, scene)
-    // box.rotation.x = -0.2
-    // box.rotation.y = -0.4
-    // var boxMaterial = new BABYLON.StandardMaterial('material', scene)
-    // boxMaterial.emissiveColor = new BABYLON.Color3(0, 0.58, 0.86)
-    // box.material = boxMaterial
+    createBox(0, 3, 0, scene, transparentMaterial)
 
     // Define spheres
-    // Purple shape
-    spheres.push(createSphere(2, 3, 0, scene, 1, purpleMaterial))
-    spheres.push(createSphere(6, 3, 0, scene, 1, yellowMaterial))
-    spheres.push(createSphere(8, 3, 0, scene, 1, redMaterial))
-    spheres.push(createSphere(12, 3, 0, scene, 1, greenMaterial))
-    spheres.push(createSphere(15, 3, 0, scene, 1, cyanMaterial))
-    spheres.push(createSphere(18, 3, 0, scene, 1, orangeMaterial))
+    spheres.push(createSphere(2, 3, 0, scene, 1, purpleMaterial, true))
+    spheres.push(createSphere(6, 3, 0, scene, 1, yellowMaterial, true))
+    spheres.push(createSphere(8, 3, 0, scene, 1, redMaterial, true))
+    spheres.push(createSphere(12, 3, 0, scene, 1, greenMaterial, true))
+    spheres.push(createSphere(15, 3, 0, scene, 1, cyanMaterial, true))
+    spheres.push(createSphere(18, 3, 0, scene, 1, orangeMaterial, true))
 
-    spheres.push(createSphere(1, 0, 0, scene, 2, purpleMaterial, spheres[0]))
-    spheres.push(createSphere(1, 0, 1, scene, 3, purpleMaterial, spheres[0]))
+    spheres.push(createSphere(1, 0, 0, scene, 2, purpleMaterial, true, spheres[0]))
+    spheres.push(createSphere(1, 0, 1, scene, 3, purpleMaterial, true, spheres[0]))
 
-    spheres.push(createSphere(1, 0, 0, scene, 2, yellowMaterial, spheres[1]))
-    spheres.push(createSphere(-1, 0, 0, scene, 3, yellowMaterial, spheres[1]))
-    spheres.push(createSphere(0, 1, 0, scene, 4, yellowMaterial, spheres[1]))
-    spheres.push(createSphere(0, 2, 0, scene, 5, yellowMaterial, spheres[1]))
+    spheres.push(createSphere(1, 0, 0, scene, 2, yellowMaterial, true, spheres[1]))
+    spheres.push(createSphere(-1, 0, 0, scene, 3, yellowMaterial, true, spheres[1]))
+    spheres.push(createSphere(0, 1, 0, scene, 4, yellowMaterial, true, spheres[1]))
+    spheres.push(createSphere(0, 2, 0, scene, 5, yellowMaterial, true, spheres[1]))
 
-    spheres.push(createSphere(1, 0, 0, scene, 2, redMaterial, spheres[2]))
-    spheres.push(createSphere(2, 0, 0, scene, 3, redMaterial, spheres[2]))
-    spheres.push(createSphere(0, 1, 0, scene, 4, redMaterial, spheres[2]))
+    spheres.push(createSphere(1, 0, 0, scene, 2, redMaterial, true, spheres[2]))
+    spheres.push(createSphere(2, 0, 0, scene, 3, redMaterial, true, spheres[2]))
+    spheres.push(createSphere(0, 1, 0, scene, 4, redMaterial, true, spheres[2]))
 
-    spheres.push(createSphere(-1, 0, 0, scene, 2, greenMaterial, spheres[3]))
-    spheres.push(createSphere(-1, 1, 0, scene, 3, greenMaterial, spheres[3]))
-    spheres.push(createSphere(1, 0, 0, scene, 4, greenMaterial, spheres[3]))
-    spheres.push(createSphere(1, 1, 0, scene, 5, greenMaterial, spheres[3]))
+    spheres.push(createSphere(-1, 0, 0, scene, 2, greenMaterial, true, spheres[3]))
+    spheres.push(createSphere(-1, 1, 0, scene, 3, greenMaterial, true, spheres[3]))
+    spheres.push(createSphere(1, 0, 0, scene, 4, greenMaterial, true, spheres[3]))
+    spheres.push(createSphere(1, 1, 0, scene, 5, greenMaterial, true, spheres[3]))
 
-    spheres.push(createSphere(-1, 0, 0, scene, 2, cyanMaterial, spheres[4]))
-    spheres.push(createSphere(-1, 1, 0, scene, 3, cyanMaterial, spheres[4]))
-    spheres.push(createSphere(0, 1, 0, scene, 4, cyanMaterial, spheres[4]))
-    spheres.push(createSphere(1, 0, 0, scene, 5, cyanMaterial, spheres[4]))
+    spheres.push(createSphere(-1, 0, 0, scene, 2, cyanMaterial, true, spheres[4]))
+    spheres.push(createSphere(-1, 1, 0, scene, 3, cyanMaterial, true, spheres[4]))
+    spheres.push(createSphere(0, 1, 0, scene, 4, cyanMaterial, true, spheres[4]))
+    spheres.push(createSphere(1, 0, 0, scene, 5, cyanMaterial, true, spheres[4]))
 
-    spheres.push(createSphere(-1, 0, 0, scene, 2, orangeMaterial, spheres[5]))
-    spheres.push(createSphere(1, 0, 0, scene, 3, orangeMaterial, spheres[5]))
-    spheres.push(createSphere(0, 1, 0, scene, 4, orangeMaterial, spheres[5]))
-    spheres.push(createSphere(1, -1, 0, scene, 5, orangeMaterial, spheres[5]))
+    spheres.push(createSphere(-1, 0, 0, scene, 2, orangeMaterial, true, spheres[5]))
+    spheres.push(createSphere(1, 0, 0, scene, 3, orangeMaterial, true, spheres[5]))
+    spheres.push(createSphere(0, 1, 0, scene, 4, orangeMaterial, true, spheres[5]))
+    spheres.push(createSphere(1, -1, 0, scene, 5, orangeMaterial, true, spheres[5]))
 
+    // create transparent spheres
+    let n = 1
+    for (var x = -1; x < 2; x++) {
+      for (var y = 2; y < 5; y++) {
+        for (var z = -1; z < 2; z++) {
+          transparentSpheres[n.toString()] = createSphere(x, y, z, scene, n, transparentMaterial, false)
+          transparentSpheres[n.toString()].isOccupied = false
+          n++
+        }
+      }
+    }
     spheres.filter(sphere => sphere.id.split('-')[1] === '1').forEach(parent => {
       const pointerDragBehavior = new BABYLON.PointerDragBehavior()
       pointerDragBehavior.useObjectOrientationForDragging = false
@@ -156,8 +233,72 @@ export default {
         }
       })
       pointerDragBehavior.onDragEndObservable.add(e => {
-        console.log(e)
-        // fuck clip the spheres to the model
+        console.log('1', spheres[0].absolutePosition)
+        const pickResult = scene.pick(scene.pointerX, scene.pointerY)
+        if (pickResult.pickedMesh) { // prevent quick flick of cursor
+          const selectedColor = pickResult.pickedMesh.material.id
+          const selectedSpheres = spheres.filter(sphere => sphere.id.split('-')[0] === selectedColor)
+          const parentSphere = spheres.find(sphere => sphere.id === selectedColor + '-' + '1')
+          selectedSpheres.sort((s1, s2) => {
+            if (s1.id.split('-')[1] > s2.id.split('-')[1]) return false
+            else return true
+          })
+          if (checkValid(selectedSpheres)) {
+            // match the spheres
+            selectedSpheres.forEach(sphere => {
+              const { x, y, z } = getPos(sphere)
+              if (sphere === parentSphere) {
+                sphere.position.x = x
+                sphere.position.y = y
+                sphere.position.z = z
+              }
+            })
+          } else {
+            // return the target spheres to start position
+            let putAttempt = false
+            selectedSpheres.forEach(s1 => {
+              Object.values(transparentSpheres).forEach(s2 => {
+                if (s1.intersectsMesh(s2)) {
+                  putAttempt = true
+                }
+              })
+            })
+            if (putAttempt) {
+              switch (selectedColor) {
+                case 'purple':
+                  parentSphere.position.x = 2
+                  parentSphere.position.y = 3
+                  parentSphere.position.z = 0
+                  break
+                case 'yellow':
+                  parentSphere.position.x = 6
+                  parentSphere.position.y = 3
+                  parentSphere.position.z = 0
+                  break
+                case 'red':
+                  parentSphere.position.x = 8
+                  parentSphere.position.y = 3
+                  parentSphere.position.z = 0
+                  break
+                case 'green':
+                  parentSphere.position.x = 12
+                  parentSphere.position.y = 3
+                  parentSphere.position.z = 0
+                  break
+                case 'cyan':
+                  parentSphere.position.x = 15
+                  parentSphere.position.y = 3
+                  parentSphere.position.z = 0
+                  break
+                case 'orange':
+                  parentSphere.position.x = 18
+                  parentSphere.position.y = 3
+                  parentSphere.position.z = 0
+              }
+            }
+          }
+        }
+        updateOccupancy()
       })
     })
 
