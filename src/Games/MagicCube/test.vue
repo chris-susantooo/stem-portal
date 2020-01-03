@@ -72,6 +72,10 @@ function createRotationButton (targetMesh, panel, id, text) {
     const parentID = targetMesh.id.split('-')[0] + '-1'
     const parent = spheres.find(sphere => sphere.id === parentID)
     parent.rotate(text === '<' ? BABYLON.Axis.Y : BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL)
+    const s = spheres.filter(s => s.id.split('-')[0] === parent.id.split('-')[0])
+    s.forEach(s1 => {
+      console.log(s1.id, 'abs', s1.absolutePosition, 'pos', s1.position)
+    })
   })
   panel.addControl(button)
 }
@@ -96,10 +100,17 @@ function createMaterials (scene) {
 }
 
 function getPos (sphere) {
-  const x = Math.round(sphere.absolutePosition.x)
-  const y = Math.round(sphere.absolutePosition.y)
-  const z = Math.round(sphere.absolutePosition.z)
-
+  let { x, y, z } = 0
+  const parentSphere = spheres.find(s => s.id === sphere.id.split('-')[0] + '-1')
+  if (sphere === parentSphere) {
+    x = Math.round(sphere.position.x)
+    y = Math.round(sphere.position.y)
+    z = Math.round(sphere.position.z)
+  } else {
+    x = Math.round(parentSphere.position.x) + sphere.position.x
+    y = Math.round(parentSphere.position.y) + sphere.position.y
+    z = Math.round(parentSphere.position.z) + sphere.position.z
+  }
   return { x, y, z }
 }
 
@@ -121,8 +132,7 @@ function checkValid (spheres) {
 
 function isOccupied (s1, s2) {
   const { x, y, z } = getPos(s2)
-  if (s2.id.split('-')[0] === 'purple') console.log(s2.absolutePosition)
-  if ((s1.absolutePosition.x === x) && (s1.absolutePosition.y === y) && (s1.absolutePosition.z === z)) {
+  if ((s1.position.x === x) && (s1.position.y === y) && (s1.position.z === z)) {
     return true
   } else {
     return false
@@ -135,6 +145,7 @@ function updateOccupancy () {
     spheres.forEach(s2 => {
       if (isOccupied(s1, s2)) {
         occupied = true
+        console.log(s1, s2)
       }
     })
     if (occupied) {
@@ -233,7 +244,6 @@ export default {
         }
       })
       pointerDragBehavior.onDragEndObservable.add(e => {
-        console.log('1', spheres[0].absolutePosition)
         const pickResult = scene.pick(scene.pointerX, scene.pointerY)
         if (pickResult.pickedMesh) { // prevent quick flick of cursor
           const selectedColor = pickResult.pickedMesh.material.id
@@ -297,8 +307,8 @@ export default {
               }
             }
           }
+          updateOccupancy()
         }
-        updateOccupancy()
       })
     })
 
