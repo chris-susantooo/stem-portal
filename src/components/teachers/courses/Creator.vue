@@ -3,20 +3,22 @@
       <tool-bar :options="toolBarOptions" @add="createItem" @delete="deleteItem" />
 
       <v-expansion-panels accordion focusable v-model="chapterIndex" class="px-2">
-        <draggable v-model="chapters" class="reset-draggable">
+        <draggable :list="chapters" handle=".handle" class="reset-draggable">
           <v-expansion-panel v-for="(chapter, ci) in chapters" :key="'c' + ci">
 
             <v-expansion-panel-header>
+              <v-icon class="handle">mdi-drag-vertical</v-icon>
               <span class="py-2">{{ 'Chapter ' + (ci + 1) + ': ' + chapter.title }}</span>
             </v-expansion-panel-header>
 
             <v-expansion-panel-content class="mx-2 pt-3">
-              <v-text-field label="Chapter name" v-model="chapters[ci].title" required />
+              <v-text-field label="Chapter name" v-model="chapter.title" required />
 
               <v-expansion-panels accordion focusable v-model="sectionIndex">
-                <draggable v-model="chapter.sections" class="reset-draggable">
+                <draggable :list="chapter.sections" handle=".handle" class="reset-draggable">
                   <v-expansion-panel v-for="(section, si) in chapter.sections" :key="'c' + ci + 's' + si">
                     <v-expansion-panel-header>
+                      <v-icon class="handle">mdi-drag-vertical</v-icon>
                       {{ `Section ${(ci + 1)}.${(si + 1)}: ${section.title}` }}
                     </v-expansion-panel-header>
                     <v-expansion-panel-content class="pt-3">
@@ -42,7 +44,7 @@
 <script>
 import Draggable from 'vuedraggable'
 import ToolBar from './ToolBar.vue'
-import TextEditor from './TextEditor.vue'
+import TextEditor from '@/components/text-editor/TextEditor.vue'
 
 export default {
   components: { Draggable, ToolBar, TextEditor },
@@ -139,5 +141,10 @@ export default {
 .reset-draggable {
   height: 100% !important;
   width: 100% !important;
+}
+.handle {
+  flex: none;
+  margin-right: 15px;
+  cursor: grab;
 }
 </style>

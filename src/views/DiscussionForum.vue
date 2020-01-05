@@ -148,7 +148,7 @@
                                     <v-icon>mdi-arrow-up-bold</v-icon>
                                   </v-btn>
                                   <v-spacer></v-spacer>
-                                  <v-dialog width="850px">
+                                  <v-dialog v-model="dialog" width="850px">
                                     <template v-slot:activator="{on}">
                                       <v-btn color="primary" dark v-on="on">Make Comment</v-btn>
                                     </template>
@@ -159,7 +159,7 @@
                                           <v-card-title class="subtitle-1"> {{CurrentPost.date}}</v-card-title>
                                         </div>
                                         <div class="row">
-                                          <v-img max-width="800" max-height="350" min-width="800" min-height="350" contain :src="CurrentPost.src" eager="true"></v-img>
+                                          <v-img max-width="800" max-height="350" min-width="800" min-height="350" contain :src="CurrentPost.src" eager></v-img>
                                         </div>
                                         <v-row>
                                           <v-spacer></v-spacer>
@@ -171,10 +171,12 @@
                                         <v-container>
                                           <v-textarea label="Your Comment" outlined background-color= "grey lighten-3" v-model="comment"></v-textarea>
                                         </v-container>
-                                        <v-spacer></v-spacer>
-                                        <v-card-actions>
-                                          <v-btn color="darken-1" text @click="addnewcomments">Reply</v-btn>
-                                        </v-card-actions>
+                                        <v-container class="justify-center d-flex">
+                                          <v-card-actions>
+                                            <v-btn color="primary" dark @click="addnewcomments">Reply</v-btn>
+                                            <v-btn color="primary" dark @click="dialog=false">Exit</v-btn>
+                                          </v-card-actions>
+                                        </v-container>
                                       </v-card>
                                     </v-row>
                                   </v-dialog>
@@ -200,19 +202,23 @@
                             <v-spacer></v-spacer>
                           </v-row>
                         </v-card>
-                        <v-row v-for="(item, i) in allcurrentComments"  :key="i" no-gutters>
-                          <v-col cols="12" md="12">
-                            <v-card>
-                              <v-list-item three-line>
-                                <v-list-item-content>
-                                  <div class="overline mb-4"> Reply #{{item.cid}}</div>
+                        <v-container pa-0 ma-0>
+                          <v-row v-for="(item, i) in allcurrentComments"  :key="i" no-gutters>
+                              <v-card width=100%>
+                                <v-list-item three-line>
+                                  <v-list-item-content>
+                                    <div class="overline mb-4"> POST #{{item.cid}}
+                                      <v-btn class="sm-6" outlined fab color="teal">
+                                        <v-icon>mdi-format-list-bulleted-square</v-icon>
+                                      </v-btn>
+                                    </div>
                                   <v-list-item-subtitle> {{item.name}} <span class="subtitle-1 pl-6">{{item.date}}</span></v-list-item-subtitle>
                                   {{item.comment}}
-                                </v-list-item-content>
-                              </v-list-item>
-                            </v-card>
-                          </v-col>
-                        </v-row>
+                                  </v-list-item-content>
+                                </v-list-item>
+                              </v-card>
+                          </v-row>
+                        </v-container>
                     </v-row>
                   </v-container>
                   <v-btn  v-on:click="LoadMoreComments(i)" block color="primary" >Load More</v-btn>
@@ -232,17 +238,17 @@ export default {
   },
   computed: {
     allcurrentComments () {
-      if (this.CurrentPost){
-        return []
-      }
-      else{
+      if (this.CurrentPost && this.CurrentPost.Allcomments) {
         return this.CurrentPost.Allcomments.filter(({ cid }) => {
           return cid >= this.currentCommentRange[0] && cid <= this.currentCommentRange[1]
-      })
+        })
+      } else {
+        return []
       }
     }
   },
   data: () => ({
+    dialog: false,
     comment: '',
     currentCommentRange: [1, 5],
     icon: 'mdi-arrow-down-bold',
@@ -325,20 +331,6 @@ export default {
         question: 'Anyone can help me please? hehe!!!Fuck the world',
         postnumber: '2',
         Allcomments: [
-          {
-            comment: 'Anyone know? I need help too...',
-            cid: '1',
-            name: 'Brian Wong',
-            date: 'Nov 9, 2019'
-          },
-          {
-            comment: 'I dont know tooo!!! Anyone know? I need help too...',
-            cid: '2'
-          },
-          {
-            comment: 'I dont know tooo!!! Anyone know? I need help too...',
-            cid: '3'
-          }
         ]
       },
       {
@@ -386,14 +378,9 @@ export default {
       }
       console.log(a)
       this.CurrentPost.Allcomments.push(a)
+      this.dialog = false
       return this.CurrentPost.Allcomments
     }
   }
 }
 </script>
-<style>
-h2{
-    padding-top:20px;
-
-}
-</style>

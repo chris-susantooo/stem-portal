@@ -110,9 +110,6 @@ export default {
     }
   },
   computed: {
-    chapterIsEmpty () {
-      return !this.options.chapters[this.options.chapter].sections.length
-    },
     chapterSelected () {
       return this.options.chapter !== undefined
     },
