@@ -32,6 +32,7 @@
                       </template>
                       <template v-else>
                         <text-editor v-model="section.content.text" />
+                        <h2 class="pt-2">Questions</h2>
                       </template>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
@@ -100,11 +101,11 @@ export default {
           this.chapterIndex = this.chapters.length - 1
           break
         case 'section':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Section', title: 'Untitled Section', content: { video: '', text: '' } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Section', title: 'Untitled Section', content: { video: '', text: '<p>Your section content...</p>' } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'checkpoint':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '' } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '<p>Your checkpoint description...</p>' } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'question':

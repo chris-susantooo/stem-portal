@@ -22,8 +22,8 @@
             </div>
           </div>
           <template v-else>
-            <v-btn @click="showLinkMenu(getMarkAttrs('link'))">
-              <span class="ml-n2">{{ isActive.link() ? 'Update Link' : 'Add Link'}}</span>
+            <v-btn @click="showLinkMenu(getMarkAttrs('link'))" color="#424242">
+              <span class="ml-n2">{{ isActive.link() ? 'Update Link' : 'Add Link' }}</span>
               <v-icon class="mr-n2" color="#FFF">mdi-link-variant-plus</v-icon>
             </v-btn>
           </template>
@@ -112,12 +112,6 @@
         >
           <v-icon>mdi-code-braces-box</v-icon>
         </v-btn>
-        <!-- <v-btn color="#FFF" min-width="0" max-width="40" text
-          :class="{ 'is-active': menu.isActive }"
-          @click="commands.bold"
-        >
-          <v-icon>mdi-link-variant-plus</v-icon>
-        </v-btn> -->
         <v-btn color="#FFF" min-width="0" max-width="40" text
           @click="commands.horizontal_rule"
         >
@@ -136,7 +130,7 @@
         </v-btn>
       </v-toolbar>
     </editor-menu-bar>
-    <editor-content class="editor-content pt-6 mb-n2" :editor="editor" autofocus />
+    <editor-content class="editor-content pt-6 mb-n2" :editor="editor" />
   </div>
 </template>
 
@@ -198,28 +192,7 @@ export default {
       ],
       onUpdate: ({ getHTML }) => this.$emit('input', getHTML())
     })
-    this.editor.setContent(this.value || `
-        <h2>
-          Hi there,
-        </h2>
-        <p>
-          this is a very <em>basic</em> example of rich text content.
-        </p>
-        <pre><code>body { display: none; }</code></pre>
-        <ul>
-          <li>
-            Write your content for each section
-          </li>
-          <li>
-            Or brief your course-takers on each checkpoint
-          </li>
-        </ul>
-        <blockquote>
-          It's amazing 👏
-          <br />
-          – powered by tiptap
-        </blockquote>
-      `)
+    this.editor.setContent(this.value)
   },
   beforeDestroy () {
     this.editor.destroy()
