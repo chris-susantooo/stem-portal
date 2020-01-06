@@ -139,13 +139,15 @@
                                 <v-row>
                                   <v-list-item-title class="headline"> Title: {{CurrentPost.title}}</v-list-item-title>
                                   <v-btn icon>
-                                    <v-icon>mdi-heart</v-icon>
+                                    <v-icon>mdi-heart-outline</v-icon>
                                   </v-btn>
-                                  <v-btn icon>
-                                    <v-icon>{{this.icon}}</v-icon>
+                                  <v-btn v-on:click="likepost()" icon>
+                                    <span> {{this.CurrentPost.likes}} </span>
+                                    <v-icon>mdi-thumb-up-outline</v-icon>
                                   </v-btn>
-                                  <v-btn icon>
-                                    <v-icon>mdi-arrow-up-bold</v-icon>
+                                  <v-btn v-on:click="dislikepost()" icon>
+                                    <span> {{this.CurrentPost.dislikes}} </span>
+                                    <v-icon>mdi-thumb-down-outline</v-icon>
                                   </v-btn>
                                   <v-spacer></v-spacer>
                                   <v-dialog v-model="dialog" width="850px">
@@ -208,8 +210,14 @@
                                 <v-list-item three-line>
                                   <v-list-item-content>
                                     <div class="overline mb-4"> POST #{{item.cid}}
-                                      <v-btn class="sm-6" outlined fab color="teal">
-                                        <v-icon>mdi-format-list-bulleted-square</v-icon>
+                                      <v-btn icon fab color="grey">
+                                        <v-icon>mdi-reply</v-icon>
+                                      </v-btn>
+                                      <v-btn v-on:clock="likepost()" icon fab color="grey">
+                                        <v-icon>mdi-thumb-up-outline</v-icon>
+                                      </v-btn>
+                                      <v-btn icon fab color="grey">
+                                        <v-icon>mdi-thumb-down-outline</v-icon>
                                       </v-btn>
                                     </div>
                                   <v-list-item-subtitle> {{item.name}} <span class="subtitle-1 pl-6">{{item.date}}</span></v-list-item-subtitle>
@@ -314,8 +322,9 @@ export default {
         rating: '4.7',
         question: 'Anyone know how to do Question 2? Thanks a lot!!! I have no idea how to do this question. Its too difficult :( Wuwuwuwuwu',
         postnumber: '1',
-        Allcomments: [
-        ]
+        likes: 0,
+        dislikes: 0,
+        Allcomments: []
       },
       {
         src: 'https://www.popsci.com/resizer/tobLbXyxWM34zcMDa7ycDgvM2C4=/1034x685/arc-anglerfish-arc2-prod-bonnier.s3.amazonaws.com/public/T4J7JURF3L5QEFNULUSXDEWYGA.jpg',
@@ -369,17 +378,21 @@ export default {
     },
     addnewcomments () {
       const cid = (this.CurrentPost.Allcomments).length + 1
-      console.log(cid)
       const newcomment = this.comment
       let a =
       {
         cid: cid,
         comment: newcomment
       }
-      console.log(a)
       this.CurrentPost.Allcomments.push(a)
       this.dialog = false
       return this.CurrentPost.Allcomments
+    },
+    likepost () {
+      this.CurrentPost.likes = this.CurrentPost.likes + 1
+    },
+    dislikepost () {
+      this.CurrentPost.dislikes = this.CurrentPost.dislikes + 1
     }
   }
 }

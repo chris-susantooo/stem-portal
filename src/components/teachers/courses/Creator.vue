@@ -23,12 +23,17 @@
                     </v-expansion-panel-header>
                     <v-expansion-panel-content class="pt-3">
                       <v-text-field :label="section.type + ' name'" v-model="section.title" required />
-                      <v-text-field required
-                        v-if="section.type === 'Section'"
-                        label="YouTube link"
-                        v-model="section.content.video"
-                      />
-                      <text-editor />
+                      <template v-if="section.type === 'Section'">
+                        <v-text-field required
+                          label="YouTube link"
+                          v-model="section.content.video"
+                        />
+                        <text-editor v-model="section.content.text" />
+                      </template>
+                      <template v-else>
+                        <text-editor v-model="section.content.text" />
+                        <h2 class="pt-2">Questions</h2>
+                      </template>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </draggable>
@@ -96,11 +101,11 @@ export default {
           this.chapterIndex = this.chapters.length - 1
           break
         case 'section':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Section', title: 'Untitled Section', content: { video: '', text: '' } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Section', title: 'Untitled Section', content: { video: '', text: '<p>Your section content...</p>' } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'checkpoint':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '' } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '<p>Your checkpoint description...</p>' } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'question':
