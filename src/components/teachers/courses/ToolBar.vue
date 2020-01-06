@@ -45,6 +45,9 @@
             <v-list-item v-if="checkPointSelected" @click="$emit('add', 'question')">
               <v-list-item-title>Question</v-list-item-title>
             </v-list-item>
+            <v-list-item v-if="questionSelected" @click="$emit('add', 'option')">
+              <v-list-item-title>Option</v-list-item-title>
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -91,8 +94,11 @@
             <v-list-item v-if="chapterSelected" @click="$emit('add', 'checkpoint')">
               <v-list-item-title>Checkpoint</v-list-item-title>
             </v-list-item>
-            <v-list-item v-if="chapterSelected && options.checkpoint !== undefined" @click="$emit('add', 'question')">
+            <v-list-item v-if="checkPointSelected" @click="$emit('add', 'question')">
               <v-list-item-title>Question</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="questionSelected" @click="$emit('add', 'option')">
+              <v-list-item-title>Option</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
