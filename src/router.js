@@ -89,6 +89,26 @@ const router = new Router({
           path: '/games/2',
           name: 'CodeSomething',
           component: () => import(/* webpackChunkName: "CodeSomething" */ './Games/CodeSomething/CodeSomething.vue')
+        },
+        {
+          path: '/teacher',
+          name: 'teacher-intro',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Teacher.vue')
+        },
+        {
+          path: '/student',
+          name: 'student-intro',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Student.vue')
+        },
+        {
+          path: '/parent',
+          name: 'parent-intro',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Parent.vue')
+        },
+        {
+          path: '/student/course',
+          name: 'student-course',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/student/Course.vue')
         }
       ]
     }

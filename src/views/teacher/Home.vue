@@ -189,6 +189,9 @@
 export default {
   //
   data: () => ({
+    news: [],
+    ongoingCourses: [],
+    posts: []
   })
 }
 </script>
