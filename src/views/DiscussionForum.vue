@@ -313,7 +313,7 @@ export default {
         src: 'http://instantview.info/wp-content/uploads/2019/07/multiplication-word-problems-worksheets-grade-5-simple-multiplying-decimals-pdf-and-division-gr.jpg',
         Field: 'Maths',
         title: 'Maths Question (Multiplication)',
-        name: 'Edith Woo',
+        name: '',
         date: 'Nov 8, 2019',
         time: '22:57',
         text: 'M',

@@ -1,5 +1,7 @@
 <template>
-<canvas id="render-canvas" ref="render-canvas" width="1024" height="768"></canvas>
+<div class="text-center">
+  <canvas id="render-canvas" ref="render-canvas" width="1024" height="768"></canvas>
+</div>
 </template>
 
 <script>
@@ -10,23 +12,71 @@ BABYLON.GUI = GUI
 
 const spheres = []
 const transparentSpheres = {}
-console.log(spheres)
+const answer = []
 
 function initScene (engine) {
   const scene = new BABYLON.Scene(engine)
   scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8)
-  engine.runRenderLoop(() => {
+  engine.runRenderLoop(function () {
     scene.render()
   })
-
   return scene
 }
+
+// function createGUI (scene, showscene, advancedTexture) {
+//   switch (showscene) {
+//     case 'mainmenu':
+//       advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
+//       var button = BABYLON.GUI.Button.CreateSimpleButton('but', 'Level1')
+//       button.width = 0.2
+//       button.height = '40px'
+//       button.color = 'white'
+//       button.background = 'green'
+//       button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+//       advancedTexture.addControl(button)
+//       button.onPointerClickObservable.add(() => {
+//         showscene = 'gamescene1_1'
+//       })
+//       return null
+//     case 'gamescene1_1':
+//       advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
+//       const panel = new BABYLON.GUI.StackPanel()
+//       panel.isVertical = false
+//       advancedTexture.addControl(panel)
+
+//       const panel2 = new BABYLON.GUI.StackPanel()
+//       advancedTexture.addControl(panel2)
+
+//       const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
+//       image.width = '200px'
+//       image.height = '200px'
+//       panel2.addControl(image)
+//       panel2.linkWithMesh(spheres[0])
+//       panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+//       panel2.left = '350px'
+//       panel2.paddingTop = '50px'
+
+//       return panel
+//   }
+// }
 
 function initUI () {
   const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI')
   const panel = new BABYLON.GUI.StackPanel()
   panel.isVertical = false
   advancedTexture.addControl(panel)
+
+  const panel2 = new BABYLON.GUI.StackPanel()
+  advancedTexture.addControl(panel2)
+
+  const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
+  image.width = '200px'
+  image.height = '200px'
+  panel2.addControl(image)
+  panel2.linkWithMesh(spheres[0])
+  panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+  panel2.left = '350px'
+  panel2.paddingTop = '50px'
 
   return panel
 }
@@ -57,8 +107,6 @@ function createBox (x, y, z, scene, material) {
 
   box.renderingGroupId = 3
   box.isPickable = false
-
-  return box
 }
 
 function createRotationButton (targetMesh, panel, id, text) {
@@ -71,10 +119,20 @@ function createRotationButton (targetMesh, panel, id, text) {
   button.onPointerClickObservable.add(() => {
     const parentID = targetMesh.id.split('-')[0] + '-1'
     const parent = spheres.find(sphere => sphere.id === parentID)
-    parent.rotate(text === '<' ? BABYLON.Axis.Y : BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL)
     const s = spheres.filter(s => s.id.split('-')[0] === parent.id.split('-')[0])
     s.forEach(s1 => {
-      console.log(s1.id, 'abs', s1.absolutePosition, 'pos', s1.position)
+      if (s1 !== parent) {
+        let temp = 0
+        if (text === '<') {
+          temp = s1.position.x
+          s1.position.x = -s1.position.z
+          s1.position.z = temp
+        } else {
+          temp = s1.position.y
+          s1.position.y = s1.position.z
+          s1.position.z = -temp
+        }
+      }
     })
   })
   panel.addControl(button)
@@ -145,7 +203,6 @@ function updateOccupancy () {
     spheres.forEach(s2 => {
       if (isOccupied(s1, s2)) {
         occupied = true
-        console.log(s1, s2)
       }
     })
     if (occupied) {
@@ -156,59 +213,57 @@ function updateOccupancy () {
   })
 }
 
-// *********************************Start World Axes********************/
-function showAxis (size, scene) {
-  var makeTextPlane = function (text, color, size) {
-    var dynamicTexture = new BABYLON.DynamicTexture('DynamicTexture', 50, scene, true)
-    dynamicTexture.hasAlpha = true
-    dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color, 'transparent', true)
-    var plane = new BABYLON.Mesh.CreatePlane('TextPlane', size, scene, true)
-    plane.material = new BABYLON.StandardMaterial('TextPlaneMaterial', scene)
-    plane.material.backFaceCulling = false
-    plane.material.specularColor = new BABYLON.Color3(0, 0, 0)
-    plane.material.diffuseTexture = dynamicTexture
-    return plane
+function checkAnswer () {
+  let counter = 0
+  for (var i = 0; i < 6; i++) {
+    if (spheres[i].position.x === answer[i].position.x && spheres[i].position.y === answer[i].position.y && spheres[i].position.z === answer[i].position.z) {
+      console.log(spheres[i].id)
+      counter++
+    }
   }
-
-  var axisX = BABYLON.Mesh.CreateLines('axisX', [
-    new BABYLON.Vector3.Zero(), new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, 0.05 * size, 0),
-    new BABYLON.Vector3(size, 0, 0), new BABYLON.Vector3(size * 0.95, -0.05 * size, 0)
-  ], scene)
-  axisX.color = new BABYLON.Color3(1, 0, 0)
-  var xChar = makeTextPlane('X', 'red', size / 10)
-  xChar.position = new BABYLON.Vector3(0.9 * size, -0.05 * size, 0)
-  var axisY = BABYLON.Mesh.CreateLines('axisY', [
-    new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3(-0.05 * size, size * 0.95, 0),
-    new BABYLON.Vector3(0, size, 0), new BABYLON.Vector3(0.05 * size, size * 0.95, 0)
-  ], scene)
-  axisY.color = new BABYLON.Color3(0, 1, 0)
-  var yChar = makeTextPlane('Y', 'green', size / 10)
-  yChar.position = new BABYLON.Vector3(0, 0.9 * size, -0.05 * size)
-  var axisZ = BABYLON.Mesh.CreateLines('axisZ', [
-    new BABYLON.Vector3.Zero(), new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3(0, -0.05 * size, size * 0.95),
-    new BABYLON.Vector3(0, 0, size), new BABYLON.Vector3(0, 0.05 * size, size * 0.95)
-  ], scene)
-  axisZ.color = new BABYLON.Color3(0, 0, 1)
-  var zChar = makeTextPlane('Z', 'blue', size / 10)
-  zChar.position = new BABYLON.Vector3(0, 0.05 * size, 0.9 * size)
+  if (counter === 6) {
+    console.log('You win!!!')
+  }
 }
-// ***************************End World Axes***************************/
 
 export default {
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
     const scene = initScene(engine)
+    // const mainScene = initScene(engine)
 
-    showAxis(8, scene)
+    // let showscene = 'mainmenu'
 
     const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene)
     camera.attachControl(this.$refs['render-canvas'], false)
     camera.setTarget(BABYLON.Vector3.Zero())
+    const panel = initUI()
+    // const camera1 = new BABYLON.ArcRotateCamera('camera1', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), mainScene)
+    // camera1.setTarget(BABYLON.Vector3.Zero())
+
+    // let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, mainScene)
+    // let panel = createGUI(mainScene, showscene, advancedTexture)
+    // setTimeout(function () {
+    //   engine.stopRenderLoop()
+
+    //   engine.runRenderLoop(function () {
+    //     switch (showscene) {
+    //       case 'mainmenu':
+    //         advancedTexture.dispose()
+    //         panel = createGUI(mainScene, showscene, advancedTexture)
+    //         mainScene.render()
+    //         break
+    //       case 'gamescene1_1':
+    //         advancedTexture.dispose()
+    //         panel = createGUI(scene, showscene, advancedTexture)
+    //         scene.render()
+    //         break
+    //     }
+    //   })
+    // }, 500)
 
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(1, 1, 0), scene)
     light.setEnabled = true
-
-    const panel = initUI()
 
     const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial } = createMaterials(scene)
 
@@ -223,7 +278,7 @@ export default {
     spheres.push(createSphere(18, 3, 0, scene, 1, orangeMaterial, true))
 
     spheres.push(createSphere(1, 0, 0, scene, 2, purpleMaterial, true, spheres[0]))
-    spheres.push(createSphere(1, 0, 1, scene, 3, purpleMaterial, true, spheres[0]))
+    spheres.push(createSphere(0, 1, 0, scene, 3, purpleMaterial, true, spheres[0]))
 
     spheres.push(createSphere(1, 0, 0, scene, 2, yellowMaterial, true, spheres[1]))
     spheres.push(createSphere(-1, 0, 0, scene, 3, yellowMaterial, true, spheres[1]))
@@ -260,6 +315,17 @@ export default {
         }
       }
     }
+
+    // create answer
+    answer.push(createSphere(0, 4, -1, scene, 1, purpleMaterial, false))
+    answer.push(createSphere(-1, 4, 0, scene, 1, yellowMaterial, false))
+    answer.push(createSphere(-1, 2, -1, scene, 1, redMaterial, false))
+    answer.push(createSphere(0, 2, 1, scene, 1, greenMaterial, false))
+    answer.push(createSphere(0, 3, 0, scene, 1, cyanMaterial, false))
+    answer.push(createSphere(1, 3, 0, scene, 1, orangeMaterial, false))
+    answer.forEach(s1 => {
+      s1.isVisible = false
+    })
     spheres.filter(sphere => sphere.id.split('-')[1] === '1').forEach(parent => {
       const pointerDragBehavior = new BABYLON.PointerDragBehavior()
       pointerDragBehavior.useObjectOrientationForDragging = false
@@ -295,14 +361,10 @@ export default {
           })
           if (checkValid(selectedSpheres)) {
             // match the spheres
-            selectedSpheres.forEach(sphere => {
-              const { x, y, z } = getPos(sphere)
-              if (sphere === parentSphere) {
-                sphere.position.x = x
-                sphere.position.y = y
-                sphere.position.z = z
-              }
-            })
+            const { x, y, z } = getPos(parentSphere)
+            parentSphere.position.x = x
+            parentSphere.position.y = y
+            parentSphere.position.z = z
           } else {
             // return the target spheres to start position
             let putAttempt = false
@@ -348,6 +410,7 @@ export default {
             }
           }
           updateOccupancy()
+          checkAnswer()
         }
       })
     })
