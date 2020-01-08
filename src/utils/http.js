@@ -1,9 +1,6 @@
 import Axios from 'axios'
 
-export function registerUser (username, password, email) {
-  return Axios.post('users', {
-    username,
-    password,
-    email
-  })
-}
+const registerUser = (username, password, email) => Axios.post('users', { username, password, email })
+const activateUser = (username, token, cancel) => Axios.post(`activate/${username}`, { token, cancel })
+
+export { registerUser, activateUser }
