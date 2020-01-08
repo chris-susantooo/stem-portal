@@ -44,6 +44,7 @@
                 </v-container>
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
+                  <v-btn v-if="canResendLink" text @click="register">Resend link</v-btn>
                   <v-btn color="primary" text @click="register">Register Now</v-btn>
                 </v-card-actions>
               </v-form>
@@ -82,6 +83,7 @@ export default {
       email: '',
       loginForm: true,
       registerForm: true,
+      canResendLink: false,
       rules: {
         name: [
           v => !!v || 'This field is required',
@@ -118,16 +120,10 @@ export default {
     },
     register () {
       if (this.registerForm) {
+        this.canResendLink = true
         registerUser(this.username, this.password, this.email)
           .then(({ status, data }) => {
-            if (status === 201) {
-              this.username = ''
-              this.password = ''
-              this.confirmPassword = ''
-              this.email = ''
-              this.$refs['register-form'].resetValidation()
-              this.registerSuccess = true
-            }
+            if (status === 201) this.registerSuccess = true
           })
           .catch(err => console.log(err))
       }

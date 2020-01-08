@@ -35,15 +35,17 @@ const router = new Router({
         {
           path: '/UserProfile',
           name: 'UserProfile',
-          // route level code-splitting
-          // this generates a separate chunk (about.[hash].js) for this route
-          // which is lazy-loaded when the route is visited.
           component: () => import(/* webpackChunkName: "UserProfile" */ './views/UserProfile.vue')
         },
         {
           path: '/login',
           name: 'login',
           component: () => import(/* webpackChunkName: "login" */ './views/Login.vue')
+        },
+        {
+          path: '/register/:username',
+          name: 'register',
+          component: () => import(/* webpackChunkName: "register" */ './views/visitors/Register.vue')
         },
         {
           path: '/DiscussionForum',
@@ -58,27 +60,27 @@ const router = new Router({
         {
           path: '/happy-corner/upload',
           name: 'upload-corner',
-          component: () => import(/* webpackChunkName: "upload-corner" */ './views/teacher/Upload_corner.vue')
+          component: () => import(/* webpackChunkName: "upload-corner" */ './views/teachers/Upload_corner.vue')
         },
         {
           path: '/happy-corner/MATH1853',
           name: 'MATH1853',
-          component: () => import(/* webpackChunkName: "MATH1853" */ './views/teacher/MATH1853.vue')
+          component: () => import(/* webpackChunkName: "MATH1853" */ './views/teachers/MATH1853.vue')
         },
         {
-          path: '/teacher/home',
-          name: 'teacher-home',
-          component: () => import(/* webpackChunkName: "teacher-home" */ './views/teacher/Home.vue')
+          path: '/teachers/home',
+          name: 'teachers-home',
+          component: () => import(/* webpackChunkName: "teacher-home" */ './views/teachers/Home.vue')
         },
         {
-          path: '/teacher/course',
+          path: '/teachers/courses',
           name: 'online-course',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/teacher/OnlineCurriculum.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/teachers/OnlineCurriculum.vue')
         },
         {
-          path: '/teacher/makenewcourse',
-          name: 'make-new-online-course',
-          component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teacher/MakeNewCourse.vue')
+          path: '/teachers/courses/new',
+          name: 'new-course',
+          component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/MakeNewCourse.vue')
         },
         {
           path: '/games/1',
@@ -122,6 +124,10 @@ const router = new Router({
 
 export default router
 
+router.beforeEach((to, from, next) => {
+  // navigation guard here
+  next()
+})
 router.afterEach((to, from) => {
   document.title = to.meta.title || DEFAULT_TITLE
 })

@@ -7,7 +7,7 @@
       </div>
     </transition>
     <v-header />
-    <router-view />
+    <router-view @childBusy="isChildBusy = true" @childReady="isChildBusy = false" />
     <v-footer />
   </div>
 </template>
@@ -24,12 +24,11 @@ export default {
   created () {
     this.$store.dispatch('fetchUser')
       .then(() => {
-        this.isFetchingUser = false
+
       })
-      .catch(err => {
-        this.isFetchingUser = false
-        console.log(err)
-      })
+      .catch(err => { console.log(err) })
+      .finally(() => { this.isFetchingUser = false })
+
     this.$store.commit('initToken')
   },
   mounted () {
@@ -37,19 +36,18 @@ export default {
     animInterval = setInterval(() => (this.animStep = (this.animStep + 1) % 4), 1000)
   },
   computed: {
-    isLoading () { return this.isLoadingPage || this.isFetchingUser }
+    isLoading () { return this.isLoadingPage || this.isFetchingUser || this.isChildBusy }
   },
   data: () => ({
     isLoadingPage: true,
     isFetchingUser: true,
+    isChildBusy: false,
     spinnerColors: ['#6789ba', '#ffed78', '#d35656', '#347474'],
     animStep: 0
   }),
   watch: {
     isLoading (newVal) {
-      if (newVal) {
-        setTimeout(() => clearInterval(animInterval), 500)
-      }
+      if (newVal) setTimeout(() => clearInterval(animInterval), 500)
     }
   }
 }
