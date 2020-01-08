@@ -53,14 +53,11 @@
       </v-card>
     </div>
     <!-- register success dialog -->
-    <v-dialog v-model="registerSuccess" max-width="300">
-      <v-card>
-        <v-card-title class="headline">Operation Successful!</v-card-title>
-        <div class="pt-3" />
+    <v-dialog v-model="registerSuccess" max-width="400">
+      <v-card class="pt-3">
+        <v-card-title class="headline mb-3">An email has been sent to you.</v-card-title>
         <v-card-text>
-          Please check your email inbox for a verification email.
-        </v-card-text>
-        <v-card-text>
+          Please check your email inbox for a verification email.<br>
           Follow the available instructions to complete the account registration.
         </v-card-text>
         <v-card-actions>
