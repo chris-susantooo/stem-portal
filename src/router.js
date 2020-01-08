@@ -55,7 +55,7 @@ const router = new Router({
         {
           path: '/happy-corner',
           name: 'corner',
-          component: () => import(/* webpackChunkName: "corner" */ './views/teacher/Teacher_corner.vue')
+          component: () => import(/* webpackChunkName: "corner" */ './views/teachers/Teacher_corner.vue')
         },
         {
           path: '/happy-corner/upload',
@@ -95,27 +95,27 @@ const router = new Router({
         {
           path: '/teacher',
           name: 'teacher-intro',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Teacher.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Teacher.vue')
         },
         {
           path: '/student',
           name: 'student-intro',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Student.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Student.vue')
         },
         {
           path: '/parent',
           name: 'parent-intro',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Parent.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Parent.vue')
         },
         {
           path: '/student/course',
           name: 'student-course',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/student/Course.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
         },
         {
           path: '/student/games',
           name: 'student-games',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/student/Games.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/students/Games.vue')
         }
       ]
     }
