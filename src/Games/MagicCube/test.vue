@@ -17,72 +17,63 @@ const answer = []
 function initScene (engine) {
   const scene = new BABYLON.Scene(engine)
   scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8)
-  engine.runRenderLoop(function () {
-    scene.render()
-  })
   return scene
 }
 
-// function createGUI (scene, showscene, advancedTexture) {
-//   switch (showscene) {
-//     case 'mainmenu':
-//       advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
-//       var button = BABYLON.GUI.Button.CreateSimpleButton('but', 'Level1')
-//       button.width = 0.2
-//       button.height = '40px'
-//       button.color = 'white'
-//       button.background = 'green'
-//       button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-//       advancedTexture.addControl(button)
-//       button.onPointerClickObservable.add(() => {
-//         showscene = 'gamescene1_1'
-//       })
-//       return null
-//     case 'gamescene1_1':
-//       advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
-//       const panel = new BABYLON.GUI.StackPanel()
-//       panel.isVertical = false
-//       advancedTexture.addControl(panel)
+// function createGUI (scene, mainScene, gameScene1advancedTexture, mainSceneadvancedTexture, myscene) {
+//   var button = BABYLON.GUI.Button.CreateSimpleButton('but', 'Level1')
+//   button.width = 0.2
+//   button.height = '40px'
+//   button.color = 'white'
+//   button.background = 'green'
+//   button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+//   mainSceneadvancedTexture.addControl(button)
+//   button.onPointerClickObservable.add(() => {
+//     if (myscene === mainScene) {
+//       myscene = scene
+//     }
+//   })
+//   const panel = new BABYLON.GUI.StackPanel()
+//   panel.isVertical = false
+//   gameScene1advancedTexture.addControl(panel)
 
-//       const panel2 = new BABYLON.GUI.StackPanel()
-//       advancedTexture.addControl(panel2)
+//   const panel2 = new BABYLON.GUI.StackPanel()
+//   gameScene1advancedTexture.addControl(panel2)
 
-//       const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
-//       image.width = '200px'
-//       image.height = '200px'
-//       panel2.addControl(image)
-//       panel2.linkWithMesh(spheres[0])
-//       panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-//       panel2.left = '350px'
-//       panel2.paddingTop = '50px'
-
-//       return panel
-//   }
+//   const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
+//   image.width = '200px'
+//   image.height = '200px'
+//   panel2.addControl(image)
+//   panel2.linkWithMesh(spheres[0])
+//   panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+//   panel2.left = '350px'
+//   panel2.paddingTop = '50px'
+//   return [panel, myscene]
 // }
 
-function initUI () {
-  const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI')
-  const panel = new BABYLON.GUI.StackPanel()
-  panel.isVertical = false
-  advancedTexture.addControl(panel)
+// function initUI () {
+//   const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI')
+//   const panel = new BABYLON.GUI.StackPanel()
+//   panel.isVertical = false
+//   advancedTexture.addControl(panel)
 
-  const panel2 = new BABYLON.GUI.StackPanel()
-  advancedTexture.addControl(panel2)
+//   const panel2 = new BABYLON.GUI.StackPanel()
+//   advancedTexture.addControl(panel2)
 
-  const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
-  image.width = '200px'
-  image.height = '200px'
-  panel2.addControl(image)
-  panel2.linkWithMesh(spheres[0])
-  panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-  panel2.left = '350px'
-  panel2.paddingTop = '50px'
+//   const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
+//   image.width = '200px'
+//   image.height = '200px'
+//   panel2.addControl(image)
+//   panel2.linkWithMesh(spheres[0])
+//   panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+//   panel2.left = '350px'
+//   panel2.paddingTop = '50px'
 
-  return panel
-}
+//   return panel
+// }
 
 function createSphere (x, y, z, scene, id, material, pickable, parent = null) {
-  const sphere = BABYLON.MeshBuilder.CreateSphere(material.id + '-' + id, scene)
+  const sphere = BABYLON.MeshBuilder.CreateSphere(material.id + '-' + id, {}, scene)
 
   if (parent) sphere.parent = parent
   if (material) sphere.material = material
@@ -230,40 +221,54 @@ export default {
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
     const scene = initScene(engine)
-    // const mainScene = initScene(engine)
+    const mainScene = initScene(engine)
+    let myscene = mainScene
 
-    // let showscene = 'mainmenu'
-
-    const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene)
+    const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), mainScene)
     camera.attachControl(this.$refs['render-canvas'], false)
     camera.setTarget(BABYLON.Vector3.Zero())
-    const panel = initUI()
-    // const camera1 = new BABYLON.ArcRotateCamera('camera1', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), mainScene)
-    // camera1.setTarget(BABYLON.Vector3.Zero())
-
-    // let advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, mainScene)
-    // let panel = createGUI(mainScene, showscene, advancedTexture)
-    // setTimeout(function () {
-    //   engine.stopRenderLoop()
-
-    //   engine.runRenderLoop(function () {
-    //     switch (showscene) {
-    //       case 'mainmenu':
-    //         advancedTexture.dispose()
-    //         panel = createGUI(mainScene, showscene, advancedTexture)
-    //         mainScene.render()
-    //         break
-    //       case 'gamescene1_1':
-    //         advancedTexture.dispose()
-    //         panel = createGUI(scene, showscene, advancedTexture)
-    //         scene.render()
-    //         break
-    //     }
-    //   })
-    // }, 500)
 
     const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(1, 1, 0), scene)
     light.setEnabled = true
+    // const panel = initUI()
+
+    const camera1 = new BABYLON.ArcRotateCamera('camera1', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene)
+    camera1.attachControl(this.$refs['render-canvas'], false)
+    camera1.setTarget(BABYLON.Vector3.Zero())
+
+    // Build 2 gui buttons
+    var gameScene1advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
+    var mainSceneadvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, mainScene)
+
+    var button = BABYLON.GUI.Button.CreateSimpleButton('but', 'Level1')
+    button.width = 0.2
+    button.height = '40px'
+    button.color = 'white'
+    button.background = 'green'
+    button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+    mainSceneadvancedTexture.addControl(button)
+    button.onPointerClickObservable.add(() => {
+      console.log('hi')
+      if (myscene === mainScene) {
+        myscene = scene
+      }
+    })
+
+    const panel = new BABYLON.GUI.StackPanel()
+    panel.isVertical = false
+    gameScene1advancedTexture.addControl(panel)
+
+    const panel2 = new BABYLON.GUI.StackPanel()
+    gameScene1advancedTexture.addControl(panel2)
+
+    const image = new BABYLON.GUI.Image('photoplane', 'https://anabolicaces.com/wp-content/uploads/2017/12/Cityscape-FB-article.jpg')
+    image.width = '200px'
+    image.height = '200px'
+    panel2.addControl(image)
+    panel2.linkWithMesh(spheres[0])
+    panel2.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
+    panel2.left = '350px'
+    panel2.paddingTop = '50px'
 
     const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial } = createMaterials(scene)
 
@@ -413,6 +418,12 @@ export default {
           checkAnswer()
         }
       })
+    })
+    engine.runRenderLoop(function () {
+      if (myscene === mainScene) {
+      } else if (myscene === scene) {
+      }
+      myscene.render()
     })
 
     window.addEventListener('click', () => {
