@@ -83,7 +83,7 @@ const router = new Router({
         {
           path: '/games/1',
           name: 'MagicCube',
-          component: () => import(/* webpackChunkName: "MagicCube" */ './Games/MagicCube/test.vue')
+          component: () => import(/* webpackChunkName: "MagicCube" */ './Games/MagicCube/MagicCube.vue')
         },
         {
           path: '/games/2',
