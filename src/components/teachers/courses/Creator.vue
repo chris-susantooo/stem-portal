@@ -11,8 +11,8 @@
                 <span class="py-2">{{ 'Chapter ' + (ci + 1) + ': ' + chapter.title }}</span>
               </v-expansion-panel-header>
 
-              <v-expansion-panel-content class="mx-2 pt-3">
-                <v-text-field :counter="60" :rules="nameRules('Chapter', 60)" label="Chapter name" v-model="chapter.title" required />
+              <v-expansion-panel-content class="mt-3 mx-2 pt-3">
+                <v-text-field outlined :counter="60" :rules="nameRules('Chapter', 60)" label="Chapter name" v-model="chapter.title" required />
 
                 <v-expansion-panels accordion focusable v-model="sectionIndex">
                   <draggable :list="chapter.sections" handle=".handle" class="reset-draggable">
@@ -21,10 +21,10 @@
                         <v-icon class="handle">mdi-drag-vertical</v-icon>
                         {{ `Section ${(ci + 1)}.${(si + 1)}: ${section.title}` }}
                       </v-expansion-panel-header>
-                      <v-expansion-panel-content class="pt-3">
-                        <v-text-field :counter="60" :rules="nameRules(section.type, 60)" :label="section.type + ' name'" v-model="section.title" required />
+                      <v-expansion-panel-content class="pt-3 mt-3">
+                        <v-text-field outlined :counter="60" :rules="nameRules(section.type, 60)" :label="section.type + ' name'" v-model="section.title" required />
                         <template v-if="section.type === 'Section'">
-                          <v-text-field :rules="linkRules" label="YouTube link" v-model="section.content.video" required />
+                          <v-text-field outlined :rules="linkRules" label="YouTube link" v-model="section.content.video" required />
                           <text-editor v-model="section.content.text" />
                         </template>
                         <template v-else>
@@ -37,14 +37,15 @@
                                   <v-icon class="handle">mdi-drag-vertical</v-icon>
                                   {{ `Question ${qi + 1}: ${question.title}` }}
                                 </v-expansion-panel-header>
-                                <v-expansion-panel-content class="pt-3">
-                                  <v-text-field :rules="nameRules('Question')" label="Your question here" v-model="question.title" required />
+                                <v-expansion-panel-content class="mt-3 pt-3">
+                                  <v-text-field outlined :rules="nameRules('Question')" label="Your question here" v-model="question.title" required />
                                   One or more answers may be selected.
                                   <v-card flat>
-                                    <v-card-text class="mb-n4">
+                                    <v-card-text class="mb-n4 mt-3">
                                       <v-row v-for="(option, oi) in question.options" :key="'c' + ci + 's' + si + 'q' + qi + 'o' + oi" class="my-n2" >
                                         <v-checkbox v-model="question.answers" :value="String.fromCharCode('A'.charCodeAt(0) + oi)" hide-details />
                                         <v-text-field
+                                          outlined
                                           :counter="100"
                                           :rules="nameRules('Option', 100)"
                                           v-model="option.title"
