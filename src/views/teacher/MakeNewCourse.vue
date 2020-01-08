@@ -8,13 +8,13 @@
       <v-stepper v-model="currentStep" vertical>
         <v-stepper-step :complete="currentStep > 1" step="1" :editable="isCourseValid && isCourseInfoValid">
           Basic information about your course
-          <small class="mt-2">Let us know what is it about</small>
+          <small class="pt-2">Let us know what is it about</small>
         </v-stepper-step>
 
         <v-stepper-content step="1">
-          <v-form v-model="isCourseInfoValid">
-            <v-text-field :counter="60" :rules="courseNameRules" label="Course title" v-model="course.title" required />
-            <v-textarea :rules="shortDescRules" label="Short description" v-model="course.description" required />
+          <v-form v-model="isCourseInfoValid" class="mt-2">
+            <v-text-field outlined :counter="60" :rules="courseNameRules" label="Course title" v-model="course.title" required />
+            <v-textarea outlined :rules="shortDescRules" label="Short description" v-model="course.description" required />
             <v-combobox
               v-model="course.tags"
               :items="allTags"
@@ -22,6 +22,7 @@
               clearable
               label="Your course tags"
               multiple
+              outlined
               :rules="tagRules"
             >
               <template v-slot:selection="{ attrs, item, select, selected }">
@@ -40,7 +41,7 @@
               </template>
             </v-combobox>
           </v-form>
-          <div class="mt-2 pt-2 pb-3">
+          <div class="pt-2 pb-2">
             <v-btn color="primary" @click="next(2)">Continue</v-btn>
             <v-btn class="ml-2" text>Save and exit</v-btn>
           </div>
