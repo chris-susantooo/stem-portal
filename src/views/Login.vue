@@ -23,7 +23,7 @@
                   <v-text-field v-model="password" :counter="20" :rules="rules.password" label="Password" outlined @keydown.enter="login" type="password" dense/>
                 </v-container>
                 <v-card-actions>
-                  <v-btn text @click="true">Reset Password</v-btn>
+                  <v-btn text @click="reset.dialog = true">Reset Password</v-btn>
                   <div class="flex-grow-1"></div>
                   <v-btn color="primary" text @click="login">Login</v-btn>
                 </v-card-actions>
@@ -35,17 +35,24 @@
             <v-card flat>
               <v-card-title class="mb-3">Join STEM Portal, 100% free.</v-card-title>
               <v-card-text>Experience STEM in the way you've never tried. The community is waiting for you.</v-card-text>
-              <v-form v-model="registerForm" ref="register-form">
+              <v-form v-model="registerForm">
                 <v-container>
-                  <v-text-field v-model="username" :counter="20" :rules="rules.name" label="Username" outlined autofocus dense/>
+                  <v-text-field outlined autofocus dense
+                    v-model="username"
+                    :counter="20"
+                    :rules="rules.name"
+                    :error-messages="usernameProps.errMsgs"
+                    :hint="usernameProps.hint"
+                    label="Username"
+                  />
                   <v-text-field v-model="password" :counter="20" :rules="rules.password" label="Password" outlined type="password" dense/>
                   <v-text-field v-model="confirmPassword" :counter="20" :rules="rules.confirm" label="Re-enter password" outlined type="password" dense/>
                   <v-text-field v-model="email" :rules="rules.email" label="Email address" outlined @keydown.enter="register" dense/>
                 </v-container>
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn v-if="canResendLink" text @click="register">Resend link</v-btn>
-                  <v-btn color="primary" text @click="register">Register Now</v-btn>
+                  <v-btn v-if="canResendLink" text @click="register(true)">Resend link</v-btn>
+                  <v-btn color="primary" text @click="register(false)">Register Now</v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
@@ -54,16 +61,43 @@
       </v-card>
     </div>
     <!-- register success dialog -->
-    <v-dialog v-model="registerSuccess" max-width="400">
+    <v-dialog v-model="resultDialog" max-width="400">
       <v-card class="pt-3">
-        <v-card-title class="headline mb-3">An email has been sent to you.</v-card-title>
-        <v-card-text>
+        <v-card-title class="headline mb-3">{{ resultDialogTitle }}</v-card-title>
+        <v-card-text v-if="registerSuccess">
           Please check your email inbox for a verification email.<br>
           Follow the available instructions to complete the account registration.
         </v-card-text>
+        <v-card-text v-else>
+          Please double check your username or other entries.<br>
+          Make sure they fit the requirements and try again later.
+        </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text color="primary" @click="registerSuccess = false">OK</v-btn>
+          <v-btn text color="primary" @click="resultDialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- reset password dialog -->
+    <v-dialog v-model="reset.dialog" max-width="400">
+      <v-card class="pa-3">
+        <v-card-title class="headline mb-3">Reset Password</v-card-title>
+        <v-card-text>
+          Please provide us your username and email.<br>
+          If they match our records, we will send you a password reset link.
+        </v-card-text>
+        <v-container>
+          <v-form v-model="reset.form">
+            <v-text-field v-model="reset.username" :counter="20" :rules="rules.name" label="Username" outlined @keydown.enter="requestReset" autofocus dense/>
+            <v-text-field v-model="reset.email" :rules="rules.email" label="Email address" outlined @keydown.enter="requestReset" dense/>
+          </v-form>
+        </v-container>
+        <v-card-text class="red--text" v-if="reset.errorResponse">
+          Request failed. Please make sure your information is correct or try again later.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text color="primary" @click="requestReset">OK</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -71,7 +105,7 @@
 </template>
 
 <script>
-import { registerUser } from '../utils/http'
+import http from '../utils/http'
 
 export default {
   data () {
@@ -84,6 +118,21 @@ export default {
       loginForm: true,
       registerForm: true,
       canResendLink: false,
+      resultDialog: false,
+      registerSuccess: false,
+      checkingUsername: false,
+      usernameProps: {
+        checking: false,
+        hint: undefined,
+        errMsgs: ''
+      },
+      reset: {
+        errorResponse: false,
+        form: true,
+        dialog: false,
+        username: '',
+        email: ''
+      },
       rules: {
         name: [
           v => !!v || 'This field is required',
@@ -93,7 +142,7 @@ export default {
         password: [
           v => !!v || 'This field is required',
           v => (v.length >= 8 && v.length <= 20) || 'Must be between 8 to 20 characters'
-          // more validation rules TODO
+          // more validation rules TODO (require numbers and characters? Upper and lower cases?)
         ],
         confirm: [
           v => v === this.password || 'Must match the above password',
@@ -103,8 +152,33 @@ export default {
           v => !!v || 'Email is required',
           v => /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Must be valid email'
         ]
-      },
-      registerSuccess: false
+      }
+    }
+  },
+  computed: {
+    resultDialogTitle () {
+      return this.registerSuccess ? 'An email has been sent to you.' : 'Failed to register at the moment.'
+    }
+  },
+  watch: {
+    username (val) {
+      if (!this.checkingUsername) {
+        setTimeout(() => {
+          const isValid = this.rules.name.every(r => typeof r(val) !== 'string')
+          if (val === this.username && isValid) {
+            http.checkUsername(val)
+              .then(() => {
+                this.usernameProps.hint = undefined
+                this.usernameProps.errMsgs = 'Username not available'
+              })
+              .catch(() => {
+                this.usernameProps.hint = 'Username available'
+                this.usernameProps.errMsgs = ''
+              })
+              .finally(() => { this.checkingUsername = false })
+          }
+        }, 1000)
+      }
     }
   },
   methods: {
@@ -118,14 +192,25 @@ export default {
         }).catch(err => console.log(err))
       }
     },
-    register () {
+    register (resend) {
       if (this.registerForm) {
-        this.canResendLink = true
-        registerUser(this.username, this.password, this.email)
+        http.registerUser(this.username, this.password, this.email, resend)
           .then(({ status, data }) => {
-            if (status === 201) this.registerSuccess = true
+            if (status === 201) {
+              this.registerSuccess = true
+              this.resultDialog = true
+            }
           })
           .catch(err => console.log(err))
+        this.canResendLink = true
+      }
+    },
+    requestReset () {
+      if (this.reset.form) {
+        this.reset.errorResponse = false
+        http.resetPassword(this.reset.username, this.reset.email)
+          .then(() => { this.reset.dialog = false })
+          .catch(() => { this.reset.errorResponse = true })
       }
     }
   }
