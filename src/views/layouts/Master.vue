@@ -21,7 +21,7 @@ let animInterval = null
 
 export default {
   components: { VHeader, VFooter, BounceSpinner },
-  created () {
+  beforeCreate () {
     this.$store.dispatch('fetchUser')
       .catch(err => { console.log(err) })
       .finally(() => { this.isFetchingUser = false })

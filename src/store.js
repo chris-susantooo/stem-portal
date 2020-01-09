@@ -6,17 +6,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: {
-      type: 'visitor'
-    },
+    user: JSON.parse(localStorage.getItem('user')) || { type: 'visitor' },
     token: localStorage.getItem('token') || ''
   },
   mutations: {
     setUser (state, user) {
       state.user = user
+      localStorage.setItem('user', JSON.stringify(user))
     },
     setToken (state, token) {
       state.token = token
+      token ? localStorage.setItem('token', token) : localStorage.removeItem('token')
     }
   },
   actions: {
@@ -26,7 +26,6 @@ export default new Vuex.Store({
           .then(({ data: { user, token } }) => {
             commit('setUser', user)
             commit('setToken', token)
-            localStorage.setItem('token', token)
             Axios.defaults.headers.common['Authorization'] = 'bearer ' + token
             resolve(user)
           })
@@ -35,7 +34,6 @@ export default new Vuex.Store({
     },
     logout ({ commit }) {
       return new Promise((resolve, reject) => {
-        localStorage.removeItem('token')
         commit('setUser', { type: 'visitor' })
         commit('setToken', '')
         delete Axios.defaults.headers.common['Authorization']
@@ -54,7 +52,6 @@ export default new Vuex.Store({
             .catch(err => {
               commit('setUser', { type: 'visitor' })
               commit('setToken', '')
-              localStorage.removeItem('token')
               delete Axios.defaults.headers.common['Authorization']
               reject(err)
             })

@@ -47,13 +47,11 @@ const router = new Router({
         {
           path: '/register/:username',
           name: 'register',
-          meta: { noAuth: true },
           component: () => import(/* webpackChunkName: "register" */ './views/visitors/Register.vue')
         },
         {
           path: '/reset-password/:username',
           name: 'reset-password',
-          meta: { noAuth: true },
           component: () => import(/* webpackChunkName: "register" */ './views/visitors/ResetPassword.vue')
         },
         {
@@ -94,7 +92,6 @@ const router = new Router({
         {
           path: '/teachers/courses/new',
           name: 'new-course',
-          // meta: { requiresAuth: true },
           component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/MakeNewCourse.vue')
         },
         {
@@ -110,6 +107,7 @@ const router = new Router({
         {
           path: '/teacher',
           name: 'teacher-intro',
+          meta: { role: 'teacher' },
           component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Teacher.vue')
         },
         {
@@ -120,7 +118,6 @@ const router = new Router({
         {
           path: '/parent',
           name: 'parent-intro',
-          meta: { noAuth: true },
           component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Parent.vue')
         },
         {
@@ -141,19 +138,16 @@ const router = new Router({
 export default router
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn && !store.getters.isTokenExpired) {
-      next()
-      return
-    } else if (store.getters.isTokenExpired) {
-      localStorage.removeItem('token')
-      store.commit('setToken', '')
-      delete Axios.defaults.headers.common['Authorization']
-    }
-    next({ name: 'login' })
-  } else {
-    next()
+  if (store.getters.isTokenExpired) {
+    store.commit('setToken', '')
+    delete Axios.defaults.headers.common['Authorization']
   }
+  console.log(to.matched)
+  const hasRequiredRole = to.matched.reduce((acc, record) => {
+    console.log(record.meta.role, store.getters.user.type)
+    return record.meta.role ? acc && record.meta.role === store.getters.user.type : acc
+  }, true)
+  hasRequiredRole ? next() : next({ name: 'login' })
 })
 
 router.afterEach((to, from) => {
