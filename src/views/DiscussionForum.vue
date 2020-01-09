@@ -419,21 +419,20 @@ export default {
       //   this.replycommentdialog = false
       //   return this.CurrentPost.Allcomments
       // } else {
-        console.log('no i')
-        const cid = (this.CurrentPost.Allcomments).length + 1
-        const newcomment = this.comment
-        console.log(newcomment)
-        let a =
-        {
-          cid: cid,
-          comment: newcomment,
-          replycomment: [],
-          date: datetime
-        }
-        this.CurrentPost.Allcomments.push(a)
-        this.dialog = false
-        return this.CurrentPost.Allcomments
-      
+      console.log('no i')
+      const cid = (this.CurrentPost.Allcomments).length + 1
+      const newcomment = this.comment
+      console.log(newcomment)
+      let a =
+      {
+        cid: cid,
+        comment: newcomment,
+        replycomment: [],
+        date: datetime
+      }
+      this.CurrentPost.Allcomments.push(a)
+      this.dialog = false
+      return this.CurrentPost.Allcomments
     },
     likepost () {
       if (this.liked === true) {
