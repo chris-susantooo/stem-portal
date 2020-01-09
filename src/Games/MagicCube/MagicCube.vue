@@ -10,9 +10,9 @@ import * as GUI from 'babylonjs-gui'
 
 BABYLON.GUI = GUI
 
-const spheres = []
-const transparentSpheres = {}
-const answers = {}
+let spheres = []
+let transparentSpheres = {}
+let answers = {}
 let mainScene
 let myScene
 
@@ -45,6 +45,9 @@ function createMainScene (engine) {
     button.background = 'green'
     button.onPointerClickObservable.add(() => {
       mainSceneAdvancedTexture.dispose()
+      spheres = []
+      answers = {}
+      transparentSpheres = {}
       myScene = createGameScene(engine, button.name)
     })
   })
@@ -86,6 +89,7 @@ function createGUI (engine, scene, level) {
   })
 
   const panel4 = new BABYLON.GUI.StackPanel()
+  panel4.isVertical = false
   gameSceneAdvancedTexture.addControl(panel4)
 
   return { panel, panel4 }
@@ -156,15 +160,17 @@ function createMaterials (scene) {
   const greenMaterial = new BABYLON.StandardMaterial('green', scene)
   const cyanMaterial = new BABYLON.StandardMaterial('cyan', scene)
   const transparentMaterial = new BABYLON.StandardMaterial('transparent', scene)
-  purpleMaterial.emissiveColor = new BABYLON.Color4(0.4, 0, 0.4, 1)
-  redMaterial.emissiveColor = new BABYLON.Color4(1, 0, 0, 1)
-  yellowMaterial.emissiveColor = new BABYLON.Color4(1, 1, 0, 1)
-  orangeMaterial.emissiveColor = new BABYLON.Color4(1, 0.5, 0, 1)
-  greenMaterial.emissiveColor = new BABYLON.Color4(0, 1, 0, 1)
-  cyanMaterial.emissiveColor = new BABYLON.Color4(0, 1, 1, 1)
+  const lightGreenMaterial = new BABYLON.StandardMaterial('lightgreen', scene)
+  purpleMaterial.diffuseColor = new BABYLON.Color4(0.4, 0, 0.4, 1)
+  redMaterial.diffuseColor = new BABYLON.Color4(1, 0, 0, 1)
+  yellowMaterial.diffuseColor = new BABYLON.Color4(1, 1, 0, 1)
+  orangeMaterial.diffuseColor = new BABYLON.Color4(1, 0.5, 0, 1)
+  greenMaterial.diffuseColor = new BABYLON.Color4(0, 1, 0, 1)
+  cyanMaterial.diffuseColor = new BABYLON.Color4(0, 1, 1, 1)
   transparentMaterial.diffuseColor = new BABYLON.Color3(0.768, 0.768, 0.768)
   transparentMaterial.alpha = 0.3
-  return { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial }
+  lightGreenMaterial.diffuseColor = new BABYLON.Color3(0.56, 0.93, 0.56)
+  return { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial, lightGreenMaterial }
 }
 
 function getPos (sphere) {
@@ -291,25 +297,36 @@ function checkAnswer (answer, panel4) {
 
 function createGameScene (engine, level) {
   const scene = initScene(engine)
-  const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene)
+  const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, new BABYLON.Vector3(0, -1, 0), scene)
   camera.attachControl(document.getElementById('render-canvas'), false)
-  camera.setTarget(BABYLON.Vector3.Zero())
-  const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(1, 1, 0), scene)
-  light.setEnabled = true
+  camera.setPosition(new BABYLON.Vector3(13, 17, -13))
+  const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene)
+  light.intensity = 0.5
+  const light2 = new BABYLON.HemisphericLight('light2', new BABYLON.Vector3(0, -1, 1), scene)
+  light2.intensity = 1
+  const light3 = new BABYLON.DirectionalLight('light3', new BABYLON.Vector3(0, 0, 1), scene)
+  light3.intensity = 0.5
 
   const { panel, panel4 } = createGUI(engine, scene, level)
 
-  const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial } = createMaterials(scene)
+  const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial, lightGreenMaterial } = createMaterials(scene)
 
   createBox(0, 3, 0, scene, transparentMaterial)
 
+  const indicator = BABYLON.MeshBuilder.CreateDisc('indicator', { sideOrientation: BABYLON.Mesh.DOUBLESIDE }, scene)
+  indicator.position.x = -1.5
+  indicator.position.y = 4.8
+  indicator.position.z = 1.5
+  indicator.rotation.y = -Math.PI / 4
+  indicator.material = lightGreenMaterial
+
   // Define spheres
-  spheres.push(createSphere(2, 3, 0, scene, 1, purpleMaterial, true))
-  spheres.push(createSphere(6, 3, 0, scene, 1, yellowMaterial, true))
-  spheres.push(createSphere(8, 3, 0, scene, 1, redMaterial, true))
-  spheres.push(createSphere(12, 3, 0, scene, 1, greenMaterial, true))
-  spheres.push(createSphere(15, 3, 0, scene, 1, cyanMaterial, true))
-  spheres.push(createSphere(18, 3, 0, scene, 1, orangeMaterial, true))
+  spheres.push(createSphere(-3, 3, -2.5, scene, 1, purpleMaterial, true))
+  spheres.push(createSphere(0.3, 2.4, -3, scene, 1, yellowMaterial, true))
+  spheres.push(createSphere(-2, 2, -4.4, scene, 1, redMaterial, true))
+  spheres.push(createSphere(5.4, 2.8, 2.4, scene, 1, greenMaterial, true))
+  spheres.push(createSphere(4.8, 2.8, 0.2, scene, 1, cyanMaterial, true))
+  spheres.push(createSphere(4.6, 3.4, -2.5, scene, 1, orangeMaterial, true))
 
   spheres.push(createSphere(1, 0, 0, scene, 2, purpleMaterial, true, spheres[0]))
   spheres.push(createSphere(0, 1, 0, scene, 3, purpleMaterial, true, spheres[0]))
@@ -356,12 +373,12 @@ function createGameScene (engine, level) {
 
   spheres.filter(sphere => sphere.id.split('-')[1] === '1').forEach(parent => {
     const pointerDragBehavior = new BABYLON.PointerDragBehavior()
-    pointerDragBehavior.useObjectOrientationForDragging = false
+    pointerDragBehavior.useObjectOrientationForDragging = true
     pointerDragBehavior.updateDragPlane = false
     parent.addBehavior(pointerDragBehavior)
     // Listen to events
     pointerDragBehavior.onDragObservable.add(e => {
-      if (e.dragPlanePoint.x >= 20 || e.dragPlanePoint.x <= -10 || e.dragPlanePoint.y >= 10 || e.dragPlanePoint.y <= -10 || e.dragPlanePoint.z >= 5 || e.dragPlanePoint.z <= -5) {
+      if (e.dragPlanePoint.x >= 20 || e.dragPlanePoint.x <= -10 || e.dragPlanePoint.y >= 20 || e.dragPlanePoint.y <= -20 || e.dragPlanePoint.z >= 20 || e.dragPlanePoint.z <= -20) {
         pointerDragBehavior.releaseDrag()
       }
     })
@@ -394,34 +411,34 @@ function createGameScene (engine, level) {
           if (putAttempt) {
             switch (selectedColor) {
               case 'purple':
-                parentSphere.position.x = 2
+                parentSphere.position.x = -3
                 parentSphere.position.y = 3
-                parentSphere.position.z = 0
+                parentSphere.position.z = -2.5
                 break
               case 'yellow':
-                parentSphere.position.x = 6
-                parentSphere.position.y = 3
-                parentSphere.position.z = 0
+                parentSphere.position.x = 0.3
+                parentSphere.position.y = 2.4
+                parentSphere.position.z = -3
                 break
               case 'red':
-                parentSphere.position.x = 8
-                parentSphere.position.y = 3
-                parentSphere.position.z = 0
+                parentSphere.position.x = -2
+                parentSphere.position.y = 2
+                parentSphere.position.z = -4.4
                 break
               case 'green':
-                parentSphere.position.x = 12
-                parentSphere.position.y = 3
-                parentSphere.position.z = 0
+                parentSphere.position.x = 5.4
+                parentSphere.position.y = 2.8
+                parentSphere.position.z = 2.4
                 break
               case 'cyan':
-                parentSphere.position.x = 15
-                parentSphere.position.y = 3
-                parentSphere.position.z = 0
+                parentSphere.position.x = 4.8
+                parentSphere.position.y = 2.8
+                parentSphere.position.z = 0.2
                 break
               case 'orange':
-                parentSphere.position.x = 18
-                parentSphere.position.y = 3
-                parentSphere.position.z = 0
+                parentSphere.position.x = 4.6
+                parentSphere.position.y = 3.4
+                parentSphere.position.z = -2.5
             }
           }
         }
