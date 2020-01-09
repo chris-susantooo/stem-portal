@@ -115,6 +115,11 @@ const router = new Router({
           path: '/student/course',
           name: 'student-course',
           component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
+        },
+        {
+          path: '/student/games',
+          name: 'student-games',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/students/Games.vue')
         }
       ]
     }
