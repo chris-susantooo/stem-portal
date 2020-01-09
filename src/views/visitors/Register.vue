@@ -9,19 +9,22 @@
 </template>
 
 <script>
-import { activateUser } from '@/utils/http'
+import http from '@/utils/http'
 
 export default {
   beforeCreate () {
+    if (this.$store.getters.isLoggedIn) {
+      this.$router.push({ name: 'home' })
+    }
     this.$emit('childBusy')
   },
   created () {
     const { username } = this.$route.params
     const { token, cancel } = this.$route.query
-    activateUser(username, token, cancel)
+    http.activateUser(username, token, cancel)
       .then(({ data: { status, user } }) => {
         console.log(status, user)
-        if (status === 'cancelled') this.header = 'Thank you for helping us out'
+        if (status === 'cancelled') this.header = 'Token invalidated! Thank you for helping us out'
         if (status === 'user verified') {
           this.header = 'Continue your registration here to use your account'
           this.user = user

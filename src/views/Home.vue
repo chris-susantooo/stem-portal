@@ -5,9 +5,9 @@
 <script>
 export default {
   components: {
-    VisitorHome: () => import('./visitor/Home.vue'),
-    StudentHome: () => import('./student/Home.vue'),
-    TeacherHome: () => import('./teacher/Home.vue')
+    VisitorHome: () => import('./visitors/Home.vue'),
+    StudentHome: () => import('./students/Home.vue'),
+    TeacherHome: () => import('./teachers/Home.vue')
   },
   computed: {
     user () {

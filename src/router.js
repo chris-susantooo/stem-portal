@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
 
 import Home from './views/Home.vue'
 import MasterLayout from './views/layouts/Master.vue'
@@ -45,6 +46,7 @@ const router = new Router({
         {
           path: '/register/:username',
           name: 'register',
+          meta: { noAuth: true },
           component: () => import(/* webpackChunkName: "register" */ './views/visitors/Register.vue')
         },
         {
@@ -55,7 +57,7 @@ const router = new Router({
         {
           path: '/happy-corner',
           name: 'corner',
-          component: () => import(/* webpackChunkName: "corner" */ './views/teacher/Teacher_corner.vue')
+          component: () => import(/* webpackChunkName: "corner" */ './views/teachers/Teacher_corner.vue')
         },
         {
           path: '/happy-corner/upload',
@@ -80,6 +82,7 @@ const router = new Router({
         {
           path: '/teachers/courses/new',
           name: 'new-course',
+          // meta: { requiresAuth: true },
           component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/MakeNewCourse.vue')
         },
         {
@@ -95,22 +98,23 @@ const router = new Router({
         {
           path: '/teacher',
           name: 'teacher-intro',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Teacher.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Teacher.vue')
         },
         {
           path: '/student',
           name: 'student-intro',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Student.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Student.vue')
         },
         {
           path: '/parent',
           name: 'parent-intro',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/visitor/Parent.vue')
+          meta: { noAuth: true },
+          component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Parent.vue')
         },
         {
           path: '/student/course',
           name: 'student-course',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/student/Course.vue')
+          component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
         }
       ]
     }
@@ -120,9 +124,20 @@ const router = new Router({
 export default router
 
 router.beforeEach((to, from, next) => {
-  // navigation guard here
-  next()
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn && !store.getters.isTokenExpired) {
+      next()
+      return
+    } else if (store.getters.isTokenExpired) {
+      localStorage.setItem('token', '')
+      store.commit('initToken')
+    }
+    next({ name: 'login' })
+  } else {
+    next()
+  }
 })
+
 router.afterEach((to, from) => {
   document.title = to.meta.title || DEFAULT_TITLE
 })
