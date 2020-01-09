@@ -134,8 +134,8 @@ router.beforeEach((to, from, next) => {
       next()
       return
     } else if (store.getters.isTokenExpired) {
-      localStorage.setItem('token', '')
-      store.commit('initToken')
+      localStorage.removeItem('token')
+      store.commit('setToken', '')
     }
     next({ name: 'login' })
   } else {

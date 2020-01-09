@@ -23,13 +23,8 @@ export default {
   components: { VHeader, VFooter, BounceSpinner },
   created () {
     this.$store.dispatch('fetchUser')
-      .then(() => {
-
-      })
       .catch(err => { console.log(err) })
       .finally(() => { this.isFetchingUser = false })
-
-    this.$store.commit('initToken')
   },
   mounted () {
     window.onload = () => (this.isLoadingPage = false)
