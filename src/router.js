@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store'
+import Axios from 'axios'
 
 import Home from './views/Home.vue'
 import MasterLayout from './views/layouts/Master.vue'
@@ -147,6 +148,7 @@ router.beforeEach((to, from, next) => {
     } else if (store.getters.isTokenExpired) {
       localStorage.removeItem('token')
       store.commit('setToken', '')
+      delete Axios.defaults.headers.common['Authorization']
     }
     next({ name: 'login' })
   } else {

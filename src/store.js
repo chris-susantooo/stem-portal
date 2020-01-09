@@ -35,8 +35,9 @@ export default new Vuex.Store({
     },
     logout ({ commit }) {
       return new Promise((resolve, reject) => {
-        commit('setUser', { type: 'visitor' })
         localStorage.removeItem('token')
+        commit('setUser', { type: 'visitor' })
+        commit('setToken', '')
         delete Axios.defaults.headers.common['Authorization']
         resolve()
       })
@@ -52,6 +53,7 @@ export default new Vuex.Store({
             })
             .catch(err => {
               commit('setUser', { type: 'visitor' })
+              commit('setToken', '')
               localStorage.removeItem('token')
               delete Axios.defaults.headers.common['Authorization']
               reject(err)

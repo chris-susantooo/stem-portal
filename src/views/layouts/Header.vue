@@ -5,10 +5,10 @@
       <div class="row align-center">
         <router-link to="/"><v-toolbar-title class="logo" v-text="'STEM Portal'" /></router-link>
         <v-spacer />
-        <nav-labels :user="user" />
+        <nav-labels />
         <v-spacer />
         <div>
-          <user-menu v-if="isLoggedIn" :user="user" @logout="logout" />
+          <user-menu v-if="isLoggedIn" @logout="logout" />
           <router-link v-else to="/login">Login / Register</router-link>
         </div>
       </div>
@@ -21,7 +21,7 @@
         <router-link to="/login">Login / Register</router-link>
         <v-app-bar-nav-icon color="black" />
       </template>
-      <user-menu v-else :user="user" @logout="logout" />
+      <user-menu v-else @logout="logout" />
     </div>
   </v-app-bar>
 </template>
@@ -33,16 +33,14 @@ import NavLabels from '@/components/header/NavLabels.vue'
 export default {
   components: { UserMenu, NavLabels },
   computed: {
-    user () { return this.$store.getters.user },
     isLoggedIn () { return this.$store.getters.isLoggedIn }
   },
   methods: {
     logout () {
       this.$store.dispatch('logout').then(() => {
+        console.log(this.$store.getters.isLoggedIn)
         if (this.$route.name !== 'home') {
           this.$router.push({ name: 'home' })
-        } else {
-          this.$router.go()
         }
       })
     }
