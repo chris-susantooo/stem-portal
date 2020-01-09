@@ -21,7 +21,7 @@ export default new Vuex.Store({
   actions: {
     login ({ commit }, user) {
       return new Promise((resolve, reject) => {
-        Axios({ url: '/login', data: user, method: 'POST' })
+        Axios({ url: '/auth/login', data: user, method: 'POST' })
           .then(({ data: { user, token } }) => {
             user.token = token
             localStorage.setItem('token', user.token)
@@ -75,7 +75,7 @@ export default new Vuex.Store({
       }
       return isExpired
     },
-    isLoggedIn: (state, getters) => !!state.user.token && !getters.isTokenExpired,
+    isLoggedIn: (state, getters) => { console.log(!!state.user.token && !getters.isTokenExpired); return !!state.user.token && !getters.isTokenExpired },
     user: state => state.user
   }
 })
