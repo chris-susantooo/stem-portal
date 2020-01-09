@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: {
-      token: ''
+      token: localStorage.getItem('token') || ''
     }
   },
   mutations: {
@@ -75,7 +75,7 @@ export default new Vuex.Store({
       }
       return isExpired
     },
-    isLoggedIn: (state, getters) => { console.log(!!state.user.token && !getters.isTokenExpired); return !!state.user.token && !getters.isTokenExpired },
+    isLoggedIn: (state, getters) => { console.log(!!state.user.token, !getters.isTokenExpired); return !!state.user.token && !getters.isTokenExpired },
     user: state => state.user
   }
 })

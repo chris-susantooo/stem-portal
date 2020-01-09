@@ -50,6 +50,12 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "register" */ './views/visitors/Register.vue')
         },
         {
+          path: '/reset-password/:username',
+          name: 'reset-password',
+          meta: { noAuth: true },
+          component: () => import(/* webpackChunkName: "register" */ './views/visitors/ResetPassword.vue')
+        },
+        {
           path: '/DiscussionForum',
           name: 'DiscussionForum',
           component: () => import(/* webpackChunkName: "DiscussionForum" */ './views/DiscussionForum.vue')
