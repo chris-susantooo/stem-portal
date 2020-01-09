@@ -101,6 +101,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- reset password success dialog -->
+    <v-dialog v-model="resetSuccess" max-width="400">
+      <v-card class="pt-3">
+        <v-card-title class="headline mb-3">An email has been sent to you.</v-card-title>
+        <v-card-text>
+          Please check your email inbox for a verification email.<br>
+          Follow the available instructions to reset your password.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text color="primary" @click="resetSuccess = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -133,6 +147,7 @@ export default {
         username: '',
         email: ''
       },
+      resetSuccess: false,
       rules: {
         name: [
           v => !!v || 'This field is required',
@@ -162,7 +177,7 @@ export default {
   },
   watch: {
     username (val) {
-      if (!this.checkingUsername) {
+      if (!this.checkingUsername && this.tabs) {
         setTimeout(() => {
           const isValid = this.rules.name.every(r => typeof r(val) !== 'string')
           if (val === this.username && isValid) {
@@ -209,8 +224,16 @@ export default {
       if (this.reset.form) {
         this.reset.errorResponse = false
         http.resetPassword(this.reset.username, this.reset.email)
-          .then(() => { this.reset.dialog = false })
-          .catch(() => { this.reset.errorResponse = true })
+          .then(({ status, data }) => {
+            if (status === 200) {
+              this.reset.dialog = false
+              this.resetSuccess = true
+            }
+          })
+          .catch((err) => {
+            this.reset.errorResponse = true
+            console.log(err)
+          })
       }
     }
   }

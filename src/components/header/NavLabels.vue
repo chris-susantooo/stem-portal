@@ -10,7 +10,7 @@
     <div v-else-if="isLoggedIn && user.type === 'student'">
         <a href="https://i.cs.hku.hk/fyp/2019/fyp19030/">About</a>
         <router-link to="/">Home</router-link>
-        <router-link to="/login">Games</router-link>
+        <router-link to="/student/games">Games</router-link>
         <router-link to="/student/course">Courses</router-link>
         <router-link to="/discussionforum">Discussion</router-link>
     </div>
