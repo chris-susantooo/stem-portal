@@ -142,9 +142,7 @@ router.beforeEach((to, from, next) => {
     store.commit('setToken', '')
     delete Axios.defaults.headers.common['Authorization']
   }
-  console.log(to.matched)
   const hasRequiredRole = to.matched.reduce((acc, record) => {
-    console.log(record.meta.role, store.getters.user.type)
     return record.meta.role ? acc && record.meta.role === store.getters.user.type : acc
   }, true)
   hasRequiredRole ? next() : next({ name: 'login' })
