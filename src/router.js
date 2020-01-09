@@ -56,9 +56,14 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "register" */ './views/visitors/ResetPassword.vue')
         },
         {
-          path: '/DiscussionForum',
+          path: '/discussion-forum',
           name: 'DiscussionForum',
-          component: () => import(/* webpackChunkName: "DiscussionForum" */ './views/DiscussionForum.vue')
+          component: () => import(/* webpackChunkName: "discussionforum" */ './views/DiscussionForum.vue')
+        },
+        {
+          path: '/create-post',
+          name: 'createpost',
+          component: () => import(/* webpackChunkName: "creatpost" */ './views/Makecomment.vue')
         },
         {
           path: '/happy-corner',
