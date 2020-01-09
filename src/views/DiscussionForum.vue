@@ -106,7 +106,7 @@
                     <v-divider></v-divider>
                     <v-list dense nav>
                       <v-list-item
-                        v-for="(item, i) in popularposts_items"
+                        v-for="(item, i) in posts"
                         :key="i"
                         link
                         v-on:click="CurrentPosts(i)"
@@ -216,7 +216,6 @@
                               </v-row>
                               <p>
                                 by {{CurrentPost.name}}
-                                <span class="subtitle-1 pl-6">Rating: {{CurrentPost.rating}}</span>
                               </p>
                             </v-list-item-content>
                           </v-list-item>
@@ -322,7 +321,7 @@
 import TextEditor from '@/components/text-editor/TextEditor.vue'
 export default {
   mounted () {
-    this.CurrentPost = this.popularposts_items[0]
+    this.CurrentPost = this.posts[0]
   },
   computed: {
     allcurrentComments () {
@@ -355,13 +354,9 @@ export default {
       {
         text: 'NEW',
         icon: 'mdi-star'
-      },
-      {
-        text: 'RATING',
-        icon: 'mdi-arrow-up-bold'
       }
     ],
-    popularposts_items: [
+    posts: [
       {
         src: 'http://instantview.info/wp-content/uploads/2019/07/multiplication-word-problems-worksheets-grade-5-simple-multiplying-decimals-pdf-and-division-gr.jpg',
         Field: 'Maths',
@@ -369,10 +364,8 @@ export default {
         name: 'Edith Woo',
         date: 'Nov 8, 2019',
         time: '22:57',
-        text: 'M',
         color: 'red',
         para: 'Engineers develop a new way to remove carbon dioxide from air. The process could work on ...',
-        rating: '4.7',
         question: 'Anyone know how to do Question 2? Thanks a lot!!! I have no idea how to do this question. Its too difficult :( Wuwuwuwuwu',
         postnumber: '0',
         likes: 0,
@@ -391,7 +384,7 @@ export default {
       }
     },
     CurrentPosts (i) {
-      this.CurrentPost = this.popularposts_items[i]
+      this.CurrentPost = this.posts[i]
     },
     LoadMoreComments () {
       if ((this.CurrentPost.Allcomments).length === this.currentCommentRange[1]) {
