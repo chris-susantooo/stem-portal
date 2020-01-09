@@ -5,11 +5,11 @@
       <div class="row align-center">
         <router-link to="/"><v-toolbar-title class="logo" v-text="'STEM Portal'" /></router-link>
         <v-spacer />
-        <nav-labels  :isLoggedIn="isLoggedIn" :user="user" />
+        <nav-labels :user="user" />
         <v-spacer />
         <div>
-          <router-link v-if="!isLoggedIn" to="/login">Login / Register</router-link>
-          <user-menu v-else :user="user" @logout="logout" />
+          <user-menu v-if="isLoggedIn" :user="user" @logout="logout" />
+          <router-link v-else to="/login">Login / Register</router-link>
         </div>
       </div>
     </div>
@@ -39,7 +39,11 @@ export default {
   methods: {
     logout () {
       this.$store.dispatch('logout').then(() => {
-        this.$router.push({ name: 'home' })
+        if (this.$route.name !== 'home') {
+          this.$router.push({ name: 'home' })
+        } else {
+          this.$router.go()
+        }
       })
     }
   }

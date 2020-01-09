@@ -32,13 +32,14 @@
 <script>
 export default {
   props: {
-    isLoggedIn: {
-      type: Boolean,
-      required: true
-    },
     user: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    isLoggedIn () {
+      return this.$store.getters.isLoggedIn
     }
   }
 }
