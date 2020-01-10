@@ -254,7 +254,7 @@
                                   POST #{{item.cid}}
                                   <v-dialog v-model="replycommentdialog" width="850px">
                                     <template v-slot:activator="{on}">
-                                      <v-btn icon fab color="grey" v-on="on">
+                                      <v-btn icon fab color="grey" v-on="on" v-on:click="showwhichcomment(i)">
                                         <v-icon>mdi-reply</v-icon>
                                       </v-btn>
                                     </template>
@@ -269,7 +269,7 @@
                                       </div>
                                       <v-container>
                                         <template>
-                                          <text-editor v-model="allcurrentComments" />
+                                          <text-editor v-model="replycomment" />
                                         </template>
                                       </v-container>
                                       <v-container class="justify-center d-flex">
@@ -277,7 +277,7 @@
                                           <v-btn
                                             color="primary"
                                             dark
-                                            @click="addnewcomments()"
+                                            @click="addnewcomments(item.cid)"
                                           >Reply</v-btn>
                                           <v-btn
                                             color="primary"
@@ -334,6 +334,12 @@ export default {
         return []
       }
     }
+    // },
+    // allreplyComments () {
+    //   if (this.CurrentPost && this.CurrentPost.Allcomments) {
+    //     allcurrentComments[i].replycomment===item.cid-1
+    //   }
+    // }
   },
   components: { TextEditor },
   data: () => ({
@@ -344,6 +350,8 @@ export default {
     replycommentdialog: false,
     replycomment: '',
     comment: '',
+    whichcomment: '',
+    updatreplycomment: [],
     currentCommentRange: [1, 5],
     icon: 'mdi-arrow-down-bold',
     items: [
@@ -394,38 +402,39 @@ export default {
     onScroll (e) {
       this.offsetTop = e.target.scrollTop
     },
-    addnewcomments () {
+    addnewcomments (itemcid = null) {
       var newDate = new Date()
       var datetime = newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear() + '  ' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds()
-      // if (i) {
-      //   console.log('yes i')
-      //   const cid = (this.CurrentPost.Allcomments).length + 1
-      //   const newreplycomment = this.replycomment
-      //   let a =
-      //   {
-      //     cid: cid,
-      //     comment: newreplycomment,
-      //     replycomment: [],
-      //     date: datetime
-      //   }
-      //   this.CurrentPost.Allcomments.push(a)
-      //   this.replycommentdialog = false
-      //   return this.CurrentPost.Allcomments
-      // } else {
-      console.log('no i')
-      const cid = (this.CurrentPost.Allcomments).length + 1
-      const newcomment = this.comment
-      console.log(newcomment)
-      let a =
-      {
-        cid: cid,
-        comment: newcomment,
-        replycomment: [],
-        date: datetime
+      if (itemcid) {
+        console.log('yes i')
+        console.log(itemcid)
+        const cid = (this.CurrentPost.Allcomments).length + 1
+        const newreplycomment = this.replycomment
+        let a =
+        {
+          cid: cid,
+          comment: newreplycomment,
+          replycomment: this.whichcomment,
+          date: datetime
+        }
+        console.log(a)
+        this.CurrentPost.Allcomments.push(a)
+        this.replycommentdialog = false
+      } else {
+        console.log('no i')
+        const cid = (this.CurrentPost.Allcomments).length + 1
+        const newcomment = this.comment
+        console.log(newcomment)
+        let a =
+        {
+          cid: cid,
+          comment: newcomment,
+          replycomment: [],
+          date: datetime
+        }
+        this.CurrentPost.Allcomments.push(a)
+        this.dialog = false
       }
-      this.CurrentPost.Allcomments.push(a)
-      this.dialog = false
-      return this.CurrentPost.Allcomments
     },
     likepost () {
       if (this.liked === true) {
@@ -444,6 +453,9 @@ export default {
         this.CurrentPost.dislikes = this.CurrentPost.dislikes + 1
         this.disliked = true
       }
+    },
+    showwhichcomment (i) {
+      this.whichcomment = i
     },
     followed () {
       if (this.notyetfollowed === true) {
