@@ -18,7 +18,7 @@
         </v-card>
       </div>
       <!-- reset password success dialog -->
-      <v-dialog v-model="resetSuccess" max-width="400">
+      <v-dialog v-model="resetSuccess" max-width="500">
         <v-card class="pt-3">
           <v-card-title class="headline mb-3">{{ resetPasswordDialogTitle }}</v-card-title>
           <v-card-text>
@@ -53,6 +53,7 @@ export default {
         if (status === 'user existed') {
           this.header = 'Continue to reset your password'
           this.username = username
+          this.resetForm = true
         }
       })
       .catch(err => { console.log(err) })
@@ -64,7 +65,7 @@ export default {
       header: 'Failed to verify user token',
       password: '',
       confirmPassword: '',
-      resetForm: true,
+      resetForm: false,
       resetSuccess: false,
       rules: {
         password: [

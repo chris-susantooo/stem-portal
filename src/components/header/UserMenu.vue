@@ -68,11 +68,8 @@
 
 <script>
 export default {
-  props: {
-    user: {
-      type: Object,
-      required: true
-    }
+  computed: {
+    user () { return this.$store.getters.user }
   },
   data: () => ({
     message: true,

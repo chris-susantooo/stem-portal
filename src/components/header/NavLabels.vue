@@ -31,16 +31,9 @@
 
 <script>
 export default {
-  props: {
-    user: {
-      type: Object,
-      required: true
-    }
-  },
   computed: {
-    isLoggedIn () {
-      return this.$store.getters.isLoggedIn
-    }
+    isLoggedIn () { return this.$store.getters.isLoggedIn },
+    user () { return this.$store.getters.user }
   }
 }
 </script>

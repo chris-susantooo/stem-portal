@@ -47,7 +47,14 @@
                   />
                   <v-text-field v-model="password" :counter="20" :rules="rules.password" label="Password" outlined type="password" dense/>
                   <v-text-field v-model="confirmPassword" :counter="20" :rules="rules.confirm" label="Re-enter password" outlined type="password" dense/>
-                  <v-text-field v-model="email" :rules="rules.email" label="Email address" outlined @keydown.enter="register" dense/>
+                  <v-text-field outlined dense
+                    v-model="email"
+                    :rules="rules.email"
+                    :error-messages="emailProps.errMsgs"
+                    :hint="emailProps.hint"
+                    label="Email address"
+                    @keydown.enter="register"
+                  />
                 </v-container>
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
@@ -134,9 +141,11 @@ export default {
       canResendLink: false,
       resultDialog: false,
       registerSuccess: false,
-      checkingUsername: false,
       usernameProps: {
-        checking: false,
+        hint: undefined,
+        errMsgs: ''
+      },
+      emailProps: {
         hint: undefined,
         errMsgs: ''
       },
@@ -177,7 +186,7 @@ export default {
   },
   watch: {
     username (val) {
-      if (!this.checkingUsername && this.tabs) {
+      if (this.tabs) {
         setTimeout(() => {
           const isValid = this.rules.name.every(r => typeof r(val) !== 'string')
           if (val === this.username && isValid) {
@@ -190,7 +199,24 @@ export default {
                 this.usernameProps.hint = 'Username available'
                 this.usernameProps.errMsgs = ''
               })
-              .finally(() => { this.checkingUsername = false })
+          }
+        }, 1000)
+      }
+    },
+    email (val) {
+      if (this.tabs) {
+        setTimeout(() => {
+          const isValid = this.rules.email.every(r => typeof r(val) !== 'string')
+          if (val === this.email && isValid) {
+            http.checkEmail(val)
+              .then(() => {
+                this.emailProps.hint = undefined
+                this.emailProps.errMsgs = 'Email already registered'
+              })
+              .catch(() => {
+                this.emailProps.hint = 'Email available'
+                this.emailProps.errMsgs = ''
+              })
           }
         }, 1000)
       }
