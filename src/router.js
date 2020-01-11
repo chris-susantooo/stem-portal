@@ -107,7 +107,6 @@ const router = new Router({
         {
           path: '/teacher',
           name: 'teacher-intro',
-          meta: { role: 'teacher' },
           component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Teacher.vue')
         },
         {
@@ -142,9 +141,7 @@ router.beforeEach((to, from, next) => {
     store.commit('setToken', '')
     delete Axios.defaults.headers.common['Authorization']
   }
-  const hasRequiredRole = to.matched.reduce((acc, record) => {
-    return record.meta.role ? acc && record.meta.role === store.getters.user.type : acc
-  }, true)
+  const hasRequiredRole = to.matched.reduce((acc, { meta: { role } }) => (role ? acc && role === store.getters.user.type : acc), true)
   hasRequiredRole ? next() : next({ name: 'login' })
 })
 

@@ -13,17 +13,20 @@
 
         <v-stepper-content step="1">
           <v-form v-model="isCourseInfoValid" class="mt-2">
-            <v-text-field outlined :counter="60" :rules="courseNameRules" label="Course title" v-model="course.title" required />
-            <v-textarea outlined :rules="shortDescRules" label="Short description" v-model="course.description" required />
-            <v-combobox
+            <v-text-field outlined required
+              :error-messages="courseProps.errMsgs"
+              :count="60"
+              :rules="courseProps.courseName"
+              label="Course title"
+              v-model="course.title"
+              :hint="courseProps.hint"
+            />
+            <v-textarea outlined :rules="courseProps.shortDesc" label="Short description" v-model="course.description" required />
+            <v-combobox multiple outlined chips clearable
               v-model="course.tags"
               :items="allTags"
-              chips
-              clearable
               label="Your course tags"
-              multiple
-              outlined
-              :rules="tagRules"
+              :rules="courseProps.tag"
             >
               <template v-slot:selection="{ attrs, item, select, selected }">
                 <v-chip
@@ -79,19 +82,20 @@
 
 <script>
 import CourseContentCreator from '@/components/teachers/courses/Creator.vue'
+import http from '@/utils/http'
 
 export default {
   components: { CourseContentCreator },
   created () {
+    this.course.author = this.$store.getters.user.username
     this.$http.get('courses/tags')
       .then(({ data: extraTags }) => {
         this.extraTags = extraTags
       })
   },
   computed: {
-    allTags () {
-      return [ ...this.baseTags, ...this.extraTags ]
-    }
+    allTags () { return [ ...this.baseTags, ...this.extraTags ] },
+    courseTitle () { return this.course.title }
   },
   data: () => ({
     isCourseInfoValid: true,
@@ -101,25 +105,35 @@ export default {
     currentStep: 1,
     save: true,
     course: {
+      id: '',
+      author: '',
       title: '',
       tags: [],
       description: '',
       chapters: []
     },
-    tagRules: [ v => !!v.length || 'At least a tag is required' ],
-    courseNameRules: [
-      v => !!v || 'Name is required',
-      v => (v && v.length <= 60) || 'Name must be less than 60 characters'
-    ],
-    shortDescRules: [ v => !!v || 'Description is required' ]
+    courseProps: {
+      errMsgs: '',
+      hint: '',
+      tag: [ v => !!v.length || 'At least a tag is required' ],
+      courseName: [
+        v => !!v || 'Name is required',
+        v => (v.length >= 10 && v.length <= 60) || 'Must be 10 to 60 characters long'
+      ],
+      shortDesc: [ v => !!v || 'Description is required' ]
+    }
   }),
   methods: {
-    saveCourse (chapters) {
-      this.course.chapters = chapters
+    saveCourse (chapters = []) {
+      if (chapters) this.course.chapters = chapters
+      const response = this.course.id ? http.updateCourse(this.course) : http.createCourse(this.course)
+      response.then(({ data: course }) => { this.course = course })
+        .catch(err => { console.log(err) })
     },
     next (to) {
       if (to === 3 && this.isCourseValid) this.save = !this.save
       if (this.isCourseInfoValid && this.isCourseValid) this.currentStep = to
+      this.saveCourse()
     },
     setCourseValid (isCourseValid) {
       this.isCourseValid = isCourseValid
@@ -127,6 +141,24 @@ export default {
     removeTag (item) {
       this.course.tags.splice(this.course.tags.indexOf(item), 1)
       this.course.tags = [ ...this.course.tags ]
+    }
+  },
+  watch: {
+    courseTitle (val) {
+      setTimeout(() => {
+        const isValid = this.courseProps.courseName.every(r => typeof r(val) !== 'string')
+        if (val === this.course.title && isValid) {
+          http.checkCourse(val)
+            .then(() => {
+              this.courseProps.hint = undefined
+              this.courseProps.errMsgs = 'Name already used'
+            })
+            .catch(() => {
+              this.courseProps.hint = 'Name available'
+              this.courseProps.errMsgs = ''
+            })
+        }
+      }, 1000)
     }
   }
 }
