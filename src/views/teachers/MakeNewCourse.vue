@@ -24,7 +24,7 @@
             <v-textarea outlined :rules="courseProps.shortDesc" label="Short description" v-model="course.description" required />
             <v-combobox multiple outlined chips clearable
               v-model="course.tags"
-              :items="allTags"
+              :items="tags"
               label="Your course tags"
               :rules="courseProps.tag"
             >
@@ -89,19 +89,17 @@ export default {
   created () {
     this.course.author = this.$store.getters.user.username
     this.$http.get('courses/tags')
-      .then(({ data: extraTags }) => {
-        this.extraTags = extraTags
+      .then(({ data: tags }) => {
+        this.tags = tags
       })
   },
   computed: {
-    allTags () { return [ ...this.baseTags, ...this.extraTags ] },
     courseTitle () { return this.course.title }
   },
   data: () => ({
     isCourseInfoValid: true,
     isCourseValid: true,
-    baseTags: ['Science', 'Technology', 'Engineering', 'Mathematics'],
-    extraTags: [],
+    tags: [],
     currentStep: 1,
     save: true,
     course: {
@@ -126,8 +124,13 @@ export default {
   methods: {
     saveCourse (chapters = []) {
       if (chapters) this.course.chapters = chapters
-      const response = this.course.id ? http.updateCourse(this.course) : http.createCourse(this.course)
-      response.then(({ data: course }) => { this.course = course })
+      const course = { ...this.course }
+      course.chapters = JSON.stringify(course.chapters)
+      this.course.id ? http.updateCourse(course) : http.createCourse(course)
+        .then(({ data: course }) => {
+          course.chapters = JSON.parse(course.chapters)
+          this.course = course
+        })
         .catch(err => { console.log(err) })
     },
     next (to) {
