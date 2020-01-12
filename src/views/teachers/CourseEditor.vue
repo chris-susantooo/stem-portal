@@ -46,7 +46,7 @@
           </v-form>
           <div class="pt-2 pb-2">
             <v-btn color="primary" @click="next(2)">Continue</v-btn>
-            <v-btn class="ml-2" text>Save and exit</v-btn>
+            <v-btn class="ml-2" text @click="saveExit">Save and exit</v-btn>
           </div>
         </v-stepper-content>
 
@@ -56,10 +56,10 @@
         </v-stepper-step>
 
         <v-stepper-content step="2">
-          <course-content-creator :save="save" @saveCourse="saveCourse" @courseValidationChanged="setCourseValid" />
+          <course-content-creator :save="trigger" @saveCourse="saveCourse" @courseValidationChanged="setCourseValid" />
           <div class="mt-2 py-2">
             <v-btn color="primary" @click="next(3)">Continue</v-btn>
-            <v-btn class="ml-2" text>Save and exit</v-btn>
+            <v-btn class="ml-2" text @click="saveExit">Save and exit</v-btn>
           </div>
         </v-stepper-content>
 
@@ -72,7 +72,7 @@
           <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
           <div class="mb-2">
             <v-btn color="primary" @click="next(1)">Publish</v-btn>
-            <v-btn class="ml-2" text>Save and exit</v-btn>
+            <v-btn class="ml-2" text @click="saveExit">Save and exit</v-btn>
           </div>
         </v-stepper-content>
       </v-stepper>
@@ -87,11 +87,15 @@ import http from '@/utils/http'
 export default {
   components: { CourseContentCreator },
   created () {
-    this.course.author = this.$store.getters.user.username
-    this.$http.get('courses/tags')
-      .then(({ data: tags }) => {
-        this.tags = tags
+    const courseId = this.$route.params.courseId
+    if (courseId) {
+      http.readCourse(courseId).then(({ data: course }) => {
+        course.chapters = JSON.parse(course.chapters)
+        this.course = course
       })
+    }
+    this.course.author = this.$store.getters.user.username
+    this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
   },
   computed: {
     courseTitle () { return this.course.title }
@@ -101,7 +105,7 @@ export default {
     isCourseValid: true,
     tags: [],
     currentStep: 1,
-    save: true,
+    trigger: true,
     course: {
       id: '',
       author: '',
@@ -124,19 +128,27 @@ export default {
   methods: {
     saveCourse (chapters = []) {
       if (chapters) this.course.chapters = chapters
-      const course = { ...this.course }
-      course.chapters = JSON.stringify(course.chapters)
-      this.course.id ? http.updateCourse(course) : http.createCourse(course)
-        .then(({ data: course }) => {
-          course.chapters = JSON.parse(course.chapters)
-          this.course = course
-        })
-        .catch(err => { console.log(err) })
+      if (this.isCourseInfoValid && this.isCourseValid) {
+        const course = { ...this.course }
+        course.chapters = JSON.stringify(course.chapters)
+        this.course.id ? http.updateCourse(course) : http.createCourse(course)
+          .then(({ data: course }) => {
+            course.chapters = JSON.parse(course.chapters)
+            this.course = course
+            this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
+          })
+          .catch(err => { console.log(err) })
+      }
     },
     next (to) {
-      if (to === 3 && this.isCourseValid) this.save = !this.save
-      if (this.isCourseInfoValid && this.isCourseValid) this.currentStep = to
-      this.saveCourse()
+      if (this.isCourseInfoValid && this.isCourseValid) {
+        this.currentStep = to
+        this.trigger = !this.trigger
+      }
+    },
+    saveExit () {
+      this.trigger = !this.trigger
+      this.$router.push({ name: 'online-course' })
     },
     setCourseValid (isCourseValid) {
       this.isCourseValid = isCourseValid

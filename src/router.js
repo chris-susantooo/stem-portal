@@ -87,12 +87,20 @@ const router = new Router({
         {
           path: '/teachers/courses',
           name: 'online-course',
+          meta: { role: 'teacher' },
           component: () => import(/* webpackChunkName: "online-course" */ './views/teachers/OnlineCurriculum.vue')
         },
         {
           path: '/teachers/courses/new',
           name: 'new-course',
-          component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/MakeNewCourse.vue')
+          meta: { role: 'teacher' },
+          component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/CourseEditor.vue')
+        },
+        {
+          path: '/teachers/courses/:courseId',
+          name: 'edit-course',
+          meta: { role: 'teacher' },
+          component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/CourseEditor.vue')
         },
         {
           path: '/games/1',

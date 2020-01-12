@@ -1,15 +1,15 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="headers text-center">
       <h1>Online Courses</h1>
+      <p>Manage and host your online courses here for students.</p>
+      <br>
     </div>
-    <div class="row">
-      <p>Here you can view your own online courses, and make a new one for your students!</p>
-    </div>
-    <br>
-    <div class="row">
-      <div class="row ml-1">
-        <h4>Completed Online Courses</h4>
+    <h3 class="mb-n6">Your Online Courses</h3>
+    <course-card />
+    <!-- <div class="row">
+      <div class="row">
+        <h3>Your Online Courses</h3>
       </div>
       <div class="row">
         <div class="col">
@@ -60,19 +60,28 @@
             </v-card-actions>
           </v-card>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="flex-grow-1"></div>
-        <v-btn rounded color="light-blue" href="/teacher/makenewcourse">
+        <v-btn rounded color="light-blue" :to="{ name: 'new-course' }">
           Add new courses
         </v-btn>
       </div>
-    </div>
   </div>
 </template>
 
 <script>
-export default {
+import CourseCard from '@/components/teachers/courses/CourseCard.vue'
 
+export default {
+  components: { CourseCard },
+  created () {
+    this.$http.get(`courses?teacher=${this.$store.getters.user.username}`)
+      .then(data => { console.log(data) })
+  }
 }
 </script>
+
+<style lang="sass" scoped>
+
+</style>

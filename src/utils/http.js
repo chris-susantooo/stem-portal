@@ -14,7 +14,9 @@ const http = {
   changePassword: (username, password) => Axios.post('users/change-password', { username, password }),
   postRegistrationUser: (username, role, firstName, lastName, gender, school, interests) => Axios.post(`users/${username}`, { role, firstName, lastName, gender, school, interests }),
   createCourse: ({ title, description, tags, chapters, author }) => Axios.post('courses', { name: title, description, tags, chapters, author }),
-  updateCourse: course => Axios.put(`courses/${course.id}`, { course })
+  readCourse: courseId => Axios.get(`courses/${courseId}`),
+  updateCourse: course => Axios.put(`courses/${course.id}`, { course }),
+  deleteCourse: courseId => Axios.delete(`courses/${courseId}`)
 }
 
 export default http
