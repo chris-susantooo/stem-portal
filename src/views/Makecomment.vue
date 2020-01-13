@@ -73,7 +73,7 @@
             <v-spacer></v-spacer>
           </v-row>
           <div class="text-center mb-3" >
-            <v-btn color="primary" class="ml-2" @click="postCreatepost()">Save and exit</v-btn>
+            <v-btn color="primary" class="ml-2" @click="postCreatepost">Save and exit</v-btn>
           </div>
         </v-form>
       </v-card>
@@ -96,6 +96,7 @@ export default {
   data: () => ({
     isPostInfoValid: true,
     extraTags: [],
+    tags: [],
     post: {
       title: '',
       tags: [],
@@ -110,13 +111,17 @@ export default {
   methods: {
     postCreatepost () {
       if (this.isPostInfoValid && this.post.content.length > 0) {
-        this.$refs.form.reset()
-        http.postCreatepost(this.user.username, this.post.title, this.post.tags, this.post.content).then(({ status, data }) => {
-          if (status === 200) this.updateSuccess = true
-        }).catch(err => {
-          console.log(err)
-          this.errorDialog = true
-        })
+        // this.$refs.form.reset()
+        http.createPost(this.user.username, this.post.title, this.post.tags, this.post.content)
+          .then(({ status, data }) => {
+            if (status === 201) {
+              this.updateSuccess = true
+              console.log('yes')
+            }
+          }).catch(err => {
+            console.log(err)
+            this.errorDialog = true
+          })
       }
     },
     removeTag (item) {
