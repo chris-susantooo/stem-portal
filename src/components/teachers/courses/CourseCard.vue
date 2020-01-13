@@ -74,7 +74,8 @@ export default {
   }),
   methods: {
     toCourse () {
-      this.$router.push({ name: 'edit-course', params: { courseId: this.course.id } })
+      if (this.role === 'teacher') this.$router.push({ name: 'edit-course', params: { courseId: this.course.id } })
+      else if (this.role === 'student') this.$router.push({ name: 'take-course', params: { courseId: this.course.id } })
     },
     toPreview () {
       this.$router.push({ name: 'preview-course', params: { courseId: this.course.id } })

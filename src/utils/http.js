@@ -5,6 +5,7 @@ const http = {
   checkUsername: username => Axios.get(`check/username/${username}`),
   checkEmail: email => Axios.get(`check/email/${email}`),
   checkCourse: courseName => Axios.get(`/check/course/${courseName}`),
+  getPosts: () => Axios.get('forum/posts'),
 
   // POST request
   registerUser: (username, password, email, isResend) => Axios.post('users', { username, password, email, isResend }),
@@ -17,7 +18,7 @@ const http = {
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   updateCourse: course => Axios.put(`courses/${course.id}`, { course }),
   deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
-  createPost: (username, datetime, postTitle, postTags, postContent) => Axios.post('forum/posts', { username, datetime, postTitle, postTags, postContent })
+  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content })
 }
 
 export default http

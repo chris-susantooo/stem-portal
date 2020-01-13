@@ -129,14 +129,20 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Parent.vue')
         },
         {
-          path: '/student/course',
-          name: 'student-courses',
-          component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
+          path: '/students/courses',
+          name: 'student-course',
+          component: () => import(/* webpackChunkName: "online-course" */ './views/students/OnlineCurriculum.vue')
         },
         {
           path: '/students/games',
           name: 'student-games',
           component: () => import(/* webpackChunkName: "online-course" */ './views/students/Games.vue')
+        },
+        {
+          path: '/students/courses/:courseId',
+          name: 'take-course',
+          meta: { role: 'student' },
+          component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
         }
       ]
     }
