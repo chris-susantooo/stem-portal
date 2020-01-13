@@ -1,6 +1,6 @@
 <template>
 <div class="text-center">
-  <canvas id="render-canvas" ref="render-canvas" width="1024" height="768"></canvas>
+  <canvas id="render-canvas" ref="render-canvas" :width="windowWidth" :height="windowHeight"></canvas>
 </div>
 </template>
 
@@ -13,7 +13,6 @@ BABYLON.GUI = GUI
 let spheres = []
 let transparentSpheres = {}
 let answers = {}
-let mainScene
 let myScene
 
 function initScene (engine) {
@@ -62,7 +61,6 @@ function createChooseLevelScene (engine, scene) {
 function createMainScene (engine) {
   const scene = initScene(engine)
   const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 20, new BABYLON.Vector3(0, 0, 0), scene)
-  camera.attachControl(document.getElementById('render-canvas'), false)
   camera.setPosition(new BABYLON.Vector3(13, 17, -13))
   const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene)
   light.intensity = 0.5
@@ -585,15 +583,26 @@ function createGameScene (engine, level) {
 }
 
 export default {
+  data () {
+    return {
+      windowHeight: window.innerHeight,
+      windowWidth: window.innerWidth - 50
+    }
+  },
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
-    mainScene = createMainScene(engine)
-
-    myScene = mainScene
+    myScene = createMainScene(engine)
 
     engine.runRenderLoop(function () {
       myScene.render()
     })
+  },
+  beforeDestroy () {
+    myScene.dispose()
+  },
+  onResize () {
+    this.windowHeight = window.innerHeight
+    this.windowWidth = window.innerWidth
   }
 }
 </script>
