@@ -88,6 +88,7 @@ export default {
   components: { CourseContentCreator },
   created () {
     const courseId = this.$route.params.courseId
+    this.isNew = !!courseId
     if (courseId) {
       http.readCourse(courseId).then(({ data: course }) => {
         course.chapters = JSON.parse(course.chapters)
@@ -101,6 +102,7 @@ export default {
     courseTitle () { return this.course.title }
   },
   data: () => ({
+    isNew: true,
     isCourseInfoValid: true,
     isCourseValid: true,
     tags: [],
@@ -160,20 +162,22 @@ export default {
   },
   watch: {
     courseTitle (val) {
-      setTimeout(() => {
-        const isValid = this.courseProps.courseName.every(r => typeof r(val) !== 'string')
-        if (val === this.course.title && isValid) {
-          http.checkCourse(val)
-            .then(() => {
-              this.courseProps.hint = undefined
-              this.courseProps.errMsgs = 'Name already used'
-            })
-            .catch(() => {
-              this.courseProps.hint = 'Name available'
-              this.courseProps.errMsgs = ''
-            })
-        }
-      }, 1000)
+      if (this.isNew) {
+        setTimeout(() => {
+          const isValid = this.courseProps.courseName.every(r => typeof r(val) !== 'string')
+          if (val === this.course.title && isValid) {
+            http.checkCourse(val)
+              .then(() => {
+                this.courseProps.hint = undefined
+                this.courseProps.errMsgs = 'Name already used'
+              })
+              .catch(() => {
+                this.courseProps.hint = 'Name available'
+                this.courseProps.errMsgs = ''
+              })
+          }
+        }, 1000)
+      }
     }
   }
 }
