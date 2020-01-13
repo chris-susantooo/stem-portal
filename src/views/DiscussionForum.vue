@@ -54,6 +54,7 @@
           <v-col cols="12" md="12">
             <v-container width="100%" class="pa-0 ma-0">
               <v-row no-gutters>
+                <!-- Navigation Bar -->
                 <v-bottom-navigation grow color="primary" height="70px">
                   <v-col cols="12" md="1">
                     <v-btn>
@@ -92,6 +93,7 @@
                     </div>
                   </v-col>
                 </v-bottom-navigation>
+                <!-- Choose Post Bar -->
                 <v-col cols="12" md="3">
                   <v-card min-height="820px" height="100%" width="100%">
                     <v-list-item>
@@ -125,6 +127,7 @@
                     </v-list>
                   </v-card>
                 </v-col>
+                <!-- Post Details -->
                 <v-col cols="12" md="9">
                   <v-container
                     id="scroll-target"
@@ -161,10 +164,9 @@
                                   <v-icon>mdi-thumb-down-outline</v-icon>
                                 </v-btn>
                                 <v-spacer></v-spacer>
-                                <v-dialog v-model="dialog" width="850px">
-                                  <template v-slot:activator="{on}">
-                                    <v-btn color="primary" dark v-on="on">Make Comment</v-btn>
-                                  </template>
+                                <v-btn color="primary" dark @click="dialog=true">Make Comment</v-btn>
+                                <!-- Reply Post Dialog -->
+                                <v-dialog v-model="dialog" width="850px" :retain-focus="false">
                                   <v-row>
                                     <v-card width="100%">
                                       <div class="row">
@@ -217,6 +219,7 @@
                           </v-list-item>
                         </div>
                       </v-card>
+                      <!-- Current Post -->
                       <v-card width="100%">
                         <div class="row">
                           <v-card-title class="subtitle-1">
@@ -241,6 +244,7 @@
                           <v-spacer></v-spacer>
                         </v-row>
                       </v-card>
+                      <!-- Current Post All Comments -->
                       <v-container pa-0 ma-0>
                         <v-row v-for="(item, i) in allcurrentComments" :key="i" no-gutters>
                           <v-card width="100%">
@@ -248,12 +252,11 @@
                               <v-list-item-content>
                                 <div class="overline mb-4">
                                   POST #{{item.cid}}
-                                  <v-dialog v-model="replycommentdialog" width="850px">
-                                    <template v-slot:activator="{on}">
-                                      <v-btn icon fab color="grey" v-on="on" v-on:click="showwhichcomment(i)">
-                                        <v-icon>mdi-reply</v-icon>
-                                      </v-btn>
-                                    </template>
+                                  <v-btn icon fab color="grey" @click="replycommentdialog=true" v-on:click="showwhichcomment(i)">
+                                    <v-icon>mdi-reply</v-icon>
+                                  </v-btn>
+                                  <!-- Reply Comment Dialog -->
+                                  <v-dialog v-model="replycommentdialog" width="850px" :retain-focus="false">
                                     <v-card width="100%">
                                       <div class="row">
                                         <v-card-title class="subtitle-1 ma-6">
@@ -302,7 +305,7 @@
                                       </v-container>
                                     </v-card>
                                   </v-dialog>
-                                  <v-btn v-on:click="likepost()" icon fab color="grey">
+                                  <v-btn v-on:click="likepost" icon fab color="grey">
                                     <v-icon>mdi-thumb-up-outline</v-icon>
                                   </v-btn>
                                   <v-btn icon fab color="grey">
@@ -320,7 +323,7 @@
                         </v-row>
                       </v-container>
                     </v-row>
-                    <v-btn v-if="allcurrentComments.length >= 5" v-on:click="LoadMoreComments()" block color="primary">Load More</v-btn>
+                    <v-btn v-if="allcurrentComments.length >= 5" v-on:click="LoadMoreComments" block color="primary">Load More</v-btn>
                   </v-container>
                 </v-col>
               </v-row>
@@ -384,7 +387,6 @@ export default {
     replycomment: '',
     comment: '',
     whichcomment: '',
-    updatreplycomment: [],
     currentCommentRange: [1, 5],
     currentreplyCommentRange: [0, 4],
     icon: 'mdi-arrow-down-bold',
@@ -458,7 +460,6 @@ export default {
       }
     },
     onScroll (e) {
-      console.log('e')
       this.offsetTop = e.target.scrollTop
     },
     addnewcomments (isPost) {
@@ -495,9 +496,8 @@ export default {
       }
     },
     showwhichcomment (i) {
-      console.log('g')
-      const temp = i
-      this.whichcomment = temp
+      console.log('g', i)
+      this.whichcomment = i
     },
     likepost () {
       console.log('h')
