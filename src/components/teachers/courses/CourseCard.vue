@@ -1,7 +1,7 @@
 <template>
-  <div class="ma-0 pa-0">
+  <div>
     <!-- course card -->
-    <v-card class="course-card mx-auto my-12" max-width="300">
+    <v-card class="course-card my-4" max-width="300">
       <v-img height="200" :src="'https://cdn.vuetifyjs.com/images/cards/cooking.png' || course.thumbnail" @click="toCourse"/>
       <v-card-title @click="toCourse">
         <span class="d-inline-block text-truncate">{{ course.title }}</span>

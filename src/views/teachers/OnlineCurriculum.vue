@@ -5,77 +5,36 @@
       <p>Manage and host your online courses here for students.</p>
       <br>
     </div>
-    <h3 class="mb-n8">Your Online Courses</h3>
+    <h3>Your Online Courses</h3>
     <v-container>
-      <v-row>
-        <div class="mx-2">
-           <course-card v-for="course in courses" :key="course.id" :course="course" />
-        </div>
-        <div class="mx-2">
-          <course-card :course="placeholderCourse" />
-        </div>
-      </v-row>
+
     </v-container>
-    <!-- <div class="row">
-      <div class="row">
-        <h3>Your Online Courses</h3>
+    <div class="d-flex overflow-x-auto">
+      <!-- add new course button -->
+      <div class="mx-2">
+        <v-card flat class="my-4 d-flex justify-center align-center text-center" width="300" height="90%">
+          <div class="content">
+            <div class="row">
+              <v-btn text icon height="128" :to="{ name: 'new-course' }">
+                <v-icon color="indigo" size="128">mdi-plus-circle</v-icon>
+              </v-btn>
+            </div>
+            <div class="row">
+              <h4>Add New Course</h4>
+            </div>
+          </div>
+        </v-card>
       </div>
-      <div class="row">
-        <div class="col">
-          <v-card>
-            <v-card-title class="d-flex justify-center">
-              <h6>Introductory Programming</h6>
-            </v-card-title>
-            <v-card-text class="d-flex justify-center">
-              Students will learn basic techniques of programming in Python.
-            </v-card-text>
-            <v-card-actions>
-              <div class="flex-grow-1"></div>
-              <v-btn text color="indigo">
-                Continue
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </div>
-        <div class="col">
-          <v-card>
-            <v-card-title class="d-flex justify-center">
-              <h6>Addition and Subtraction I</h6>
-            </v-card-title>
-            <v-card-text class="d-flex justify-center">
-              Students will learn simple arithmetic.
-            </v-card-text>
-            <v-card-actions>
-              <div class="flex-grow-1"></div>
-              <v-btn text color="indigo">
-                Continue
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </div>
-        <div class="col">
-          <v-card>
-            <v-card-title class="d-flex justify-center">
-              <h6>Geometry I</h6>
-            </v-card-title>
-            <v-card-text class="d-flex justify-center">
-              Students will learn features of different figures
-            </v-card-text>
-            <v-card-actions>
-              <div class="flex-grow-1"></div>
-              <v-btn text color="indigo">
-                Continue
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </div>
-      </div> -->
-      <div class="row">
-        <div class="flex-grow-1"></div>
-        <v-btn rounded color="light-blue" :to="{ name: 'new-course' }">
-          Add new courses
-        </v-btn>
+      <!-- courses -->
+      <div v-for="course in courses" :key="course.id" class="mx-2">
+          <course-card :course="course" />
       </div>
+      <!-- placeholder course -->
+      <div class="mx-2">
+        <course-card :course="placeholderCourse" />
+      </div>
+      <div class="px-2" />
+    </div>
   </div>
 </template>
 
