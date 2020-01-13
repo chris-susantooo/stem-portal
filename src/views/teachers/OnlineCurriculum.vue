@@ -5,8 +5,17 @@
       <p>Manage and host your online courses here for students.</p>
       <br>
     </div>
-    <h3 class="mb-n6">Your Online Courses</h3>
-    <course-card />
+    <h3 class="mb-n8">Your Online Courses</h3>
+    <v-container>
+      <v-row>
+        <div class="mx-2">
+           <course-card v-for="course in courses" :key="course.id" :course="course" />
+        </div>
+        <div class="mx-2">
+          <course-card :course="placeholderCourse" />
+        </div>
+      </v-row>
+    </v-container>
     <!-- <div class="row">
       <div class="row">
         <h3>Your Online Courses</h3>
@@ -77,8 +86,20 @@ export default {
   components: { CourseCard },
   created () {
     this.$http.get(`courses?teacher=${this.$store.getters.user.username}`)
-      .then(data => { console.log(data) })
-  }
+      .then(({ data: courses }) => { this.courses = courses })
+  },
+  data: () => ({
+    courses: [],
+    placeholderCourse: {
+      id: 'demo',
+      thumbnail: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+      title: 'Introductory Programming! Learn fast.',
+      author: 'christophers',
+      tags: ['JavaScript', 'Coding', 'Technology'],
+      rating: 4.5,
+      votes: 100
+    }
+  })
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div class="ma-0 pa-0">
     <!-- course card -->
     <v-card class="course-card mx-auto my-12" max-width="300">
-      <v-img height="200" :src="course.thumbnail" @click="toCourse"/>
+      <v-img height="200" :src="'https://cdn.vuetifyjs.com/images/cards/cooking.png' || course.thumbnail" @click="toCourse"/>
       <v-card-title @click="toCourse">
         <span class="d-inline-block text-truncate">{{ course.title }}</span>
       </v-card-title>
@@ -62,16 +62,7 @@ export default {
     },
     course: {
       type: Object,
-      required: true,
-      default: () => ({
-        id: 'demo',
-        thumbnail: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-        title: 'Introductory Programming! Learn fast.',
-        author: 'christophers',
-        tags: ['JavaScript', 'Coding', 'Technology'],
-        rating: 4.5,
-        votes: 100
-      })
+      required: true
     }
   },
   data: () => ({
