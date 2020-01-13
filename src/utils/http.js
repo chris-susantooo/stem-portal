@@ -16,7 +16,8 @@ const http = {
   createCourse: ({ title, description, tags, chapters, author }) => Axios.post('courses', { name: title, description, tags, chapters, author }),
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   updateCourse: course => Axios.put(`courses/${course.id}`, { course }),
-  deleteCourse: courseId => Axios.delete(`courses/${courseId}`)
+  deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
+  createPost: (username, datetime, postTitle, postTags, postContent) => Axios.post('forum/posts', { username, datetime, postTitle, postTags, postContent })
 }
 
 export default http

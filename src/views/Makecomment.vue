@@ -8,7 +8,7 @@
       >
         <v-form
           ref="form"
-          v-model="validcreation"
+          v-model="isPostInfoValid"
           class="ma-6"
           lazy-validation
         >
@@ -21,7 +21,7 @@
                 v-model="post.title"
                 :counter="60"
                 :rules="titleRules"
-                label="Title"
+                label=" Post Title"
                 chips
                 clearable
                 outlined
@@ -36,7 +36,7 @@
             <v-col cols="11">
               <v-combobox
                 v-model="post.tags"
-                :items="allTags"
+                :items="tags"
                 chips
                 clearable
                 label="Your post tags"
@@ -73,7 +73,7 @@
             <v-spacer></v-spacer>
           </v-row>
           <div class="text-center mb-3" >
-            <v-btn color="primary" class="ml-2" @click="validate()">Save and exit</v-btn>
+            <v-btn color="primary" class="ml-2" @click="postCreatepost()">Save and exit</v-btn>
           </div>
         </v-form>
       </v-card>
@@ -83,21 +83,23 @@
 
 <script>
 import TextEditor from '@/components/text-editor/TextEditor.vue'
+import http from '@/utils/http'
+
 export default {
+  created () {
+    this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
+  },
   computed: {
-    allTags () {
-      return [ ...this.baseTags, ...this.extraTags ]
-    }
+    user () { return this.$store.getters.user }
   },
   components: { TextEditor },
   data: () => ({
-    validcreation: true,
-    baseTags: ['Science', 'Technology', 'Engineering', 'Mathematics'],
+    isPostInfoValid: true,
     extraTags: [],
     post: {
       title: '',
       tags: [],
-      content: []
+      content: ''
     },
     tagRules: [ v => !!v.length || 'At least a tag is required' ],
     titleRules: [
@@ -106,65 +108,23 @@ export default {
     ]
   }),
   methods: {
+    postCreatepost () {
+      if (this.isPostInfoValid && this.post.content.length > 0) {
+        var newDate = new Date()
+        var datetime = newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear() + '  ' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds()
+        this.$refs.form.reset()
+        http.postCreatepost(this.user.username, datetime, this.post.title, this.post.tags, this.post.content).then(({ status, data }) => {
+          if (status === 200) this.updateSuccess = true
+        }).catch(err => {
+          console.log(err)
+          this.errorDialog = true
+        })
+      }
+    },
     removeTag (item) {
       this.course.tags.splice(this.course.tags.indexOf(item), 1)
       this.course.tags = [ ...this.course.tags ]
-    },
-    validate () {
-      if (this.$refs.form.validate()) {
-        this.snackbar = true
-        this.$refs.form.reset()
-      }
     }
   }
 }
-// export default {
-//   created () {
-//     this.$http.get('courses/tags')
-//       .then(({ data: extraTags }) => {
-//         this.extraTags = extraTags
-//       })
-//   },
-//   computed: {
-//     allTags () {
-//       return [ ...this.baseTags, ...this.extraTags ]
-//     }
-//   },
-//   data: () => ({
-//     isCourseInfoValid: true,
-//     isCourseValid: true,
-//     baseTags: ['Science', 'Technology', 'Engineering', 'Mathematics'],
-//     extraTags: [],
-//     currentStep: 1,
-//     save: true,
-//     course: {
-//       title: '',
-//       tags: [],
-//       description: '',
-//       chapters: []
-//     },
-//     tagRules: [ v => !!v.length || 'At least a tag is required' ],
-//     courseNameRules: [
-//       v => !!v || 'Name is required',
-//       v => (v && v.length <= 60) || 'Name must be less than 60 characters'
-//     ],
-//     shortDescRules: [ v => !!v || 'Description is required' ]
-//   }),
-//   methods: {
-//     saveCourse (chapters) {
-//       this.course.chapters = chapters
-//     },
-//     next (to) {
-//       if (to === 3 && this.isCourseValid) this.save = !this.save
-//       if (this.isCourseInfoValid && this.isCourseValid) this.currentStep = to
-//     },
-//     setCourseValid (isCourseValid) {
-//       this.isCourseValid = isCourseValid
-//     },
-//     removeTag (item) {
-//       this.course.tags.splice(this.course.tags.indexOf(item), 1)
-//       this.course.tags = [ ...this.course.tags ]
-//     }
-//   }
-// }
 </script>

@@ -62,6 +62,7 @@ const router = new Router({
         {
           path: '/create-post',
           name: 'createpost',
+          meta: { role: 'teacher' },
           component: () => import(/* webpackChunkName: "creatpost" */ './views/Makecomment.vue')
         },
         {
