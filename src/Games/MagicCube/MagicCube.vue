@@ -1,6 +1,6 @@
 <template>
 <div class="text-center">
-  <canvas id="render-canvas" ref="render-canvas" width="1024" height="768"></canvas>
+  <canvas id="render-canvas" ref="render-canvas" :width="windowWidth" :height="windowHeight"></canvas>
 </div>
 </template>
 
@@ -13,7 +13,6 @@ BABYLON.GUI = GUI
 let spheres = []
 let transparentSpheres = {}
 let answers = {}
-let mainScene
 let myScene
 
 function initScene (engine) {
@@ -22,47 +21,168 @@ function initScene (engine) {
   return scene
 }
 
-function createMainScene (engine) {
-  const scene = initScene(engine)
-  const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene)
-  camera.attachControl(document.getElementById('render-canvas'), false)
-  camera.setTarget(BABYLON.Vector3.Zero())
-
-  const mainSceneAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
-  const panel = new BABYLON.GUI.StackPanel()
-  panel.isVertical = false
-  mainSceneAdvancedTexture.addControl(panel)
+function createChooseLevelScene (engine, scene) {
+  const background = new BABYLON.Layer('background', require('./Photos/MainPage/background.jpg'), scene)
+  background.alpha = 1
+  // GUI set up
+  const chooseLevelAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
   const buttons = []
-  buttons.push(BABYLON.GUI.Button.CreateSimpleButton('1-1', 'Level 1'))
-  buttons.push(BABYLON.GUI.Button.CreateSimpleButton('1-2', 'Level 2'))
-  buttons.push(BABYLON.GUI.Button.CreateSimpleButton('1-3', 'Level 3'))
-  buttons.push(BABYLON.GUI.Button.CreateSimpleButton('1-4', 'Level 4'))
-  buttons.forEach(button => {
-    panel.addControl(button)
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-1', require('./Photos/MainPage/game1-1.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-2', require('./Photos/MainPage/game1-2.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-3', require('./Photos/MainPage/game1-3.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-4', require('./Photos/MainPage/game1-4.jpg')))
+  buttons.forEach((button, index) => {
+    chooseLevelAdvancedTexture.addControl(button)
     button.width = '80px'
-    button.height = '40px'
-    button.color = 'white'
-    button.background = 'green'
+    button.height = '80px'
+    button.top = '150px'
+    button.left = (-200 + index * 135).toString() + 'px'
     button.onPointerClickObservable.add(() => {
-      mainSceneAdvancedTexture.dispose()
+      chooseLevelAdvancedTexture.dispose()
       spheres = []
       answers = {}
       transparentSpheres = {}
       myScene = createGameScene(engine, button.name)
     })
   })
+  const home = BABYLON.GUI.Button.CreateImageOnlyButton('home', require('./Photos/MainPage/home.jpg'))
+  chooseLevelAdvancedTexture.addControl(home)
+  home.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
+  home.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
+  home.width = '80px'
+  home.height = '80px'
+  home.onPointerClickObservable.add(() => {
+    chooseLevelAdvancedTexture.dispose()
+    myScene = createMainScene(engine)
+  })
   return scene
 }
 
-function createGUI (engine, scene, level) {
+function createMainScene (engine) {
+  const scene = initScene(engine)
+  const camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 20, new BABYLON.Vector3(0, 0, 0), scene)
+  camera.setPosition(new BABYLON.Vector3(13, 17, -13))
+  const light = new BABYLON.HemisphericLight('light', new BABYLON.Vector3(0, 1, -1), scene)
+  light.intensity = 0.5
+  const light2 = new BABYLON.HemisphericLight('light2', new BABYLON.Vector3(0, -1, 1), scene)
+  light2.intensity = 1
+  const light3 = new BABYLON.DirectionalLight('light3', new BABYLON.Vector3(0, 0, 1), scene)
+  light3.intensity = 0.5
+  const background = new BABYLON.Layer('background', require('./Photos/MainPage/background.jpg'), scene)
+  background.alpha = 1
+  const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial } = createMaterials(scene)
+  const box = createBox(0, 0, 0, scene, transparentMaterial)
+  createSphere(0, 0, 0, scene, '1', cyanMaterial, false, box)
+  createSphere(0, 1, 0, scene, '2', cyanMaterial, false, box)
+  createSphere(0, 1, 1, scene, '3', cyanMaterial, false, box)
+  createSphere(0, -1, 0, scene, '4', cyanMaterial, false, box)
+  createSphere(0, 0, 1, scene, '5', cyanMaterial, false, box)
+  createSphere(0, -1, 1, scene, '1', greenMaterial, false, box)
+  createSphere(-1, -1, 1, scene, '2', greenMaterial, false, box)
+  createSphere(1, -1, 1, scene, '3', greenMaterial, false, box)
+  createSphere(-1, 0, 1, scene, '4', greenMaterial, false, box)
+  createSphere(1, 0, 1, scene, '5', greenMaterial, false, box)
+  createSphere(-1, 1, 0, scene, '1', yellowMaterial, false, box)
+  createSphere(-1, 1, -1, scene, '2', yellowMaterial, false, box)
+  createSphere(-1, 1, 1, scene, '3', yellowMaterial, false, box)
+  createSphere(-1, 0, 0, scene, '4', yellowMaterial, false, box)
+  createSphere(-1, -1, 0, scene, '5', yellowMaterial, false, box)
+  createSphere(-1, -1, -1, scene, '1', redMaterial, false, box)
+  createSphere(-1, 0, -1, scene, '2', redMaterial, false, box)
+  createSphere(0, -1, -1, scene, '3', redMaterial, false, box)
+  createSphere(1, -1, -1, scene, '4', redMaterial, false, box)
+  createSphere(0, 1, -1, scene, '1', purpleMaterial, false, box)
+  createSphere(0, 0, -1, scene, '2', purpleMaterial, false, box)
+  createSphere(1, 1, -1, scene, '3', purpleMaterial, false, box)
+  createSphere(1, 0, 0, scene, '1', orangeMaterial, false, box)
+  createSphere(1, 1, 0, scene, '2', orangeMaterial, false, box)
+  createSphere(1, 1, 1, scene, '3', orangeMaterial, false, box)
+  createSphere(1, 0, -1, scene, '4', orangeMaterial, false, box)
+  createSphere(1, -1, 0, scene, '5', orangeMaterial, false, box)
+  const frameRate = 10
+  const rotation = new BABYLON.Animation('rotation', 'rotation.y', frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE)
+  const keyFramesR = []
+  keyFramesR.push({
+    frame: 0,
+    value: 0
+  })
+  keyFramesR.push({
+    frame: frameRate,
+    value: Math.PI
+  })
+  keyFramesR.push({
+    frame: 2 * frameRate,
+    value: 2 * Math.PI
+  })
+  rotation.setKeys(keyFramesR)
+  scene.beginDirectAnimation(box, [rotation], 0, 20, true)
+  // GUI set up
+  const mainSceneAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
+  const instructionButton = BABYLON.GUI.Button.CreateImageOnlyButton('instruction', require('./Photos/MainPage/instruction.jpg'))
+  instructionButton.cornerRadius = 500
+  mainSceneAdvancedTexture.addControl(instructionButton)
+  const playButton = BABYLON.GUI.Button.CreateImageOnlyButton('play', require('./Photos/MainPage/play.jpg'))
+  playButton.cornerRadius = 500
+  mainSceneAdvancedTexture.addControl(playButton)
+  instructionButton.left = '-200px'
+  instructionButton.top = '200px'
+  instructionButton.width = '80px'
+  instructionButton.height = '80px'
+  instructionButton.onPointerClickObservable.add(() => {
+    const panel = new BABYLON.GUI.StackPanel()
+    panel.background = 'green'
+    panel.width = '600px'
+    panel.height = '400px'
+    mainSceneAdvancedTexture.addControl(panel)
+    const howToPlayMessage = new BABYLON.GUI.TextBlock()
+    howToPlayMessage.text = 'How To Play'
+    howToPlayMessage.color = 'white'
+    howToPlayMessage.fontSize = '36px'
+    howToPlayMessage.width = '300px'
+    howToPlayMessage.height = '100px'
+    howToPlayMessage.textWrapping = true
+    const instructionMessage = new BABYLON.GUI.TextBlock()
+    instructionMessage.text = 'Alter the orientation of the pieces and drag them to different positions to form a cube according to the image at the top right corner.'
+    instructionMessage.color = 'white'
+    instructionMessage.fontSize = 24
+    instructionMessage.width = '500px'
+    instructionMessage.height = '200px'
+    instructionMessage.textWrapping = true
+    const confirmButton = BABYLON.GUI.Button.CreateSimpleButton('OK', 'OK!')
+    confirmButton.width = '80px'
+    confirmButton.height = '80px'
+    confirmButton.background = 'white'
+    confirmButton.onPointerClickObservable.add(() => {
+      panel.dispose()
+    })
+    panel.addControl(howToPlayMessage)
+    panel.addControl(instructionMessage)
+    panel.addControl(confirmButton)
+  })
+  playButton.left = '200px'
+  playButton.top = '200px'
+  playButton.width = '80px'
+  playButton.height = '80px'
+  playButton.onPointerClickObservable.add(() => {
+    mainSceneAdvancedTexture.dispose()
+    myScene = createChooseLevelScene(engine, scene)
+  })
+  return scene
+}
+
+function createGameSceneGUI (engine, scene, level) {
   let gameSceneAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
+  const music = new BABYLON.Sound('background-music', require('./Music/bgm.mp3'), scene, null)
+  music.loop = true
+  music.autoplay = true
+
   const panel = new BABYLON.GUI.StackPanel()
   panel.isVertical = false
   gameSceneAdvancedTexture.addControl(panel)
 
   const panel2 = new BABYLON.GUI.StackPanel()
   gameSceneAdvancedTexture.addControl(panel2)
-  const image = new BABYLON.GUI.Image('photoplane', require('./Photos/game' + level + '.png'))
+  const image = new BABYLON.GUI.Image('photoplane', require('./Photos/GameScene/game' + level + '.png'))
   image.width = '200px'
   image.height = '200px'
   panel2.addControl(image)
@@ -71,20 +191,15 @@ function createGUI (engine, scene, level) {
   panel2.width = '200px'
   panel2.height = '300px'
 
-  const panel3 = new BABYLON.GUI.StackPanel()
-  gameSceneAdvancedTexture.addControl(panel3)
-  const backButton = BABYLON.GUI.Button.CreateSimpleButton('back', 'Back to Main')
-  panel3.addControl(backButton)
-  panel3.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
-  panel3.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
-  panel3.width = '200px'
-  panel3.height = '100px'
-  backButton.width = '120px'
-  backButton.height = '50px'
-  backButton.color = 'white'
-  backButton.background = 'green'
+  const backButton = BABYLON.GUI.Button.CreateImageOnlyButton('home', require('./Photos/MainPage/home.jpg'))
+  gameSceneAdvancedTexture.addControl(backButton)
+  backButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
+  backButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
+  backButton.width = '80px'
+  backButton.height = '80px'
   backButton.onPointerClickObservable.add(() => {
     gameSceneAdvancedTexture.dispose()
+    music.stop()
     myScene = createMainScene(engine)
   })
 
@@ -121,6 +236,8 @@ function createBox (x, y, z, scene, material) {
 
   box.renderingGroupId = 3
   box.isPickable = false
+
+  return box
 }
 
 function createRotationButton (targetMesh, panel, id, text) {
@@ -288,6 +405,8 @@ function checkAnswer (answer, panel4) {
     winningMessage.text = 'You win!!!'
     winningMessage.color = 'white'
     winningMessage.fontSize = 24
+    winningMessage.width = '150px'
+    winningMessage.height = '45px'
     panel4.addControl(winningMessage)
     panel4.height = '50px'
     panel4.width = '200px'
@@ -306,8 +425,9 @@ function createGameScene (engine, level) {
   light2.intensity = 1
   const light3 = new BABYLON.DirectionalLight('light3', new BABYLON.Vector3(0, 0, 1), scene)
   light3.intensity = 0.5
-
-  const { panel, panel4 } = createGUI(engine, scene, level)
+  const background = new BABYLON.Layer('background', require('./Photos/GameScene/gameBackground.jpg'), scene)
+  background.alpha = 1
+  const { panel, panel4 } = createGameSceneGUI(engine, scene, level)
 
   const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial, lightGreenMaterial } = createMaterials(scene)
 
@@ -463,15 +583,26 @@ function createGameScene (engine, level) {
 }
 
 export default {
+  data () {
+    return {
+      windowHeight: window.innerHeight,
+      windowWidth: window.innerWidth - 50
+    }
+  },
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
-    mainScene = createMainScene(engine)
-
-    myScene = mainScene
+    myScene = createMainScene(engine)
 
     engine.runRenderLoop(function () {
       myScene.render()
     })
+  },
+  beforeDestroy () {
+    myScene.dispose()
+  },
+  onResize () {
+    this.windowHeight = window.innerHeight
+    this.windowWidth = window.innerWidth
   }
 }
 </script>
