@@ -5,7 +5,7 @@
       <p>Choose an online course and start to learn something interesting!</p>
       <br>
     </div>
-    <template v-if="ongoingCourses.length>0">
+    <template v-if="ongoingCourses && ongoingCourses.length">
       <h3 class="d-flex justify-center">Ongoing Online Courses</h3>
         <v-container>
           <v-row class="d-flex justify-center">

@@ -18,9 +18,9 @@
     "tiptap": "^1.26.4",
     "tiptap-extensions": "^1.28.4",
     "vue": "^2.6.10",
-    "vue-babylonjs": "^1.0.0-beta.7",
     "vue-router": "^3.0.3",
     "vue-upload-component": "^2.8.20",
+    "vue-youtube": "^1.4.0",
     "vuedraggable": "^2.23.2",
     "vuetify": "^2.0.0",
     "vuex": "^3.0.1"

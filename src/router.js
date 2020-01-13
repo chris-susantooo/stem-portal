@@ -130,7 +130,7 @@ const router = new Router({
         },
         {
           path: '/students/courses',
-          name: 'student-course',
+          name: 'student-courses',
           component: () => import(/* webpackChunkName: "online-course" */ './views/students/OnlineCurriculum.vue')
         },
         {
