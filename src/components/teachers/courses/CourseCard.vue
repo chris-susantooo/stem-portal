@@ -63,6 +63,10 @@ export default {
     course: {
       type: Object,
       required: true
+    },
+    role: {
+      type: String,
+      required: true
     }
   },
   data: () => ({
