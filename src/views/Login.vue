@@ -122,6 +122,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- login fail dialog -->
+    <v-dialog v-model="loginFailDialog" max-width="400">
+      <v-card class="pt-3">
+        <v-card-title class="headline mb-3">Opps.</v-card-title>
+        <v-card-text>
+          You failed to log in.<br>
+          Please provide a valid username and password.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text color="primary" @click="loginFailDialog = false">OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -141,6 +155,7 @@ export default {
       canResendLink: false,
       resultDialog: false,
       registerSuccess: false,
+      loginFailDialog: false,
       usernameProps: {
         hint: undefined,
         errMsgs: ''
@@ -230,7 +245,10 @@ export default {
           password: this.password
         }).then(() => {
           this.$router.push({ name: 'home' })
-        }).catch(err => console.log(err))
+        }).catch(err => {
+          this.loginFailDialog = true
+          console.log(err)
+        })
       }
     },
     register (resend) {
