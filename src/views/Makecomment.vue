@@ -110,10 +110,8 @@ export default {
   methods: {
     postCreatepost () {
       if (this.isPostInfoValid && this.post.content.length > 0) {
-        var newDate = new Date()
-        var datetime = newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear() + '  ' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds()
         this.$refs.form.reset()
-        http.postCreatepost(this.user.username, datetime, this.post.title, this.post.tags, this.post.content).then(({ status, data }) => {
+        http.postCreatepost(this.user.username, this.post.title, this.post.tags, this.post.content).then(({ status, data }) => {
           if (status === 200) this.updateSuccess = true
         }).catch(err => {
           console.log(err)
