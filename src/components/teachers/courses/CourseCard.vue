@@ -11,7 +11,7 @@
         <v-row align="center" class="mx-0">
           <v-rating dense half-increments
             :readonly="!ratable"
-            :value="course.rating"
+            :value="course.rating === 'No ratings yet' ? 4 : course.rating"
             color="amber"
             size="14"
           />
@@ -23,7 +23,7 @@
           </v-chip>
         </v-chip-group>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="role === 'teacher'">
         <v-btn text color="indigo" class="mr-n1 px-n1" @click="toCourse">
           Edit
         </v-btn>
@@ -91,6 +91,5 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.course-card
-  cursor: pointer
+
 </style>

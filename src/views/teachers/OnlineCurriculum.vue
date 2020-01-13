@@ -27,11 +27,11 @@
       </div>
       <!-- courses -->
       <div v-for="course in courses" :key="course.id" class="mx-2">
-          <course-card :course="course" />
+          <course-card :course="course" :role="user.type" @courseDeleted="fetchTeachingCourses" />
       </div>
       <!-- placeholder course -->
       <div class="mx-2">
-        <course-card :course="placeholderCourse" />
+        <course-card :course="placeholderCourse" :role="user.type" />
       </div>
       <div class="px-2" />
     </div>
@@ -44,8 +44,12 @@ import CourseCard from '@/components/teachers/courses/CourseCard.vue'
 export default {
   components: { CourseCard },
   created () {
-    this.$http.get(`courses?teacher=${this.$store.getters.user.username}`)
-      .then(({ data: courses }) => { this.courses = courses })
+    this.fetchTeachingCourses()
+  },
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
   },
   data: () => ({
     courses: [],
@@ -58,7 +62,13 @@ export default {
       rating: 4.5,
       votes: 100
     }
-  })
+  }),
+  methods: {
+    fetchTeachingCourses () {
+      this.$http.get(`courses?teacher=${this.user.username}`)
+        .then(({ data: courses }) => { this.courses = courses })
+    }
+  }
 }
 </script>
 
