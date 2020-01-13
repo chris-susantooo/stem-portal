@@ -24,7 +24,7 @@
                       <v-expansion-panel-content class="pt-3 mt-3">
                         <v-text-field outlined :counter="60" :rules="nameRules(section.type, 60)" :label="section.type + ' name'" v-model="section.title" required />
                         <template v-if="section.type === 'Section'">
-                          <v-text-field outlined :rules="linkRules" label="YouTube link" v-model="section.content.video" required />
+                          <v-text-field outlined :rules="linkRules" label="YouTube link or video ID" v-model="section.content.video" required />
                           <text-editor v-model="section.content.text" />
                         </template>
                         <template v-else>
@@ -84,6 +84,10 @@ export default {
     save: {
       type: Boolean,
       required: true
+    },
+    retrievedChapters: {
+      type: Array,
+      required: true
     }
   },
   components: { Draggable, ToolBar, TextEditor },
@@ -94,8 +98,7 @@ export default {
     sectionIndex: undefined,
     questionIndex: undefined,
     linkRules: [
-      v => !!v || 'A YouTube link is required',
-      v => v.substring(0, 24) === 'https://www.youtube.com/' || 'Please enter a valid YouTube link'
+      v => !!v || 'A YouTube link or video ID is required'
     ]
   }),
   computed: {
@@ -204,6 +207,9 @@ export default {
     },
     isCourseValid () {
       this.$emit('courseValidationChanged', this.isCourseValid)
+    },
+    retrievedChapters (val) {
+      if (val.length) this.chapters = val
     }
   }
 }
