@@ -129,12 +129,12 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "online-course" */ './views/visitors/Parent.vue')
         },
         {
-          path: '/student/course',
+          path: '/students/course',
           name: 'student-course',
           component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
         },
         {
-          path: '/student/games',
+          path: '/students/games',
           name: 'student-games',
           component: () => import(/* webpackChunkName: "online-course" */ './views/students/Games.vue')
         }
