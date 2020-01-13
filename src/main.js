@@ -5,7 +5,9 @@ import store from './store'
 import Axios from 'axios'
 import { baseURL } from '@/utils/constants'
 import vuetify from './plugins/vuetify'
-import vb from 'vue-babylonjs'
+import VueYoutube from 'vue-youtube'
+
+Vue.use(VueYoutube)
 
 Vue.config.productionTip = false
 
@@ -17,7 +19,7 @@ if (token) {
 Axios.defaults.baseURL = baseURL
 Axios.defaults.timeout = 10000
 Vue.prototype.$http = Axios.create()
-Vue.use(vb)
+
 new Vue({
   router,
   store,

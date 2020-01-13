@@ -91,5 +91,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
+.course-card
+  cursor: pointer
 </style>
