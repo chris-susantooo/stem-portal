@@ -22,7 +22,7 @@
         <v-card class="pt-3">
           <v-card-title class="headline mb-3">{{ resetPasswordDialogTitle }}</v-card-title>
           <v-card-text>
-            You password has been reset. Try log back into STEM Portal!
+            Your password has been reset. Try log back into STEM Portal!
           </v-card-text>
           <v-card-actions>
             <v-spacer />
