@@ -6,15 +6,12 @@
       <br>
     </div>
     <h3>Your Online Courses</h3>
-    <v-container>
-
-    </v-container>
     <div class="d-flex overflow-x-auto">
       <!-- add new course button -->
       <div class="mx-2">
         <v-card flat class="my-4 d-flex align-center justify-center text-center" width="300" height="90%">
           <div>
-            <v-btn text icon height="128" :to="{ name: 'new-course' }">
+            <v-btn text icon width="128" height="128" :to="{ name: 'new-course' }">
               <v-icon color="indigo" size="128">mdi-plus-circle</v-icon>
             </v-btn>
             <p>Add New Course</p>
