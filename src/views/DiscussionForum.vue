@@ -97,6 +97,17 @@
                 <v-col cols="12" md="3">
                   <v-card min-height="820px" height="100%" width="100%">
                     <v-list-item>
+                      <v-btn
+                        color="pink"
+                        dark
+                        small
+                        absolute
+                        left
+                        fab
+                        v-on:click="toCreatePost"
+                      >
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
                       <v-list-item-content>
                         <v-list-item-title class="title text-center">Posts</v-list-item-title>
                       </v-list-item-content>
@@ -109,19 +120,22 @@
                         link
                         v-on:click="CurrentPosts(i)"
                       >
-                        <v-list-item-avatar :color="item.color">
+                        <v-list-item-avatar :color="color">
                           <span
                             class="white--text headline pl-3"
-                            v-text="item.name.slice(0, 1).toUpperCase()"
+                            v-text="item.author.slice(0, 1).toUpperCase()"
                           ></span>
                         </v-list-item-avatar>
                         <v-list-item-content>
                           <v-list-item-subtitle>
-                            {{item.name}}
-                            <span class="pl-6">{{item.time}}</span>
-                            <span class="pl-2">{{item.date}}</span>
+                            {{item.author}}
+                            <span class="pl-6">{{(String(item.createdAt)).substring(0,10)}}</span>
+                            <span class="pl-2"> {{(String(item.createdAt)).substring(11,19)}}</span>
                           </v-list-item-subtitle>
-                          <v-list-item-title class="title" v-text="item.title"></v-list-item-title>
+                          <v-row>
+                            <v-col cols="12" md="6" class="d-inline-block text-truncate">Title: {{item.title}}</v-col>
+                            <v-col cols="12" md="6" class="d-inline-block text-truncate">Tags: {{item.tags[0]}}</v-col>
+                          </v-row>
                         </v-list-item-content>
                       </v-list-item>
                     </v-list>
@@ -140,7 +154,7 @@
                       justify="center"
                       no-gutters
                     >
-                      <v-card width="100%">
+                      <v-card width="100%" v-if="posts.length>0">
                         <div>
                           <v-list-item>
                             <v-list-item-avatar color="grey"></v-list-item-avatar>
@@ -151,16 +165,14 @@
                                   text
                                   :color="CurrentPost.notyetfollowed ? 'grey' : 'pink'"
                                   icon
-                                  v-on:click="followed()"
+                                  v-on:click="followed(true)"
                                 >
                                   <v-icon>mdi-heart</v-icon>
                                 </v-btn>
-                                <v-btn v-if="!CurrentPost.disliked" v-on:click="likepost()" icon>
-                                  <span>{{CurrentPost.likes}}</span>
+                                <v-btn v-if="!CurrentPost.disliked" v-on:click="likepost(true)" icon>
                                   <v-icon>mdi-thumb-up-outline</v-icon>
                                 </v-btn>
-                                <v-btn v-if="!CurrentPost.liked" v-on:click="dislikepost()" icon>
-                                  <span>{{this.CurrentPost.dislikes}}</span>
+                                <v-btn v-if="!CurrentPost.liked" v-on:click="dislikepost(true)" icon>
                                   <v-icon>mdi-thumb-down-outline</v-icon>
                                 </v-btn>
                                 <v-spacer></v-spacer>
@@ -171,11 +183,11 @@
                                     <v-card width="100%">
                                       <div class="row">
                                         <v-card-title class="subtitle-1 ma-6">
-                                          Post #{{CurrentPost.postnumber}}
-                                          <span class="subtitle-1 pl-6">{{CurrentPost.name}}</span>
+                                          Post #{{CurrentPost.cid}}
+                                          <span class="subtitle-1 pl-6">{{CurrentPost.author}}</span>
                                           <span class="subtitle-1 pl-2"></span>
                                         </v-card-title>
-                                        <v-card-title class="subtitle-1">{{CurrentPost.date}}</v-card-title>
+                                        <v-card-title class="subtitle-1">{{(String(CurrentPost.createdAt)).substring(0,10)}} <span class="pl-2"> {{(String(CurrentPost.createdAt)).substring(11,19)}}</span> </v-card-title>
                                       </div>
                                       <div v-if="CurrentPost.src" class="row">
                                         <v-img
@@ -190,7 +202,7 @@
                                       </div>
                                       <v-row>
                                         <v-spacer></v-spacer>
-                                        <v-col cols="12" md="10">{{CurrentPost.question}}</v-col>
+                                        <v-col cols="12" md="10" v-html="CurrentPost.content"></v-col>
                                         <v-spacer></v-spacer>
                                       </v-row>
                                       <v-container>
@@ -213,21 +225,20 @@
                                 </v-dialog>
                               </v-row>
                               <p>
-                                by {{CurrentPost.name}}
+                                by {{CurrentPost.author}}
                               </p>
                             </v-list-item-content>
                           </v-list-item>
                         </div>
                       </v-card>
                       <!-- Current Post -->
-                      <v-card width="100%">
+                      <v-card width="100%" v-if="posts.length>0">
                         <div class="row">
                           <v-card-title class="subtitle-1">
-                            Post #{{CurrentPost.postnumber}}
-                            <span class="subtitle-1 pl-6">{{CurrentPost.name}}</span>
-                            <span class="subtitle-1 pl-2"></span>
+                            Post #{{CurrentPost.cid}}
+                            <span class="subtitle-1 pl-6">{{CurrentPost.author}}</span>
                           </v-card-title>
-                          <v-card-title class="subtitle-1">{{CurrentPost.date}}</v-card-title>
+                          <v-card-title class="subtitle-1">{{(String(CurrentPost.createdAt)).substring(0,10)}} <span class="pl-2">{{(String(CurrentPost.createdAt)).substring(11,19)}}</span> </v-card-title>
                         </div>
                         <div v-if="CurrentPost.src" class="row">
                           <v-img
@@ -240,7 +251,7 @@
                         </div>
                         <v-row>
                           <v-spacer></v-spacer>
-                          <v-col cols="12" md="10">{{CurrentPost.question}}</v-col>
+                          <v-col cols="12" md="10" v-html="CurrentPost.content"></v-col>
                           <v-spacer></v-spacer>
                         </v-row>
                       </v-card>
@@ -256,31 +267,40 @@
                                     <v-icon>mdi-reply</v-icon>
                                   </v-btn>
                                   <!-- Reply Comment Dialog -->
-                                  <v-dialog v-model="replycommentdialog" width="850px" :retain-focus="false">
-                                    <v-card width="100%">
-                                      <div class="row">
+                                  <v-dialog v-model="replycommentdialog" :retain-focus="false">
+                                    <v-card width="100%" height="100%">
+                                      <v-row>
                                         <v-card-title class="subtitle-1 ma-6">
-                                          Post #{{item.cid}}
-                                          <span class="subtitle-1 pl-6">{{CurrentPost.name}}</span>
+                                          Post #{{whichcomment+1}}
+                                          <span class="subtitle-1 pl-6">Author Name</span>
                                         </v-card-title>
-                                        <v-card-title class="subtitle-1">{{CurrentPost.date}}</v-card-title>
-                                      </div>
+                                        <v-card-title class="subtitle-1">{{item.date}}</v-card-title>
+                                      </v-row>
+                                      <v-row>
+                                        <v-spacer></v-spacer>
+                                        <v-col cols="12" md="10">
+                                          <v-card-text v-html="item.comment"></v-card-text>
+                                        </v-col>
+                                        <v-spacer></v-spacer>
+                                      </v-row>
                                       <v-row v-for="(allreplycomment, a) in allreplyComments" :key="a">
-                                        <v-card width = 100% >
+                                        <v-card width = "100%" >
                                           <v-row no-gutters>
-                                            <v-col cols="5">
+                                            <v-col cols="8">
                                               <v-card-subtitle class="subtitle-1 ma-6">
-                                                Post #{{allreplycomment.cid}}
+                                                Post #{{allreplycomment.cid}} Author Name
                                                 <span class="subtitle-1 pl-2">{{allreplycomment.date}}</span>
                                               </v-card-subtitle>
                                             </v-col>
                                             <v-spacer></v-spacer>
                                           </v-row>
                                           <v-row>
-                                            <v-card-text>
-                                            </v-card-text>
+                                            <v-spacer></v-spacer>
+                                            <v-col cols="12" md="10">
+                                              <v-card-text v-html="allreplycomment.comment"> </v-card-text>
+                                            </v-col>
+                                            <v-spacer></v-spacer>
                                           </v-row>
-                                          <v-card-text class="pl-" v-html="allreplycomment.comment"> </v-card-text>
                                         </v-card>
                                       </v-row>
                                       <v-btn v-if="allreplyComments.length>=5" v-on:click="LoadMoreReplyComments()" block color="primary">Load More</v-btn>
@@ -305,10 +325,10 @@
                                       </v-container>
                                     </v-card>
                                   </v-dialog>
-                                  <v-btn v-on:click="likepost" icon fab color="grey">
+                                  <v-btn v-if="!item.disliked" v-on:click="likepost(false, i)" icon fab color="grey">
                                     <v-icon>mdi-thumb-up-outline</v-icon>
                                   </v-btn>
-                                  <v-btn icon fab color="grey">
+                                  <v-btn v-if="!item.liked" v-on:click="dislikepost(false, i)" icon fab color="grey">
                                     <v-icon>mdi-thumb-down-outline</v-icon>
                                   </v-btn>
                                 </div>
@@ -336,10 +356,14 @@
 </template>
 <script>
 import TextEditor from '@/components/text-editor/TextEditor.vue'
+import http from '@/utils/http'
 
 export default {
-  mounted () {
-    this.CurrentPost = this.posts[0]
+  created () {
+    http.getPosts().then(({ data: posts }) => {
+      this.posts = posts
+      this.CurrentPost = this.posts[0]
+    })
   },
   computed: {
     allcurrentComments () {
@@ -368,7 +392,6 @@ export default {
             }
           }
         }
-        console.log(replycomments)
       }
       if (replycomments) {
         return replycomments.filter(({ replyid }) => {
@@ -381,6 +404,7 @@ export default {
   },
   components: { TextEditor },
   data: () => ({
+    color: 'red',
     dialog: false,
     replycommentdialog: false,
     isPost: true,
@@ -402,31 +426,12 @@ export default {
     ],
     posts: [
       {
-        src: 'http://instantview.info/wp-content/uploads/2019/07/multiplication-word-problems-worksheets-grade-5-simple-multiplying-decimals-pdf-and-division-gr.jpg',
-        Field: 'Maths',
-        title: 'Maths Question (Multiplication)',
-        name: 'Edith Woo',
-        date: 'Nov 8, 2019',
-        time: '22:57',
-        color: 'red',
-        question: 'Anyone know how to do Question 2? Thanks a lot!!! I have no idea how to do this question. Its too difficult :( Wuwuwuwuwu',
-        postnumber: '0',
-        likes: 0,
-        dislikes: 0,
-        Allcomments: [],
-        liked: false,
-        disliked: false,
-        notyetfollowed: true
-      },
-      {
-        Field: 'Engineering',
-        title: 'Engineering Question (Force= MA)',
-        name: 'Brian Chan',
-        date: 'Nov 2, 2019',
-        time: '01:34',
-        color: 'blue',
-        question: 'What is the meaning of F=MA??',
-        postnumber: '0',
+        title: '',
+        author: '',
+        content: '',
+        tags: [],
+        createdAt: '',
+        cid: 0,
         likes: 0,
         dislikes: 0,
         Allcomments: [],
@@ -440,11 +445,9 @@ export default {
   }),
   methods: {
     CurrentPosts (i) {
-      console.log('b')
       this.CurrentPost = this.posts[i]
     },
     LoadMoreComments () {
-      console.log('c')
       if ((this.CurrentPost.Allcomments).length >= this.currentCommentRange[1]) {
         this.currentCommentRange = [this.currentCommentRange[0], this.currentCommentRange[1] + 5]
       } else {
@@ -452,7 +455,6 @@ export default {
       }
     },
     LoadMoreReplyComments () {
-      console.log('d')
       if ((this.allreplyComments).length >= this.currentreplyCommentRange[1]) {
         this.currentreplyCommentRange = [this.currentreplyCommentRange[0], this.currentreplyCommentRange[1] + 5]
       } else {
@@ -466,7 +468,6 @@ export default {
       var newDate = new Date()
       var datetime = newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear() + '  ' + newDate.getHours() + ':' + newDate.getMinutes() + ':' + newDate.getSeconds()
       if (isPost === false) {
-        console.log('itisnotpost', isPost)
         const cid = (this.CurrentPost.Allcomments).length + 1
         const newreplycomment = this.replycomment
         const replytowhichcomment = this.whichcomment
@@ -475,13 +476,14 @@ export default {
           cid: cid,
           comment: newreplycomment,
           replyto: replytowhichcomment,
-          date: datetime
+          date: datetime,
+          liked: false,
+          disliked: false,
+          notyetfollowed: true
         }
         this.CurrentPost.Allcomments.push(a1)
-        console.log(this.CurrentPost.Allcomments)
         this.replycommentdialog = false
       } else {
-        console.log('itisapost', isPost)
         const cid = (this.CurrentPost.Allcomments).length + 1
         const newcomment = this.comment
         let a =
@@ -489,38 +491,56 @@ export default {
           cid: cid,
           comment: newcomment,
           replyto: null,
-          date: datetime
+          date: datetime,
+          liked: false,
+          disliked: false,
+          notyetfollowed: true
         }
         this.CurrentPost.Allcomments.push(a)
         this.dialog = false
       }
     },
     showwhichcomment (i) {
-      console.log('g', i)
       this.whichcomment = i
     },
-    likepost () {
-      console.log('h')
-      if (this.CurrentPost.liked === true) {
-        this.CurrentPost.liked = false
-        this.CurrentPost.likes = this.CurrentPost.likes - 1
+    toCreatePost () {
+      this.$router.push({ name: 'createpost' })
+    },
+    likepost (isPost, i = null) {
+      if (isPost === true) {
+        if (this.CurrentPost.liked === true) {
+          this.CurrentPost.liked = false
+          this.CurrentPost.likes = this.CurrentPost.likes - 1
+        } else {
+          this.CurrentPost.likes = this.CurrentPost.likes + 1
+          this.CurrentPost.liked = true
+        }
       } else {
-        this.CurrentPost.likes = this.CurrentPost.likes + 1
-        this.CurrentPost.liked = true
+        if (this.allcurrentComments[i].liked === true) {
+          this.allcurrentComments[i].liked = false
+        } else {
+          this.allcurrentComments[i].liked = true
+        }
       }
     },
-    dislikepost () {
-      console.log('i')
-      if (this.CurrentPost.disliked === true) {
-        this.CurrentPost.dislikes = this.CurrentPost.dislikes - 1
-        this.CurrentPost.disliked = false
+    dislikepost (isPost, i = null) {
+      if (isPost === true) {
+        if (this.CurrentPost.disliked === true) {
+          this.CurrentPost.dislikes = this.CurrentPost.dislikes - 1
+          this.CurrentPost.disliked = false
+        } else {
+          this.CurrentPost.dislikes = this.CurrentPost.dislikes + 1
+          this.CurrentPost.disliked = true
+        }
       } else {
-        this.CurrentPost.dislikes = this.CurrentPost.dislikes + 1
-        this.CurrentPost.disliked = true
+        if (this.allcurrentComments[i].disliked === true) {
+          this.allcurrentComments[i].disliked = false
+        } else {
+          this.allcurrentComments[i].disliked = true
+        }
       }
     },
     followed () {
-      console.log('j')
       if (this.CurrentPost.notyetfollowed === true) {
         this.CurrentPost.notyetfollowed = false
       } else {

@@ -8,7 +8,7 @@
       >
         <v-form
           ref="form"
-          v-model="isPostInfoValid"
+          v-model="valid"
           class="ma-6"
           lazy-validation
         >
@@ -62,10 +62,10 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="1">
+            <v-col cols="2">
               <v-subheader>Content: </v-subheader>
             </v-col>
-            <v-col cols="11">
+            <v-col cols="10">
               <template>
                 <text-editor v-model="post.content" />
               </template>
@@ -73,7 +73,7 @@
             <v-spacer></v-spacer>
           </v-row>
           <div class="text-center mb-3" >
-            <v-btn color="primary" class="ml-2" @click="postCreatepost">Save and exit</v-btn>
+            <v-btn color="primary" class="ml-2" :disabled="!valid" @click="createPost">Save and exit</v-btn>
           </div>
         </v-form>
       </v-card>
@@ -86,6 +86,11 @@ import TextEditor from '@/components/text-editor/TextEditor.vue'
 import http from '@/utils/http'
 
 export default {
+  beforeCreate () {
+    if (!this.$store.getters.isLoggedIn) {
+      this.$router.push({ name: 'home' })
+    }
+  },
   created () {
     this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
   },
@@ -94,7 +99,7 @@ export default {
   },
   components: { TextEditor },
   data: () => ({
-    isPostInfoValid: true,
+    valid: true,
     extraTags: [],
     tags: [],
     post: {
@@ -109,14 +114,15 @@ export default {
     ]
   }),
   methods: {
-    postCreatepost () {
-      if (this.isPostInfoValid && this.post.content.length > 0) {
-        // this.$refs.form.reset()
+    createPost () {
+      if (this.$refs.form.validate() && this.post.content.length > 0) {
         http.createPost(this.user.username, this.post.title, this.post.tags, this.post.content)
           .then(({ status, data }) => {
             if (status === 201) {
               this.updateSuccess = true
-              console.log('yes')
+              this.snackbar = true
+              this.$refs.form.reset()
+              this.$router.push({ name: 'DiscussionForum' })
             }
           }).catch(err => {
             console.log(err)
