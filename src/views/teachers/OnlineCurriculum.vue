@@ -12,16 +12,12 @@
     <div class="d-flex overflow-x-auto">
       <!-- add new course button -->
       <div class="mx-2">
-        <v-card flat class="my-4 d-flex justify-center align-center text-center" width="300" height="90%">
-          <div class="content">
-            <div class="row">
-              <v-btn text icon height="128" :to="{ name: 'new-course' }">
-                <v-icon color="indigo" size="128">mdi-plus-circle</v-icon>
-              </v-btn>
-            </div>
-            <div class="row">
-              <h4>Add New Course</h4>
-            </div>
+        <v-card flat class="my-4 d-flex align-center justify-center text-center" width="300" height="90%">
+          <div>
+            <v-btn text icon height="128" :to="{ name: 'new-course' }">
+              <v-icon color="indigo" size="128">mdi-plus-circle</v-icon>
+            </v-btn>
+            <p>Add New Course</p>
           </div>
         </v-card>
       </div>
