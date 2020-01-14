@@ -104,6 +104,12 @@ const router = new Router({
           component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/CourseEditor.vue')
         },
         {
+          path: '/teachers/courses/:courseId/preview',
+          name: 'preview-course',
+          meta: { role: 'teacher' },
+          component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/students/Course.vue')
+        },
+        {
           path: '/games/1',
           name: 'MagicCube',
           component: () => import(/* webpackChunkName: "MagicCube" */ './Games/MagicCube/MagicCube.vue')

@@ -74,9 +74,11 @@
         </v-stepper-step>
 
         <v-stepper-content step="3">
-          <v-card color="grey lighten-1" class="mb-12" height="200px"></v-card>
+          <div class="d-flex justify-center">
+            <v-btn class="ml-2 white--text" color="red" @click="preview">Preview course</v-btn>
+          </div>
           <div class="mb-2">
-            <v-btn color="primary" @click="next(1)">Publish</v-btn>
+            <v-btn color="primary" @click="publish">Publish</v-btn>
             <v-btn class="ml-2" text @click="saveExit">Save and exit</v-btn>
           </div>
         </v-stepper-content>
@@ -157,6 +159,9 @@ export default {
     removeTag (item) {
       this.course.tags.splice(this.course.tags.indexOf(item), 1)
       this.course.tags = [ ...this.course.tags ]
+    },
+    preview () {
+      this.$router.push({ name: 'preview-course', params: { courseId: this.course.id } })
     }
   },
   watch: {
