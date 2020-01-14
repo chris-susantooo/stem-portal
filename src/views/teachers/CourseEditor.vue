@@ -56,7 +56,12 @@
         </v-stepper-step>
 
         <v-stepper-content step="2">
-          <course-content-creator :save="trigger" @saveCourse="saveCourse" @courseValidationChanged="setCourseValid" />
+          <course-content-creator
+            :retrievedChapters="course.chapters"
+            :save="trigger"
+            @saveCourse="saveCourse"
+            @courseValidationChanged="setCourseValid"
+          />
           <div class="mt-2 py-2">
             <v-btn color="primary" @click="next(3)">Continue</v-btn>
             <v-btn class="ml-2" text @click="saveExit">Save and exit</v-btn>
@@ -88,11 +93,9 @@ export default {
   components: { CourseContentCreator },
   created () {
     const courseId = this.$route.params.courseId
+    this.isNew = !courseId
     if (courseId) {
-      http.readCourse(courseId).then(({ data: course }) => {
-        course.chapters = JSON.parse(course.chapters)
-        this.course = course
-      })
+      http.readCourse(courseId).then(({ data: course }) => { this.course = course })
     }
     this.course.author = this.$store.getters.user.username
     this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
@@ -101,6 +104,7 @@ export default {
     courseTitle () { return this.course.title }
   },
   data: () => ({
+    isNew: true,
     isCourseInfoValid: true,
     isCourseValid: true,
     tags: [],
@@ -129,11 +133,8 @@ export default {
     saveCourse (chapters = []) {
       if (chapters) this.course.chapters = chapters
       if (this.isCourseInfoValid && this.isCourseValid) {
-        const course = { ...this.course }
-        course.chapters = JSON.stringify(course.chapters)
-        this.course.id ? http.updateCourse(course) : http.createCourse(course)
+        this.course.id ? http.updateCourse(this.course) : http.createCourse(this.course)
           .then(({ data: course }) => {
-            course.chapters = JSON.parse(course.chapters)
             this.course = course
             this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
           })
@@ -160,20 +161,22 @@ export default {
   },
   watch: {
     courseTitle (val) {
-      setTimeout(() => {
-        const isValid = this.courseProps.courseName.every(r => typeof r(val) !== 'string')
-        if (val === this.course.title && isValid) {
-          http.checkCourse(val)
-            .then(() => {
-              this.courseProps.hint = undefined
-              this.courseProps.errMsgs = 'Name already used'
-            })
-            .catch(() => {
-              this.courseProps.hint = 'Name available'
-              this.courseProps.errMsgs = ''
-            })
-        }
-      }, 1000)
+      if (this.isNew) {
+        setTimeout(() => {
+          const isValid = this.courseProps.courseName.every(r => typeof r(val) !== 'string')
+          if (val === this.course.title && isValid) {
+            http.checkCourse(val)
+              .then(() => {
+                this.courseProps.hint = undefined
+                this.courseProps.errMsgs = 'Name already used'
+              })
+              .catch(() => {
+                this.courseProps.hint = 'Name available'
+                this.courseProps.errMsgs = ''
+              })
+          }
+        }, 1000)
+      }
     }
   }
 }

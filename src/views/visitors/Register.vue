@@ -119,6 +119,7 @@ export default {
   methods: {
     postRegistrationUser () {
       if (this.postRegistrationForm) {
+        this.role = this.role.toLowerCase()
         http.postRegistrationUser(this.username, this.role, this.firstName, this.lastName, this.gender, this.school, this.interest)
           .then(({ status, data }) => {
             if (status === 200) this.updateSuccess = true

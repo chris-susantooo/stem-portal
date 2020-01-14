@@ -1,7 +1,7 @@
 <template>
-  <div class="ma-0 pa-0">
+  <div>
     <!-- course card -->
-    <v-card class="course-card mx-auto my-12" max-width="300">
+    <v-card class="course-card my-4" max-width="300">
       <v-img height="200" :src="'https://cdn.vuetifyjs.com/images/cards/cooking.png' || course.thumbnail" @click="toCourse"/>
       <v-card-title @click="toCourse">
         <span class="d-inline-block text-truncate">{{ course.title }}</span>
@@ -11,7 +11,7 @@
         <v-row align="center" class="mx-0">
           <v-rating dense half-increments
             :readonly="!ratable"
-            :value="course.rating"
+            :value="course.rating === 'No ratings yet' ? 4 : course.rating"
             color="amber"
             size="14"
           />
@@ -23,7 +23,7 @@
           </v-chip>
         </v-chip-group>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="role === 'teacher'">
         <v-btn text color="indigo" class="mr-n1 px-n1" @click="toCourse">
           Edit
         </v-btn>
@@ -63,6 +63,10 @@ export default {
     course: {
       type: Object,
       required: true
+    },
+    role: {
+      type: String,
+      required: true
     }
   },
   data: () => ({
@@ -70,7 +74,8 @@ export default {
   }),
   methods: {
     toCourse () {
-      this.$router.push({ name: 'edit-course', params: { courseId: this.course.id } })
+      if (this.role === 'teacher') this.$router.push({ name: 'edit-course', params: { courseId: this.course.id } })
+      else if (this.role === 'student') this.$router.push({ name: 'take-course', params: { courseId: this.course.id } })
     },
     toPreview () {
       this.$router.push({ name: 'preview-course', params: { courseId: this.course.id } })
