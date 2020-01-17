@@ -71,7 +71,7 @@ export default {
         password: [
           v => !!v || 'This field is required',
           v => (v.length >= 8 && v.length <= 26) || 'Must be between 8 to 26 characters',
-          v => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,26}$/.test(v) || 'Must contain at least a number and an upper case letter.'
+          v => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,26}$/.test(v) || 'Must contain a number and an uppercase letter.'
         ],
         confirm: [
           v => v === this.password || 'Must match the above password',
