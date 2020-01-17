@@ -7,8 +7,8 @@
           <v-card-text>Enter your new password to complete the procedure.</v-card-text>
           <v-form v-model="resetForm">
             <v-container>
-              <v-text-field v-model="password" :counter="20" :rules="rules.password" label="Password" outlined type="password" dense/>
-              <v-text-field v-model="confirmPassword" :counter="20" :rules="rules.confirm" label="Re-enter password" outlined type="password" dense/>
+              <v-text-field v-model="password" :counter="26" :rules="rules.password" label="Password" outlined type="password" dense/>
+              <v-text-field v-model="confirmPassword" :counter="26" :rules="rules.confirm" label="Re-enter password" outlined type="password" dense/>
             </v-container>
             <v-card-actions>
               <div class="flex-grow-1"></div>
@@ -70,8 +70,8 @@ export default {
       rules: {
         password: [
           v => !!v || 'This field is required',
-          v => (v.length >= 8 && v.length <= 20) || 'Must be between 8 to 20 characters'
-          // more validation rules TODO (require numbers and characters? Upper and lower cases?)
+          v => (v.length >= 8 && v.length <= 26) || 'Must be between 8 to 26 characters',
+          v => /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,26}$/.test(v) || 'Must contain at least a number and an upper case letter.'
         ],
         confirm: [
           v => v === this.password || 'Must match the above password',
