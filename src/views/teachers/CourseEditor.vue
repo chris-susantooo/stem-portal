@@ -18,13 +18,13 @@
               :count="60"
               :rules="courseProps.courseName"
               label="Course title"
-              v-model="course.title"
+              v-model="course.name"
               :hint="courseProps.hint"
             />
             <v-textarea outlined :rules="courseProps.shortDesc" label="Short description" v-model="course.description" required />
             <v-combobox multiple outlined chips clearable
               v-model="course.tags"
-              :items="tags"
+              :items="tags.map(tag => tag.name)"
               label="Your course tags"
               :rules="courseProps.tag"
             >
@@ -97,13 +97,13 @@ export default {
     const courseId = this.$route.params.courseId
     this.isNew = !courseId
     if (courseId) {
-      http.readCourse(courseId).then(({ data: course }) => { this.course = course })
+      http.readCourse(courseId).then(({ data: { course } }) => { this.course = course })
     }
     this.course.author = this.$store.getters.user.username
-    this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
+    this.$http.get('tags').then(({ data: { tags } }) => { this.tags = tags })
   },
   computed: {
-    courseTitle () { return this.course.title }
+    courseTitle () { return this.course.name }
   },
   data: () => ({
     isNew: true,
@@ -115,7 +115,7 @@ export default {
     course: {
       id: '',
       author: '',
-      title: '',
+      name: '',
       tags: [],
       description: '',
       chapters: []
@@ -135,12 +135,23 @@ export default {
     saveCourse (chapters = []) {
       if (chapters) this.course.chapters = chapters
       if (this.isCourseInfoValid && this.isCourseValid) {
-        this.course.id ? http.updateCourse(this.course) : http.createCourse(this.course)
-          .then(({ data: course }) => {
-            this.course = course
-            this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
-          })
-          .catch(err => { console.log(err) })
+        if (this.course._id) {
+          http.updateCourse(this.course)
+            .then(({ status, error }) => {
+              if (status !== 204) {
+                console.log(error)
+              } else {
+                this.$http.get('tags').then(({ data: { tags } }) => { this.tags = tags })
+              }
+            })
+        } else {
+          http.createCourse(this.course)
+            .then(({ data: { course } }) => {
+              this.course = course
+              this.$http.get('tags').then(({ data: { tags } }) => { this.tags = tags })
+            })
+            .catch(err => { console.log(err) })
+        }
       }
     },
     next (to) {
@@ -161,7 +172,17 @@ export default {
       this.course.tags = [ ...this.course.tags ]
     },
     preview () {
-      this.$router.push({ name: 'preview-course', params: { courseId: this.course.id } })
+      this.$router.push({ name: 'preview-course', params: { courseId: this.course._id } })
+    },
+    publish () {
+      http.publishCourse(this.course._id)
+        .then(({ status, error }) => {
+          if (status === 204) {
+            this.$router.push({ name: 'online-course' })
+          } else {
+            console.log(error)
+          }
+        })
     }
   },
   watch: {
@@ -169,7 +190,7 @@ export default {
       if (this.isNew) {
         setTimeout(() => {
           const isValid = this.courseProps.courseName.every(r => typeof r(val) !== 'string')
-          if (val === this.course.title && isValid) {
+          if (val === this.course.name && isValid) {
             http.checkCourse(val)
               .then(() => {
                 this.courseProps.hint = undefined

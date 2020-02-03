@@ -1,24 +1,33 @@
 import Axios from 'axios'
 
 const http = {
+  // HEAD requests
+  checkValid: key => Axios.head(`users/${key}`),
+  checkCourse: name => Axios.head(`courses/${name}`),
+
   // GET requests
-  checkUsername: username => Axios.get(`check/username/${username}`),
-  checkEmail: email => Axios.get(`check/email/${email}`),
-  checkCourse: courseName => Axios.get(`/check/course/${courseName}`),
   getPosts: () => Axios.get('forum/posts'),
+  readCourse: courseId => Axios.get(`courses/${courseId}`),
 
   // POST request
-  registerUser: (username, password, email, isResend) => Axios.post('users', { username, password, email, isResend }),
-  activateUser: (username, token, cancel) => Axios.post(`auth/activate/${username}`, { token, cancel }),
-  resetPassword: (username, email) => Axios.post('auth/reset-password', { username, email }),
-  acquirePassword: (username, token, cancel) => Axios.post(`auth/acquire-password/${username}`, { token, cancel }),
-  changePassword: (username, password) => Axios.post('users/change-password', { username, password }),
-  postRegistrationUser: (username, role, firstName, lastName, gender, school, interests) => Axios.post('users/register', { username, role, firstName, lastName, gender, school, interests }),
-  createCourse: ({ title, description, tags, chapters, author }) => Axios.post('courses', { name: title, description, tags, chapters, author }),
-  readCourse: courseId => Axios.get(`courses/${courseId}`),
-  updateCourse: course => Axios.put(`courses/${course.id}`, { course }),
-  deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
-  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content })
+  registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
+  verifyUser: (username, token, cancel) => Axios.post(`auth/verify/${username}`, { token, cancel }),
+  activateUser: (username, role, firstName, lastName, gender, school, interests) => Axios.post(`auth/activate/${username}`, { role, firstName, lastName, gender, school, interests }),
+  forgotPassword: (username, email) => Axios.post('auth/forgot-password', { username, email }),
+  cancelToken: (username, token) => Axios.post(`auth/cancel-token/${token}`, { username }),
+  resetPassword: (username, password, token) => Axios.post('auth/reset-password', { username, password, token }),
+  createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
+  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content }),
+
+  // PATCH request
+  publishCourse: _id => Axios.patch(`courses/${_id}`),
+
+  // PUT request
+  updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
+
+  // DELETE request
+  deleteCourse: courseId => Axios.delete(`courses/${courseId}`)
+
 }
 
 export default http

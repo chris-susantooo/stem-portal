@@ -19,12 +19,8 @@
         </v-card>
       </div>
       <!-- courses -->
-      <div v-for="course in courses" :key="course.id" class="mx-2">
+      <div v-for="course in courses" :key="course._id" class="mx-2">
           <course-card :course="course" :role="user.type" @courseDeleted="fetchTeachingCourses" />
-      </div>
-      <!-- placeholder course -->
-      <div class="mx-2">
-        <course-card :course="placeholderCourse" :role="user.type" />
       </div>
       <div class="px-2" />
     </div>
@@ -45,21 +41,12 @@ export default {
     }
   },
   data: () => ({
-    courses: [],
-    placeholderCourse: {
-      id: 'demo',
-      thumbnail: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-      title: 'Introductory Programming! Learn fast.',
-      author: 'christophers',
-      tags: ['JavaScript', 'Coding', 'Technology'],
-      rating: 4.5,
-      votes: 100
-    }
+    courses: []
   }),
   methods: {
     fetchTeachingCourses () {
-      this.$http.get(`courses?teacher=${this.user.username}`)
-        .then(({ data: courses }) => { this.courses = courses })
+      this.$http.get('courses')
+        .then(({ data: { courses, page, pages } }) => { this.courses = courses })
     }
   }
 }

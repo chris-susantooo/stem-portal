@@ -4,18 +4,18 @@
     <v-card class="course-card my-4" max-width="300">
       <v-img height="200" :src="'https://cdn.vuetifyjs.com/images/cards/cooking.png' || course.thumbnail" @click="toCourse"/>
       <v-card-title @click="toCourse">
-        <span class="d-inline-block text-truncate">{{ course.title }}</span>
+        <span class="d-inline-block text-truncate">{{ course.name }}</span>
       </v-card-title>
       <v-card-text class="mt-n2">
-        <router-link to="/">{{ course.author }}</router-link>
+        <router-link to="/">{{ course.author.username }}</router-link>
         <v-row align="center" class="mx-0">
           <v-rating dense half-increments
             :readonly="!ratable"
-            :value="course.rating === 'No ratings yet' ? 4 : course.rating"
+            :value="course.rating || 3.5"
             color="amber"
             size="14"
           />
-          <div class="grey--text ml-4">{{ `${course.rating} (${course.votes})` }}</div>
+          <div class="grey--text ml-4">{{ course.nRatings ? course.rating + ' (' + course.nRatings + ')' : 'No ratings yet' }}</div>
         </v-row>
         <v-chip-group show-arrows active-class="deep-purple white--text">
           <v-chip v-for="tag in course.tags" :key="tag" to="/">
@@ -74,15 +74,15 @@ export default {
   }),
   methods: {
     toCourse () {
-      if (this.role === 'teacher') this.$router.push({ name: 'edit-course', params: { courseId: this.course.id } })
-      else if (this.role === 'student') this.$router.push({ name: 'take-course', params: { courseId: this.course.id } })
+      if (this.role === 'teacher') this.$router.push({ name: 'edit-course', params: { courseId: this.course._id } })
+      else if (this.role === 'student') this.$router.push({ name: 'take-course', params: { courseId: this.course._id } })
     },
     toPreview () {
-      this.$router.push({ name: 'preview-course', params: { courseId: this.course.id } })
+      this.$router.push({ name: 'preview-course', params: { courseId: this.course._id } })
     },
     deleteCourse () {
       this.removeDialog = false
-      http.deleteCourse(this.course.id).then(({ status }) => {
+      http.deleteCourse(this.course._id).then(({ status }) => {
         if (status === 204) { this.$emit('courseDeleted') }
       })
     }
