@@ -5,7 +5,20 @@ const http = {
   checkUsername: username => Axios.get(`check/username/${username}`),
   checkEmail: email => Axios.get(`check/email/${email}`),
   checkCourse: courseName => Axios.get(`/check/course/${courseName}`),
-  getPosts: () => Axios.get('forum/posts'),
+  getPosts: ({ search, tags, sort, page, size }) => {
+    let url = 'forum/posts?'
+    if (search) {
+      url += `search=${search}&`
+    } if (tags) {
+      url += `tags=${tags.join(',')}&`
+    } if (sort) {
+      url += `sort=${sort}&`
+    }
+    url += `page=${page}&size=${size}`
+    return Axios.get(url)
+  },
+  getPost: id => Axios.get(`/forum/posts/${id}`),
+  getComments: (id, page) => Axios.get(`/forum/posts/${id}/comments?page=${page}`),
 
   // POST request
   registerUser: (username, password, email, isResend) => Axios.post('users', { username, password, email, isResend }),
@@ -18,7 +31,8 @@ const http = {
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   updateCourse: course => Axios.put(`courses/${course.id}`, { course }),
   deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
-  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content })
+  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content }),
+  createComment: (id, content, replyto) => Axios.post(`/forum/posts/${id}/comments`, { content, replyto })
 }
 
 export default http
