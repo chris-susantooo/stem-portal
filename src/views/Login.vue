@@ -205,7 +205,7 @@ export default {
         setTimeout(() => {
           const isValid = this.rules.name.every(r => typeof r(val) !== 'string')
           if (val === this.username && isValid) {
-            http.checkUsername(val)
+            http.checkValid(val)
               .then(() => {
                 this.usernameProps.hint = undefined
                 this.usernameProps.errMsgs = 'Username not available'
@@ -223,7 +223,7 @@ export default {
         setTimeout(() => {
           const isValid = this.rules.email.every(r => typeof r(val) !== 'string')
           if (val === this.email && isValid) {
-            http.checkEmail(val)
+            http.checkValid(val)
               .then(() => {
                 this.emailProps.hint = undefined
                 this.emailProps.errMsgs = 'Email already registered'
@@ -254,7 +254,7 @@ export default {
     register (resend) {
       if (this.registerForm) {
         http.registerUser(this.username, this.password, this.email, resend)
-          .then(({ status, data }) => {
+          .then(({ status }) => {
             if (status === 201) {
               this.registerSuccess = true
               this.resultDialog = true
@@ -267,9 +267,9 @@ export default {
     requestReset () {
       if (this.reset.form) {
         this.reset.errorResponse = false
-        http.resetPassword(this.reset.username, this.reset.email)
+        http.forgotPassword(this.reset.username, this.reset.email)
           .then(({ status, data }) => {
-            if (status === 200) {
+            if (status === 204) {
               this.reset.dialog = false
               this.resetSuccess = true
             }
