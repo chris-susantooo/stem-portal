@@ -18,9 +18,8 @@ const http = {
   resetPassword: (username, password, token) => Axios.post('auth/reset-password', { username, password, token }),
   createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
   createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content }),
-
-  // PATCH request
-  publishCourse: _id => Axios.patch(`courses/${_id}`),
+  publishCourse: _id => Axios.post(`courses/${_id}/publish`),
+  unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
