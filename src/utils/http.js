@@ -9,7 +9,7 @@ const http = {
   getPosts: () => Axios.get('forum/posts'),
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: id => Axios.get(`/forum/posts/${id}`),
-  getComments: (id, page) => Axios.get(`/forum/posts/${id}/comments?page=${page}`),
+  getComments: (id, page, reply) => Axios.get(`/forum/posts/${id}/comments?page=${page}` + (reply ? `&reply=${reply}` : '')),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
@@ -19,8 +19,8 @@ const http = {
   cancelToken: (username, token) => Axios.post(`auth/cancel-token/${token}`, { username }),
   resetPassword: (username, password, token) => Axios.post('auth/reset-password', { username, password, token }),
   createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
-  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content }),
-  createComment: (id, content, replyto) => Axios.post(`/forum/posts/${id}/comments`, { content, replyto }),
+  createPost: (title, content, tags) => Axios.post('forum/posts', { title, content, tags }),
+  createComment: (id, content, reply) => Axios.post(`/forum/posts/${id}/comments`, { content, reply }),
 
   // PATCH request
   publishCourse: _id => Axios.patch(`courses/${_id}`),
