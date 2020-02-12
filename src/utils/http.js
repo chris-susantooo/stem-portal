@@ -21,9 +21,8 @@ const http = {
   createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
   createPost: (title, content, tags) => Axios.post('forum/posts', { title, content, tags }),
   createComment: (id, content, reply) => Axios.post(`/forum/posts/${id}/comments`, { content, reply }),
-
-  // PATCH request
-  publishCourse: _id => Axios.patch(`courses/${_id}`),
+  publishCourse: _id => Axios.post(`courses/${_id}/publish`),
+  unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),

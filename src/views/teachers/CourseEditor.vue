@@ -78,7 +78,8 @@
             <v-btn class="ml-2 white--text" color="red" @click="preview">Preview course</v-btn>
           </div>
           <div class="mb-2">
-            <v-btn color="primary" @click="publish">Publish</v-btn>
+            <v-btn v-if="!this.course.published" color="primary" @click="publish">Publish</v-btn>
+            <v-btn v-else color="primary" @click="unpublish">Unpublish</v-btn>
             <v-btn class="ml-2" text @click="saveExit">Save and exit</v-btn>
           </div>
         </v-stepper-content>
@@ -113,12 +114,13 @@ export default {
     currentStep: 1,
     trigger: true,
     course: {
-      id: '',
+      _id: '',
       author: '',
       name: '',
       tags: [],
       description: '',
-      chapters: []
+      chapters: [],
+      published: false
     },
     courseProps: {
       errMsgs: '',
@@ -176,6 +178,16 @@ export default {
     },
     publish () {
       http.publishCourse(this.course._id)
+        .then(({ status, error }) => {
+          if (status === 204) {
+            this.$router.push({ name: 'online-course' })
+          } else {
+            console.log(error)
+          }
+        })
+    },
+    unpublish () {
+      http.unpublishCourse(this.course._id)
         .then(({ status, error }) => {
           if (status === 204) {
             this.$router.push({ name: 'online-course' })
