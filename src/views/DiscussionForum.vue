@@ -129,7 +129,7 @@
                                 <v-icon v-if="post.rating>=0">mdi-thumb-up-outline</v-icon>
                                 <v-icon v-if="post.rating<0">mdi-thumb-down-outline</v-icon>
                               </span>
-                              <span class="mr-3">{{post.nComments}}<v-icon>mdi-chat-outline</v-icon></span>
+                              <span class="pl-2 mr-3">{{nComments}}<v-icon>mdi-chat-outline</v-icon></span>
                             </v-row>
                           </v-list-item-title>
                           <v-list-item-subtitle class="pl-3 body-1 bold d-inline-block text-truncate">
@@ -185,10 +185,7 @@
                                   <v-btn class="pl-2" v-on:click="dislikepost(true)" icon>
                                     <v-icon>mdi-thumb-down-outline</v-icon>
                                   </v-btn>
-                                  {{CurrentPost.nComments}}
-                                  <v-btn class="pl-2" disabled icon>
-                                    <v-icon>mdi-reply</v-icon>
-                                  </v-btn>
+                                  <span class="pl-2 mr-3">{{nComments}}<v-icon>mdi-chat-outline</v-icon></span>
                                   <v-spacer></v-spacer>
                                   <v-btn class="mr-3" color="primary" dark @click="dialog=true">Reply Post</v-btn>
                                 </v-list-item>
@@ -268,9 +265,9 @@
                           <v-card width="100%">
                             <v-list-item three-line>
                               <v-list-item-content>
-                                <v-list-item-title class="subtitle-1">
-                                  #{{i+2}}
-                                  <span class="pl-4">{{item.author.username}}</span>
+                                <v-list-item-title class="subtitle-1 indigo--text">
+                                  #{{item.floor}}
+                                  <span class="pl-4 black--text">{{item.author.username}}</span>
                                 </v-list-item-title>
                                 <v-list-item-subtitle>
                                   {{postTime(item.createdAt)}}
@@ -285,53 +282,61 @@
                                   </v-btn>
                                   <!-- Reply Comment Dialog -->
                                   <v-dialog v-model="replycommentdialog" :retain-focus="false">
-                                    <v-card width="100%" height="100%">
-                                      <v-row v-for="(replyComment, a) in allreplyComments" :key="a">
-                                        <v-row no-gutters>
-                                          <v-card width="100%">
-                                            <v-list-item three-line>
-                                              <v-list-item-content>
-                                                <v-list-item-title class="subtitle-1 pl-4">
-                                                  <span class="indigo--text"># {{replyComment.floor}} </span>
-                                                  <span class="pl-4">{{replyComment.author.username}}</span>
-                                                </v-list-item-title>
-                                                <v-list-item-subtitle class="pl-4 overline">
-                                                  {{postTime(replyComment.createdAt)}}
-                                                </v-list-item-subtitle>
-                                                <div class="mt-5 pl-4" v-html="replyComment.content"/>
-                                              </v-list-item-content>
-                                            </v-list-item>
-                                          </v-card>
-                                        </v-row>
-                                      </v-row>
-                                      <v-row>
-                                        <v-card-title class="subtitle-1 ma-6">
-                                          # {{whichcomment+1}}
-                                          <span class="subtitle-1 pl-6"></span>
+                                    <v-card>
+                                      <v-card outlined>
+                                        <v-card-title class="subtitle-1 indigo--text">
+                                          # {{whichcomment+2}}
+                                          <span class="pl-6 black--text">{{item.author.username}}</span>
                                         </v-card-title>
-                                        <v-card-title class="subtitle-1"></v-card-title>
-                                      </v-row>
-                                      <v-row>
-                                        <v-card-text v-html="content"></v-card-text>
-                                      </v-row>
+                                        <v-card-subtitle>{{postTime(item.createdAt)}}</v-card-subtitle>
+                                        <div class="black-text pl-4" v-html="content"></div>
+                                      </v-card>
+                                      <v-container
+                                        id="target1"
+                                        style="max-height: 400px"
+                                        class="overflow-y-auto"
+                                      >
+                                        <v-row
+                                          v-scroll:#target1="onScroll1"
+                                        >
+                                          <v-col cols="12" md="12">
+                                            <v-row v-for="(replyComment, a) in allreplyComments" :key="a">
+                                              <v-card width="100%">
+                                                <v-list-item three-line>
+                                                  <v-list-item-content>
+                                                    <v-list-item-title class="subtitle-1 pl-4">
+                                                      <span class="indigo--text"># {{replyComment.floor}} </span>
+                                                      <span class="pl-4">{{replyComment.author.username}}</span>
+                                                    </v-list-item-title>
+                                                    <v-list-item-subtitle class="pl-4 overline">
+                                                      {{postTime(replyComment.createdAt)}}
+                                                    </v-list-item-subtitle>
+                                                    <div class="mt-5 pl-4" v-html="replyComment.content"/>
+                                                  </v-list-item-content>
+                                                </v-list-item>
+                                              </v-card>
+                                            </v-row>
+                                          </v-col>
+                                        </v-row>
+                                      </v-container>
                                       <v-container>
                                         <template>
                                           <text-editor v-model="replycomment" />
                                         </template>
-                                      </v-container>
-                                      <v-container class="justify-center d-flex">
-                                        <v-card-actions>
-                                          <v-btn
-                                            color="primary"
-                                            dark
-                                            @click="addnewcomments(false)"
-                                          >Reply</v-btn>
-                                          <v-btn
-                                            color="primary"
-                                            dark
-                                            @click="replycommentdialog=false"
-                                          >Exit</v-btn>
-                                        </v-card-actions>
+                                        <v-container class="justify-center d-flex">
+                                          <v-card-actions>
+                                            <v-btn
+                                              color="primary"
+                                              dark
+                                              @click="addnewcomments(false)"
+                                            >Reply</v-btn>
+                                            <v-btn
+                                              color="primary"
+                                              dark
+                                              @click="replycommentdialog=false"
+                                            >Exit</v-btn>
+                                          </v-card-actions>
+                                        </v-container>
                                       </v-container>
                                     </v-card>
                                   </v-dialog>
@@ -372,6 +377,7 @@ export default {
           this.CurrentPost = data.post
           this.allcurrentComments = data.post.comments
           this.page = 1
+          this.nComments = data.post.nComments
           this.maxPages = Math.ceil(data.post.nComments / 10)
         })
       }
@@ -421,13 +427,19 @@ export default {
     comments: { content: '' },
     CurrentPost: [],
     allcurrentComments: [],
-    allreplyComments: []
+    allreplyComments: [],
+    nComments: 0,
+    dialogPage: 0
   }),
   methods: {
     CurrentPosts (i) {
       http.getPost(this.posts[i]._id).then(({ data }) => {
         this.CurrentPost = data.post
         this.allcurrentComments = data.post.comments
+        this.page = 1
+        this.allreplyComments = []
+        this.nComments = data.nComments
+        this.maxPages = Math.ceil(data.post.nComments / 10)
       })
     },
     LoadMoreReplyComments () {
@@ -437,13 +449,22 @@ export default {
         this.currentCommentRange = this.currentCommentRange
       }
     },
+    onScroll1 (e1) {
+      console.log(e1.target.clientHeight, e1.target.scrollTop, this.dialogPage, this.dialogPages)
+      if (e1.target.clientHeight + e1.target.scrollTop >= e1.target.scrollHeight && this.dialogPage < this.dialogPages) {
+        console.log('a')
+        http.getComments(this.CurrentPost._id, this.dialogPage + 1, this.allcurrentComments[this.whichcomment]._id).then(({ data }) => {
+          let a = (this.allcurrentComments).concat(data.comments)
+          this.allcurrentComments = a
+        })
+      }
+    },
     onScroll (e) {
       if (e.target.clientHeight + e.target.scrollTop >= e.target.scrollHeight && this.page < this.maxPages) {
         this.page += 1
         http.getComments(this.CurrentPost._id, this.page).then(({ data }) => {
           let a = (this.allcurrentComments).concat(data.comments)
           this.allcurrentComments = a
-          console.log(this.allcurrentComments)
         })
       }
     },
@@ -455,13 +476,12 @@ export default {
         http.createComment(id, content, reply).then(({ data }) => {
           if (data.status === 201) {
             this.replycommentdialog = false
-            http.getComments(id, this.page).then(({ data }) => {
-              if (data.status === 200) {
-                this.allcurrentComments = data.comments
-              }
+            this.allcurrentComments.push(data.comment)
+            http.getPost(this.CurrentPost._id).then(({ data }) => {
+              this.nComments = data.post.nComments
             }).catch(err => {
               console.log(err)
-              this.errorDialog = true
+              this.errDialog = true
             })
           }
         }).catch(err => {
@@ -469,17 +489,16 @@ export default {
           this.errorDialog = true
         })
       } else {
-        http.createComment(id, this.comments.content).then(({ status, comment }) => {
-          if (status === 201) {
-            http.getComments(id, this.page).then(({ data }) => {
-              if (data.status === 200) {
-                this.allcurrentComments = data.comments
-              }
+        http.createComment(id, this.comments.content).then(({ data }) => {
+          if (data.status === 201) {
+            this.allcurrentComments.push(data.comment)
+            this.dialog = false
+            http.getPost(this.CurrentPost._id).then(({ data }) => {
+              this.nComments = data.post.nComments
             }).catch(err => {
               console.log(err)
-              this.errorDialog = true
+              this.errDialog = true
             })
-            this.dialog = false
           }
         }).catch(err => {
           console.log(err)
@@ -491,19 +510,17 @@ export default {
       this.content = comment
       this.whichcomment = i
       var reply = this.allcurrentComments[this.whichcomment]._id
-      if (this.allcurrentComments[this.whichcomment].nComments > 0) {
-        http.getComments(this.CurrentPost._id, 1, reply).then(({ data }) => {
-          if (data.status === 200) {
-            this.allreplyComments = data.comments
-            console.log(this.allreplyComments)
-          }
-        }).catch(err => {
-          console.log(err)
-          this.errorDialog = true
-        })
-      } else {
-        this.allreplyComments = []
-      }
+      http.getComments(this.CurrentPost._id, null, reply).then(({ data }) => {
+        if (data.status === 200) {
+          this.allreplyComments = data.comments
+          this.content = ''
+          this.dialogPage = data.page
+          this.dialogPages = data.pages
+        }
+      }).catch(err => {
+        console.log(err)
+        this.errorDialog = true
+      })
     },
     toCreatePost () {
       this.$router.push({ name: 'createpost' })
@@ -552,7 +569,11 @@ export default {
       var year = 0
       if (diffHour < 1) {
         var diffmin = diffHour * 60
-        postTime = String(Math.round(diffmin)) + ' Mins Ago'
+        if (diffmin < 1.5) {
+          postTime = String(Math.round(diffmin)) + ' Min Ago'
+        } else {
+          postTime = String(Math.round(diffmin)) + ' Mins Ago'
+        }
       } else if (diffHour >= 1 && diffHour <= 23) {
         postTime = String(Math.round(diffHour)) + ' Hours Ago'
       } else if (diffDay >= 1 && diffDay < 30) {

@@ -9,7 +9,7 @@ const http = {
   getPosts: () => Axios.get('forum/posts'),
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: id => Axios.get(`/forum/posts/${id}`),
-  getComments: (id, page, reply) => Axios.get(`/forum/posts/${id}/comments?page=${page}` + (reply ? `&reply=${reply}` : '')),
+  getComments: (id, page, reply) => Axios.get(`/forum/posts/${id}/comments` + (page && !reply ? `?page=${page}` : '') + (reply && !page ? `?reply=${reply}` : '') + (reply && page ? `?page=${page}&reply=${reply}` : '')),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
