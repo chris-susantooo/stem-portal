@@ -8,7 +8,7 @@ const http = {
   getPosts: () => Axios.get('forum/posts'),
 
   // POST request
-  registerUser: (username, password, email, isResend) => Axios.post('users', { username, password, email, isResend }),
+  registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
   activateUser: (username, token, cancel) => Axios.post(`auth/activate/${username}`, { token, cancel }),
   resetPassword: (username, email) => Axios.post('auth/reset-password', { username, email }),
   acquirePassword: (username, token, cancel) => Axios.post(`auth/acquire-password/${username}`, { token, cancel }),

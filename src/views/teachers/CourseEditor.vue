@@ -162,6 +162,9 @@ export default {
     },
     preview () {
       this.$router.push({ name: 'preview-course', params: { courseId: this.course.id } })
+    },
+    publish () {
+
     }
   },
   watch: {

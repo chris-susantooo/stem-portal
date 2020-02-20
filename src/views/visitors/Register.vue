@@ -101,7 +101,7 @@ export default {
       rules: {
         name: [
           v => !!v || 'This field is required',
-          v => (v.length >= 1 && v.length <= 20) || 'Must be between 6 to 20 characters',
+          v => v.length <= 20 || 'Must be less than 20 characters',
           v => /^([^0-9]*)$/.test(v) || 'Must not contain numbers'
         ],
         select: [
