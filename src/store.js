@@ -45,7 +45,7 @@ export default new Vuex.Store({
         if (getters.isLoggedIn) {
           Axios.defaults.headers.common['Authorization'] = 'bearer ' + state.token
           Axios({ url: '/user', method: 'GET' })
-            .then(({ data: user }) => {
+            .then(({ data: { user } }) => {
               commit('setUser', user)
               resolve(user)
             })

@@ -45,19 +45,20 @@ export default {
     this.$emit('childBusy')
   },
   created () {
-    const { username } = this.$route.params
+    this.username = this.$route.params.username
     const { token, cancel } = this.$route.query
-    http.acquirePassword(username, token, cancel)
-      .then(({ data: { status, user } }) => {
-        if (status === 'cancelled') this.header = 'Token invalidated! Thank you for helping us out.'
-        if (status === 'user existed') {
-          this.header = 'Continue to reset your password'
-          this.username = username
-          this.resetForm = true
-        }
-      })
-      .catch(err => { console.log(err) })
-      .finally(() => { this.$emit('childReady') })
+    if (cancel) {
+      // send request to backend to revoke token
+      http.cancelToken(this.username, token)
+        .then(({ status, data }) => {
+          if (status === 200) {
+            this.header = 'Thank you for helping us!'
+          }
+        })
+    } else {
+      this.$emit('childReady')
+      this.resetForm = true
+    }
   },
   data () {
     return {
@@ -88,9 +89,9 @@ export default {
   methods: {
     changePassword () {
       if (this.resetForm) {
-        http.changePassword(this.username, this.password)
+        http.resetPassword(this.username, this.password, this.$route.query.token)
           .then(({ status, data }) => {
-            if (status === 200) {
+            if (status === 204) {
               this.resetSuccess = true
             }
           })

@@ -5,7 +5,7 @@
         <v-card v-if="username" flat>
           <v-card-title class="mb-3">{{ header }}</v-card-title>
           <v-card-text>Please provide us some information for further registration.</v-card-text>
-          <v-form v-model="postRegistrationForm">
+          <v-form v-model="activateForm">
             <v-container>
               <v-row>
                 <v-select v-model="role" :items="roles" :rules="rules.select" label="Your role" outlined dense/>
@@ -24,7 +24,7 @@
             </v-container>
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn color="primary" text @click="postRegistrationUser">Continue</v-btn>
+              <v-btn color="primary" text @click="activateUser">Continue</v-btn>
             </v-card-actions>
           </v-form>
         </v-card>
@@ -72,13 +72,13 @@ export default {
   created () {
     const { username } = this.$route.params
     const { token, cancel } = this.$route.query
-    http.activateUser(username, token, cancel)
-      .then(({ data: { status, user } }) => {
-        if (status === 'cancelled') this.header = 'Token invalidated! Thank you for helping us out'
-        if (status === 'user verified') {
+    http.verifyUser(username, token, cancel)
+      .then(({ data: { status, message } }) => {
+        if (message === 'cancelled') this.header = 'Token invalidated! Thank you for helping us out'
+        if (message === 'verified token') {
           this.header = 'Continue your registration here to use your account'
           this.username = username
-          this.postRegistrationForm = true
+          this.activateForm = true
         }
       })
       .catch(err => { console.log(err) })
@@ -88,7 +88,7 @@ export default {
     return {
       username: '',
       header: 'Failed to verify user token',
-      postRegistrationForm: false,
+      activateForm: false,
       role: '',
       firstName: '',
       lastName: '',
@@ -117,12 +117,13 @@ export default {
     }
   },
   methods: {
-    postRegistrationUser () {
-      if (this.postRegistrationForm) {
+    activateUser () {
+      if (this.activateForm) {
         this.role = this.role.toLowerCase()
-        http.postRegistrationUser(this.username, this.role, this.firstName, this.lastName, this.gender, this.school, this.interest)
-          .then(({ status, data }) => {
-            if (status === 200) this.updateSuccess = true
+        this.gender = this.gender.toLowerCase()
+        http.activateUser(this.username, this.role, this.firstName, this.lastName, this.gender, this.school, this.interest)
+          .then(({ status }) => {
+            if (status === 204) this.updateSuccess = true
           })
           .catch(err => {
             console.log(err)

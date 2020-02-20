@@ -15,6 +15,16 @@
           </v-row>
         </v-container>
     </template>
+    <template v-if="finishedCourses && finishedCourses.length">
+      <h3 class="d-flex justify-center">Completed Online Courses</h3>
+        <v-container>
+          <v-row class="d-flex justify-center">
+            <div class="mx-2" v-for="course in finishedCourses" :key="course.id">
+              <course-card :course="course" :role="user.type" />
+            </div>
+          </v-row>
+        </v-container>
+    </template>
     <h3 class="d-flex justify-center">Available Online Courses</h3>
     <v-container>
       <v-row class="d-flex justify-center">
@@ -37,15 +47,17 @@ export default {
     }
   },
   created () {
-    this.$http.get(`courses?student=${this.$store.getters.user.username}`)
-      .then(({ data: courses }) => {
-        this.ongoingCourses = courses.ongoing
-        this.courses = courses.others
+    this.$http.get('courses')
+      .then(({ data: { courses, page, pages } }) => {
+        this.ongoingCourses = this.user.courses.inProgress
+        this.finishedCourses = this.user.courses.finished
+        this.courses = courses.filter(course => !this.ongoingCourses.includes(course) && !this.finishedCourses.includes(course))
       })
   },
   data: () => ({
     courses: [],
-    ongoingCourses: []
+    ongoingCourses: [],
+    finishedCourses: []
   })
 }
 </script>
