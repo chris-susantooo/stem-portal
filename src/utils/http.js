@@ -23,6 +23,7 @@ const http = {
   createComment: (id, content, reply) => Axios.post(`/forum/posts/${id}/comments`, { content, reply }),
   publishCourse: _id => Axios.post(`courses/${_id}/publish`),
   unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
+  reactPost: (id, liked, disliked) => Axios.post(`forum/posts/${id}/react`, { liked, disliked }),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
