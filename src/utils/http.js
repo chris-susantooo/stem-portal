@@ -24,6 +24,7 @@ const http = {
   publishCourse: _id => Axios.post(`courses/${_id}/publish`),
   unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
   reactPost: (id, liked, disliked) => Axios.post(`forum/posts/${id}/react`, { liked, disliked }),
+  reactComment: (pid, cid, liked, disliked) => Axios.post(`forum/posts/${pid}/comments/${cid}/react`, { liked, disliked }),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
