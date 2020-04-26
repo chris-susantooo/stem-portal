@@ -116,8 +116,8 @@ const router = new Router({
         },
         {
           path: '/games/2',
-          name: 'CodeSomething',
-          component: () => import(/* webpackChunkName: "CodeSomething" */ './Games/CodeSomething/CodeSomething.vue')
+          name: 'SolveThEM',
+          component: () => import(/* webpackChunkName: "SolveThEM" */ './Games/SolveThEM/SolveThEM.vue')
         },
         {
           path: '/teacher',
