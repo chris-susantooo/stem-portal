@@ -75,6 +75,7 @@
                     dark
                     small
                     color="green"
+                    v-on:click="toCreatePost()"
                   >
                     <v-icon>mdi-plus-thick</v-icon>
                   </v-btn>
@@ -106,7 +107,7 @@
                     <v-divider></v-divider>
                     <v-list dense nav>
                       <v-list-item
-                        v-for="(post, i) in posts"
+                        v-for="(p, i) in posts"
                         :key="i"
                         link
                         v-on:click="CurrentPosts(i)"
@@ -114,19 +115,28 @@
                         <v-list-item-avatar :color="color">
                           <span
                             class="white--text headline pl-3"
-                            v-text="post.author.username.slice(0, 1).toUpperCase()"
+                            v-text="p.author.username.slice(0, 1).toUpperCase()"
                           ></span>
                         </v-list-item-avatar>
+                        <v-divider vertical></v-divider>
                         <v-list-item-content>
-                          <v-list-item-title class="title d-inline-block text-truncate">
-                            {{post.title}}
+                          <v-list-item-title class="pl-3 caption">
+                            <v-row>
+                              <span class="pl-3">{{p.author.username}}</span>
+                              <span class="pl-2">{{postTime(p.updatedAt)}}</span>
+                              <v-spacer></v-spacer>
+                              <span>{{Math.abs(p.rating)}}
+                                <v-icon v-if="p.rating>=0">mdi-thumb-up-outline</v-icon>
+                                <v-icon v-if="p.rating<0">mdi-thumb-down-outline</v-icon>
+                              </span>
+                              <span class="pl-2 mr-3">{{p.nComments}}<v-icon>mdi-chat-outline</v-icon></span>
+                            </v-row>
                           </v-list-item-title>
-                          <v-list-item-title class="body-1">
-                            {{post.author.username}}
-                            <span class="body-2 subtitle-3 pl-4 ">{{postTime(post.createdAt)}}</span>
-                          </v-list-item-title>
-                          <v-list-item-subtitle class="body-1 pt-2 text-truncate">
-                            {{post.tags.join(', ')}}
+                          <v-list-item-subtitle class="pl-3 body-1 bold d-inline-block text-truncate">
+                            {{p.title}}
+                          </v-list-item-subtitle>
+                          <v-list-item-subtitle class="pl-3 caption text-truncate">
+                            Tags: {{p.tags.join(', ')}}
                           </v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
@@ -147,7 +157,7 @@
                       no-gutters
                     >
                       <!--Current Post Content-->
-                      <v-card width="100%" v-if="posts.length>0">
+                      <v-card width="100%" v-if="posts.length>0 && CurrentPost">
                         <div>
                           <v-list-item>
                             <v-list-item-avatar color="grey">
@@ -158,23 +168,15 @@
                             </v-list-item-avatar>
                             <v-list-item-content class="ma-3">
                               <v-row>
-                                <v-list-item class="headline">Title: {{CurrentPost.title}}</v-list-item>
+                                  <v-list-item class="headline">{{CurrentPost.title}}</v-list-item>
                                 <v-list-item class="overline pl-4"> {{postTime(CurrentPost.createdAt)}}
-                                  <!-- <v-btn
-                                    text
-                                    :color="CurrentPost.notyetfollowed ? 'grey' : 'pink'"
-                                    icon
-                                    v-on:click="followed(true)"
-                                    class="pl-4"
-                                  >
-                                    <v-icon>mdi-heart</v-icon>
-                                  </v-btn> -->
-                                  <v-btn class="pl-2" v-on:click="likepost(true)" icon>
+                                  <v-btn v-if="(!CurrentPost.disliked && !CurrentPost.liked) || CurrentPost.disliked" class="pl-2" v-on:click="like(true)" icon>
                                     <v-icon>mdi-thumb-up-outline</v-icon>
                                   </v-btn>
-                                  <v-btn class="pl-2" v-on:click="dislikepost(true)" icon>
+                                  <v-btn v-if="(!CurrentPost.disliked && !CurrentPost.liked) || CurrentPost.liked" class="pl-2" v-on:click="dislike(true)" icon>
                                     <v-icon>mdi-thumb-down-outline</v-icon>
                                   </v-btn>
+                                  <span class="pl-2 mr-3">{{nComments}}<v-icon>mdi-chat-outline</v-icon></span>
                                   <v-spacer></v-spacer>
                                   <v-btn class="mr-3" color="primary" dark @click="dialog=true">Reply Post</v-btn>
                                 </v-list-item>
@@ -249,86 +251,109 @@
                       <v-container pa-0 ma-0>
                         <v-row v-for="(item, i) in allcurrentComments" :key="i" no-gutters>
                           <v-card v-if="i%10 == 0" class="mt-8 mb-8" min-height ="50" width="100%">
-                            Choose Pages Bar
+                            <v-pagination
+                              v-model="page"
+                              :length="maxPages"
+                              :total-visible="7"
+                              circle
+                            ></v-pagination>
                           </v-card>
-                          <v-card width="100%">
-                            <v-list-item three-line>
+                          <v-card width="100%" >
+                            <v-list-item>
                               <v-list-item-content>
-                                <v-list-item-title class="subtitle-1">
-                                  <span>#{{i+2}} </span>
-                                  <span class="pl-4">{{item.author.username}}</span>
+                                <v-list-item-title class="subtitle-1 indigo--text">
+                                  #{{item.floor}}
+                                  <span class="pl-4 black--text">{{item.author.username}}</span>
+                                  <span class="pl-4 caption grey--text">{{postTime(item.createdAt)}}</span>
                                 </v-list-item-title>
                                 <v-list-item-subtitle>
-                                  <span>{{postTime(item.createdAt)}}</span>
-                                  <v-btn v-if="!item.disliked" v-on:click="likepost(false, i)" icon fab color="grey">
-                                    <v-icon>mdi-thumb-up-outline</v-icon>
-                                  </v-btn>
-                                  <v-btn v-if="!item.liked" v-on:click="dislikepost(false, i)" icon fab color="grey">
-                                    <v-icon>mdi-thumb-down-outline</v-icon>
-                                  </v-btn>
-                                  <v-btn icon fab color="grey" @click="replycommentdialog=true" v-on:click="showwhichcomment(i)">
-                                    <v-icon>mdi-reply</v-icon>
-                                  </v-btn>
+                                  <div v-html="item.content" />
+                                </v-list-item-subtitle>
+                                <v-list-item-subtitle>
+                                  <v-row>
+                                    <v-card class="mx ml-3" outlined>
+                                      <span class="ml-1 text-center overline">{{item.nLikes}}</span>
+                                      <v-btn v-if="!item.disliked" v-on:click="like(false, i)" icon fab x-small >
+                                        <v-icon>mdi-thumb-up-outline</v-icon>
+                                      </v-btn>
+                                        <span class="ml-1 text-center overline">{{item.nDislikes}}</span>
+                                      <v-btn v-if="!item.liked" v-on:click="dislike(false, i)" icon fab x-small>
+                                        <v-icon>mdi-thumb-down-outline</v-icon>
+                                      </v-btn>
+                                    </v-card>
+                                    <v-card class="mx ml-4" outlined>
+                                      <span class="ml-1 text-center overline ">{{item.nComments}}</span>
+                                      <v-btn icon fab x-small @click="replycommentdialog=true" v-on:click="replyComments(i, item.content)">
+                                        <v-icon>mdi-chat-outline</v-icon>
+                                      </v-btn>
+                                    </v-card>
+                                  </v-row>
                                   <!-- Reply Comment Dialog -->
-                                  <v-dialog v-model="replycommentdialog" :retain-focus="false">
-                                    <v-card width="100%" height="100%">
-                                      <v-row>
-                                        <v-card-title class="subtitle-1 ma-6">
-                                          Post #{{whichcomment+1}}
-                                          <span class="subtitle-1 pl-6">Author Name</span>
+                                  <v-dialog v-if="parent" v-model="replycommentdialog" :retain-focus="false">
+                                    <v-card height="20%">
+                                      <v-card outlined>
+                                        <v-card-title class="subtitle-1 indigo--text">
+                                          # {{parent.floor}}
+                                          <span class="pl-6 black--text">{{parent.author.username}}</span>
                                         </v-card-title>
-                                        <v-card-title class="subtitle-1">{{item.date}}</v-card-title>
-                                      </v-row>
-                                      <v-row>
-                                        <v-spacer></v-spacer>
-                                        <v-col cols="12" md="10">
-                                          <v-card-text v-html="item.comment"></v-card-text>
-                                        </v-col>
-                                        <v-spacer></v-spacer>
-                                      </v-row>
-                                      <v-row v-for="(allreplycomment, a) in allreplyComments" :key="a">
-                                        <v-card width = "100%" >
-                                          <v-row no-gutters>
-                                            <v-col cols="8">
-                                              <v-card-subtitle class="subtitle-1 ma-6">
-                                                Post #{{allreplycomment.cid}} Author Name
-                                                <span class="subtitle-1 pl-2">{{allreplycomment.date}}</span>
-                                              </v-card-subtitle>
-                                            </v-col>
-                                            <v-spacer></v-spacer>
-                                          </v-row>
-                                          <v-row>
-                                            <v-spacer></v-spacer>
-                                            <v-col cols="12" md="10">
-                                              <v-card-text v-html="allreplycomment.comment"> </v-card-text>
-                                            </v-col>
-                                            <v-spacer></v-spacer>
-                                          </v-row>
-                                        </v-card>
-                                      </v-row>
+                                        <v-card-subtitle>{{postTime(parent.createdAt)}}</v-card-subtitle>
+                                        <div class="black-text pl-4" v-html="parent.content"></div>
+                                        <v-row>
+                                          <v-spacer></v-spacer>
+                                          <span class="caption mr-5" v-if="parent.createdAt!=parent.updatedAt"> **Edited At: {{postTime(parent.updatedAt)}}</span>
+                                        </v-row>
+                                      </v-card>
+                                      <v-container
+                                        id="target1"
+                                        style="max-height: 350px"
+                                        class="overflow-y-auto"
+                                      >
+                                        <v-row
+                                          v-scroll:#target1="onScroll1"
+                                          no-gutters
+                                        >
+                                          <v-col cols="12" md="12">
+                                            <v-row v-scroll:#target1="onScroll1" v-for="(replyComment, a) in allreplyComments" :key="a" v-bind:id="replyComment._id">
+                                              <v-card  width="100%">
+                                                <v-list-item three-line>
+                                                  <v-list-item-content>
+                                                    <v-list-item-title class="subtitle-1 pl-4">
+                                                      <span class="indigo--text"># {{replyComment.floor}} </span>
+                                                      <span class="pl-4">{{replyComment.author.username}}</span>
+                                                    </v-list-item-title>
+                                                    <v-list-item-subtitle class="pl-4 overline">
+                                                      {{postTime(replyComment.createdAt)}}
+                                                    </v-list-item-subtitle>
+                                                    <div class="mt-5 pl-4" v-html="replyComment.content"/>
+                                                  </v-list-item-content>
+                                                </v-list-item>
+                                              </v-card>
+                                            </v-row>
+                                          </v-col>
+                                        </v-row>
+                                      </v-container>
                                       <v-container>
                                         <template>
                                           <text-editor v-model="replycomment" />
                                         </template>
-                                      </v-container>
-                                      <v-container class="justify-center d-flex">
-                                        <v-card-actions>
-                                          <v-btn
-                                            color="primary"
-                                            dark
-                                            @click="addnewcomments(false)"
-                                          >Reply</v-btn>
-                                          <v-btn
-                                            color="primary"
-                                            dark
-                                            @click="replycommentdialog=false"
-                                          >Exit</v-btn>
-                                        </v-card-actions>
+                                        <v-container class="justify-center d-flex">
+                                          <v-card-actions>
+                                            <v-btn
+                                              color="primary"
+                                              dark
+                                              @click="addnewcomments(false)"
+                                            >Reply</v-btn>
+                                            <v-btn
+                                              color="primary"
+                                              dark
+                                              @click="replycommentdialog=false"
+                                            >Exit</v-btn>
+                                          </v-card-actions>
+                                        </v-container>
                                       </v-container>
                                     </v-card>
                                   </v-dialog>
                                 </v-list-item-subtitle>
-                                <div v-html="item.content" />
                               </v-list-item-content>
                             </v-list-item>
                             <v-row>
@@ -357,47 +382,25 @@ export default {
   created () {
     http.getPosts({ page: 1, size: 10 }).then(({ data }) => {
       this.posts = data.posts
+      console.log('a', this.posts)
       if (this.posts) {
         http.getPost(this.posts[0]._id).then(({ data }) => {
           console.log(data)
           this.CurrentPost = data.post
           this.allcurrentComments = data.post.comments
+          console.log(this.allcurrentComments)
           this.page = 1
-          this.maxPages = Math.ceil(data.post.nComments / 10)
+          this.nComments = data.post.nComments
+          this.maxPages = data.pages
         })
       }
     })
   },
   computed: {
-    allreplyComments () {
-      let replycomments = []
-      if (this.CurrentPost && this.CurrentPost.Allcomments) {
-        if (this.CurrentPost.Allcomments[this.whichcomment]) {
-          for (let j = 0; j < (this.CurrentPost.Allcomments).length; j++) {
-            if (this.CurrentPost.Allcomments[j].replyto === (this.CurrentPost.Allcomments[this.whichcomment].cid - 1)) {
-              const replyid = replycomments.length
-              let replycomment = {
-                date: this.CurrentPost.Allcomments[j].date,
-                cid: this.CurrentPost.Allcomments[j].cid,
-                comment: this.CurrentPost.Allcomments[j].comment,
-                replyid: replyid
-              }
-              replycomments.push(replycomment)
-            }
-          }
-        }
-      }
-      if (replycomments) {
-        return replycomments.filter(({ replyid }) => {
-          return replyid >= this.currentreplyCommentRange[0] && replyid <= this.currentreplyCommentRange[1]
-        })
-      } else {
-        return []
-      }
-    }
   },
   components: { TextEditor },
   data: () => ({
+    content: '',
     page: 0,
     maxPages: 1,
     color: 'red',
@@ -407,7 +410,6 @@ export default {
     isPost: true,
     replycomment: '',
     whichcomment: '',
-    currentreplyCommentRange: [0, 4],
     icon: 'mdi-arrow-down-bold',
     items: [
       {
@@ -420,69 +422,87 @@ export default {
       }
     ],
     posts: [
-      {
-        title: '',
-        author: '',
-        content: '',
-        tags: [],
-        createdAt: '',
-        cid: 0,
-        likes: 0,
-        dislikes: 0,
-        Allcomments: [],
-        liked: false,
-        disliked: false,
-        notyetfollowed: true
-      }
     ],
     comments: { content: '' },
-    CurrentPost: [],
-    allcurrentComments: []
+    CurrentPost: undefined,
+    allcurrentComments: [],
+    allreplyComments: [],
+    parent: undefined,
+    nComments: 0,
+    dialogPage: 0,
+    rating: 0,
+    whichPost: 0
   }),
   methods: {
     CurrentPosts (i) {
+      this.whichPost = i
       http.getPost(this.posts[i]._id).then(({ data }) => {
+        console.log(data)
         this.CurrentPost = data.post
+        this.allcurrentComments = data.post.comments
+        this.page = 1
+        this.allreplyComments = []
+        this.nComments = data.post.nComments
+        this.maxPages = data.pages
+        this.rating = Math.abs(data.post.nLikes - data.post.nDislikes)
       })
     },
-    LoadMoreReplyComments () {
-      if ((this.allreplyComments).length >= this.currentreplyCommentRange[1]) {
-        this.currentreplyCommentRange = [this.currentreplyCommentRange[0], this.currentreplyCommentRange[1] + 5]
-      } else {
-        this.currentCommentRange = this.currentCommentRange
+    onScroll1 (e1) {
+      console.log(e1.target.clientHeight)
+      if (Math.ceil(e1.target.clientHeight + e1.target.scrollTop) >= e1.target.scrollHeight && this.dialogPage < this.dialogPages) {
+        this.dialogPage += 1
+        http.getComments(this.CurrentPost._id, this.dialogPage, this.allcurrentComments[this.whichcomment]._id).then(({ data }) => {
+          console.log(data)
+          let a = (this.allreplyComments).concat(data.comments)
+          this.allreplyComments = a
+        })
       }
     },
     onScroll (e) {
-      if (e.target.clientHeight + e.target.scrollTop >= e.target.scrollHeight && this.page < this.maxPages) {
+      console.log(e)
+      if (Math.ceil(e.target.clientHeight + e.target.scrollTop) >= e.target.scrollHeight && this.page < this.maxPages) {
         this.page += 1
         http.getComments(this.CurrentPost._id, this.page).then(({ data }) => {
+          console.log(data)
           let a = (this.allcurrentComments).concat(data.comments)
           this.allcurrentComments = a
         })
       }
     },
     addnewcomments (isPost) {
+      var id = this.CurrentPost._id
       if (isPost === false) {
-        const cid = (this.CurrentPost.Allcomments).length + 1
-        const newreplycomment = this.replycomment
-        const replytowhichcomment = this.whichcomment
-        let a1 =
-        {
-          cid: cid,
-          comment: newreplycomment,
-          replyto: replytowhichcomment,
-          liked: false,
-          disliked: false,
-          notyetfollowed: true
-        }
-        this.CurrentPost.Allcomments.push(a1)
-        this.replycommentdialog = false
+        var reply = this.allcurrentComments[this.whichcomment]._id
+        var content = this.replycomment
+        http.createComment(id, content, reply).then(({ data }) => {
+          if (data.status === 201) {
+            this.replycommentdialog = false
+            console.log(data)
+            this.allcurrentComments.push(data.comment)
+            http.getPost(this.CurrentPost._id).then(({ data }) => {
+              console.log(data)
+              this.nComments = data.post.nComments
+              this.maxPages = data.pages
+            }).catch(err => {
+              console.log(err)
+              this.errDialog = true
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+          this.errorDialog = true
+        })
       } else {
-        console.log(this.comments.content)
-        http.createComment(this.CurrentPost._id, this.comments.content).then(({ status, comment }) => {
-          if (status === 201) {
+        http.createComment(id, this.comments.content).then(({ data }) => {
+          if (data.status === 201) {
+            this.allcurrentComments.push(data.comment)
             this.dialog = false
-            this.comments.content = ''
+            http.getPost(this.CurrentPost._id).then(({ data }) => {
+              this.nComments = data.post.nComments
+            }).catch(err => {
+              console.log(err)
+              this.errDialog = true
+            })
           }
         }).catch(err => {
           console.log(err)
@@ -490,44 +510,60 @@ export default {
         })
       }
     },
-    showwhichcomment (i) {
+    replyComments (i, comment) {
+      this.content = comment
       this.whichcomment = i
+      const reply = this.allcurrentComments[this.whichcomment]._id
+      http.getComments(this.CurrentPost._id, null, reply).then(({ data }) => {
+        if (data.status === 200) {
+          this.parent = data.parent
+          this.allreplyComments = data.comments
+          this.dialogPage = data.page
+          this.dialogPages = data.pages
+          location.href = `#${reply}`
+        }
+      }).catch(err => {
+        console.log(err)
+        this.errorDialog = true
+      })
     },
     toCreatePost () {
       this.$router.push({ name: 'createpost' })
     },
-    likepost (isPost, i = null) {
+    like (isPost, i = null) {
       if (isPost === true) {
-        if (this.CurrentPost.liked === true) {
-          this.CurrentPost.liked = false
-          this.CurrentPost.likes = this.CurrentPost.likes - 1
-        } else {
-          this.CurrentPost.likes = this.CurrentPost.likes + 1
-          this.CurrentPost.liked = true
-        }
+        this.CurrentPost.liked = true
+        this.CurrentPost.disliked = false
+        http.reactPost(this.CurrentPost._id, this.CurrentPost.liked, this.CurrentPost.disliked).then(({ data }) => {
+          this.posts[this.whichPost].rating += 1
+          console.log(this.posts[this.whichPost].rating)
+          console.log('liked post')
+        })
       } else {
-        if (this.allcurrentComments[i].liked === true) {
-          this.allcurrentComments[i].liked = false
-        } else {
-          this.allcurrentComments[i].liked = true
-        }
+        const cid = this.allcurrentComments[i]._id
+        const pid = this.CurrentPost._id
+        http.reactComment(pid, cid, true, false).then(({ data }) => {
+          console.log(data)
+          console.log('liked comment')
+        })
       }
     },
-    dislikepost (isPost, i = null) {
+    dislike (isPost, i = null) {
       if (isPost === true) {
-        if (this.CurrentPost.disliked === true) {
-          this.CurrentPost.dislikes = this.CurrentPost.dislikes - 1
-          this.CurrentPost.disliked = false
-        } else {
-          this.CurrentPost.dislikes = this.CurrentPost.dislikes + 1
-          this.CurrentPost.disliked = true
-        }
+        this.CurrentPost.disliked = true
+        this.CurrentPost.liked = false
+        http.reactPost(this.CurrentPost._id, this.CurrentPost.liked, this.CurrentPost.disliked).then(({ data }) => {
+          this.posts[this.whichPost].rating -= 1
+          console.log('disliked post')
+        })
       } else {
-        if (this.allcurrentComments[i].disliked === true) {
-          this.allcurrentComments[i].disliked = false
-        } else {
-          this.allcurrentComments[i].disliked = true
-        }
+        const cid = this.allcurrentComments[i]._id
+        const pid = this.CurrentPost._id
+        http.reactComment(pid, cid, false, true).then(({ data }) => {
+          this.allcurrentComments[i].nDislikes += 1
+          console.log(data)
+          console.log('disliked comment')
+        })
       }
     },
     postTime (createdAt) {
@@ -540,11 +576,15 @@ export default {
       var year = 0
       if (diffHour < 1) {
         var diffmin = diffHour * 60
-        postTime = String(Math.round(diffmin)) + ' Mins Ago'
-      } else if (diffHour >= 1 && diffHour <= 23) {
+        if (diffmin < 1.5) {
+          postTime = String(Math.round(diffmin)) + ' Min Ago'
+        } else {
+          postTime = String(Math.round(diffmin)) + ' Mins Ago'
+        }
+      } else if (diffHour >= 1 && Math.floor(diffHour) <= 23) {
         postTime = String(Math.round(diffHour)) + ' Hours Ago'
       } else if (diffDay >= 1 && diffDay < 30) {
-        if (diffDay === 1) {
+        if (diffDay < 1.5) {
           postTime = String(Math.round(diffDay)) + ' Day Ago'
         } else {
           postTime = String(Math.round(diffDay)) + ' Days Ago'
@@ -560,9 +600,6 @@ export default {
         postTime = String(year) + '/' + String(month) + '/' + String(day)
       }
       return postTime
-    },
-    clearInput (comment) {
-      comment = ''
     }
   }
 }

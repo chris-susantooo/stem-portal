@@ -9,7 +9,7 @@ const http = {
   getPosts: () => Axios.get('forum/posts'),
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: id => Axios.get(`/forum/posts/${id}`),
-  getComments: (id, page) => Axios.get(`/forum/posts/${id}/comments?page=${page}`),
+  getComments: (id, page, reply) => Axios.get(`/forum/posts/${id}/comments` + (page && !reply ? `?page=${page}` : '') + (reply && !page ? `?reply=${reply}` : '') + (reply && page ? `?page=${page}&reply=${reply}` : '')),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
@@ -19,11 +19,12 @@ const http = {
   cancelToken: (username, token) => Axios.post(`auth/cancel-token/${token}`, { username }),
   resetPassword: (username, password, token) => Axios.post('auth/reset-password', { username, password, token }),
   createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
-  createPost: (author, title, tags, content) => Axios.post('forum/posts', { author, title, tags, content }),
+  createPost: (title, content, tags) => Axios.post('forum/posts', { title, content, tags }),
+  createComment: (id, content, reply) => Axios.post(`/forum/posts/${id}/comments`, { content, reply }),
   publishCourse: _id => Axios.post(`courses/${_id}/publish`),
   unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
-
-  createComment: (id, content, replyto) => Axios.post(`/forum/posts/${id}/comments`, { content, replyto }),
+  reactPost: (id, liked, disliked) => Axios.post(`forum/posts/${id}/react`, { liked, disliked }),
+  reactComment: (pid, cid, liked, disliked) => Axios.post(`forum/posts/${pid}/comments/${cid}/react`, { liked, disliked }),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),

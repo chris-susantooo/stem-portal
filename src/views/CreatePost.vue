@@ -2,7 +2,7 @@
   <div class="make-comment">
     <v-container>
       <div class="mb-5 text-center">
-        <h1>Create a New Post</h1>
+        <h1>Create Post</h1>
       </div>
       <v-card
       >
@@ -19,7 +19,7 @@
             <v-col cols="11">
               <v-text-field
                 v-model="post.title"
-                :counter="60"
+                :counter="50"
                 :rules="titleRules"
                 label=" Post Title"
                 chips
@@ -36,13 +36,14 @@
             <v-col cols="11">
               <v-combobox
                 v-model="post.tags"
-                :items="tags"
+                :items="tags.map(tag => tag.name)"
                 chips
                 clearable
                 label="Your post tags"
                 multiple
                 outlined
                 :rules="tagRules"
+                v-if="tags"
               >
                 <template v-slot:selection="{ attrs, item, select, selected }">
                   <v-chip
@@ -92,10 +93,7 @@ export default {
     }
   },
   created () {
-    this.$http.get('tags').then(({ data: tags }) => { this.tags = tags })
-  },
-  computed: {
-    user () { return this.$store.getters.user }
+    this.$http.get('tags').then(({ data: { tags } }) => { this.tags = tags })
   },
   components: { TextEditor },
   data: () => ({
@@ -110,13 +108,14 @@ export default {
     tagRules: [ v => !!v.length || 'At least a tag is required' ],
     titleRules: [
       v => !!v || 'Title is required',
-      v => (v && v.length <= 60) || 'Title must be less than 60 characters'
+      v => (v && v.length <= 50) || 'Title must be less than 60 characters'
     ]
   }),
   methods: {
     createPost () {
       if (this.$refs.form.validate() && this.post.content.length > 0) {
-        http.createPost(this.user.username, this.post.title, this.post.tags, this.post.content)
+        console.log(this.post.content)
+        http.createPost(this.post.title, this.post.content, this.post.tags)
           .then(({ status, data }) => {
             if (status === 201) {
               this.updateSuccess = true
@@ -131,8 +130,8 @@ export default {
       }
     },
     removeTag (item) {
-      this.course.tags.splice(this.course.tags.indexOf(item), 1)
-      this.course.tags = [ ...this.course.tags ]
+      this.post.tags.splice(this.post.tags.indexOf(item), 1)
+      this.post.tags = [ ...this.post.tags ]
     }
   }
 }
