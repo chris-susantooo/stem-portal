@@ -6,7 +6,7 @@ const http = {
   checkCourse: name => Axios.head(`courses/${name}`),
 
   // GET requests
-  getPosts: () => Axios.get('forum/posts'),
+  getPosts: () => Axios.get('forum/posts?sort=latest'),
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: id => Axios.get(`/forum/posts/${id}`),
   getComments: (id, page, reply) => Axios.get(`/forum/posts/${id}/comments` + (page && !reply ? `?page=${page}` : '') + (reply && !page ? `?reply=${reply}` : '') + (reply && page ? `?page=${page}&reply=${reply}` : '')),

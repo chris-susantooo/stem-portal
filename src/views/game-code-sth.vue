@@ -16,7 +16,7 @@ export default {
     }
   },
   async mounted () {
-    const game = await import(/* webpackChunkName: "game" */ '@/Games/CodeSomething/CodeSomething')
+    const game = await import('@/games/CodeSomething/CodeSomething')
     this.downloaded = true
     this.$nextTick(() => {
       this.gameInstance = game.launch(this.containerId)

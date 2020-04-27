@@ -8,7 +8,7 @@ export class MainScene extends Phaser.Scene {
     this.circle = undefined
   }
   preload () {
-    this.load.image('cube', require('@/Games/CodeSomething/Images/Cube.jpg'))
+    this.load.image('cube', require('@/games/CodeSomething/Images/Cube.jpg'))
   }
   create () {
     this.group = this.add.group()
