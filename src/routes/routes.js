@@ -45,14 +45,14 @@ const routes = [
     component: () => import('@/views/game-list.vue')
   },
   {
-    path: '/games/code-something',
-    name: 'game-code-sth',
-    component: () => import('@/views/game-code-sth.vue')
-  },
-  {
     path: '/games/magic-cube',
     name: 'game-magic-cube',
     component: () => import('@/views/game-magic-cube.vue')
+  },
+  {
+    path: '/games/solve-them',
+    name: 'game-solve-them',
+    component: () => import('@/views/game-solve-them.vue')
   },
   {
     path: '*',

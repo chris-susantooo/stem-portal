@@ -35,7 +35,7 @@
         <div class="col">
           <v-card>
             <v-card-title class="d-flex justify-center">
-              <h3>CodeSomething!</h3>
+              <h3>SolveThEM</h3>
             </v-card-title>
             <v-container class="d-flex justify-center">
               <v-img
@@ -46,11 +46,11 @@
             ></v-img>
             </v-container>
             <v-card-text class="text-center">
-              CodeSomething! is a coding game. You need to choose the correct logical operator to make the code have the desired output.
+              SolveThEM is a mathematical game. You need to choose the compute the correct answers in limited time.
             </v-card-text>
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn text color="indigo">
+              <v-btn text color="indigo" :to="{ name: 'game-solve-them' }">
                 Play Game!
               </v-btn>
             </v-card-actions>
