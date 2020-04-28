@@ -3,19 +3,19 @@
     <transition name="fade">
       <div v-if="isLoading" class="preloader d-flex justify-center align-center defer-500">
         <bounce-spinner :color="spinnerColors[animStep]"/>
-        <span class="text-center mt-12" style="position: fixed;">{{ 'STEM Portal is Loading' + '.'.repeat(animStep) }}</span>
+        <span class="text-center mt-10" style="position: fixed;">{{ 'STEM Portal is Loading' + '.'.repeat(animStep) }}</span>
       </div>
     </transition>
     <v-header />
-    <router-view @childBusy="isChildBusy = true" @childReady="isChildBusy = false" />
+    <router-view class="d-flex flex-column" style="margin-top: 4rem;" @childBusy="isChildBusy = true" @childReady="isChildBusy = false" />
     <v-footer />
   </div>
 </template>
 
 <script>
-import VHeader from './Header.vue'
-import VFooter from './Footer.vue'
-import BounceSpinner from '@/components/loader/BounceSpinner.vue'
+import VHeader from './layout-header.vue'
+import VFooter from './layout-footer.vue'
+import BounceSpinner from '@/components/loader-spinner.vue'
 
 let animInterval = null
 
@@ -48,6 +48,13 @@ export default {
 }
 </script>
 
-<style lang="sass">
-@import '~@/styles/style.scss'
+<style lang="scss">
+  @import '~@/styles/style.scss';
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+  }
 </style>

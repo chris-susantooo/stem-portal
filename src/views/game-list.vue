@@ -26,7 +26,7 @@
             </v-card-text>
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn text color="indigo" :to="{ name: 'MagicCube' }">
+              <v-btn text color="indigo" :to="{ name: 'game-magic-cube' }">
                 Play Game!
               </v-btn>
             </v-card-actions>
@@ -50,7 +50,7 @@
             </v-card-text>
             <v-card-actions>
               <div class="flex-grow-1"></div>
-              <v-btn text color="indigo" :to="{ name: 'SolveThEM' }">
+              <v-btn text color="indigo" :to="{ name: 'game-solve-them' }">
                 Play Game!
               </v-btn>
             </v-card-actions>

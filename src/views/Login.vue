@@ -1,72 +1,70 @@
 <template>
-  <div id="login-bg" class="wrapper">
+  <div id="login-bg">
     <!-- page elements -->
-    <div class="container d-flex justify-end">
-      <v-card max-width="400" class="vertical-center pa-3">
-        <!-- Tab headers -->
-        <v-tabs v-model="tabs" fixed-tabs>
-          <v-tab>Login</v-tab>
-          <v-tab>Register</v-tab>
-        </v-tabs>
-        <v-tabs-items v-model="tabs">
-          <!-- Login form -->
-          <v-tab-item>
-            <v-card flat>
-              <v-card-title class="mb-3">Login to the World of STEM.</v-card-title>
-              <v-card-text>
-                View more, learn more with your account @STEM Portal.
-                Don't have one? Get yours for free, <a @click="tabs = 1">here</a>.
-              </v-card-text>
-              <v-form v-model="loginForm">
-                <v-container>
-                  <v-text-field v-model="username" :counter="20" :rules="rules.name" label="Username" outlined @keydown.enter="login" autofocus dense/>
-                  <v-text-field v-model="password" :counter="26" :rules="rules.password" label="Password" outlined @keydown.enter="login" type="password" dense/>
-                </v-container>
-                <v-card-actions>
-                  <v-btn text @click="reset.dialog = true">Reset Password</v-btn>
-                  <div class="flex-grow-1"></div>
-                  <v-btn color="primary" text @click="login">Login</v-btn>
-                </v-card-actions>
-              </v-form>
-            </v-card>
-          </v-tab-item>
-          <!-- Register form -->
-          <v-tab-item>
-            <v-card flat>
-              <v-card-title class="mb-3">Join STEM Portal, 100% free.</v-card-title>
-              <v-card-text>Experience STEM in the way you've never tried. The community is waiting for you.</v-card-text>
-              <v-form v-model="registerForm">
-                <v-container>
-                  <v-text-field outlined autofocus dense
-                    v-model="username"
-                    :counter="20"
-                    :rules="rules.name"
-                    :error-messages="usernameProps.errMsgs"
-                    :hint="usernameProps.hint"
-                    label="Username"
-                  />
-                  <v-text-field v-model="password" :counter="26" :rules="rules.password" label="Password" outlined type="password" dense/>
-                  <v-text-field v-model="confirmPassword" :counter="26" :rules="rules.confirm" label="Re-enter password" outlined type="password" dense/>
-                  <v-text-field outlined dense
-                    v-model="email"
-                    :rules="rules.email"
-                    :error-messages="emailProps.errMsgs"
-                    :hint="emailProps.hint"
-                    label="Email address"
-                    @keydown.enter="register"
-                  />
-                </v-container>
-                <v-card-actions>
-                  <div class="flex-grow-1"></div>
-                  <v-btn v-if="canResendLink" text @click="register(true)">Resend link</v-btn>
-                  <v-btn color="primary" text @click="register(false)">Register Now</v-btn>
-                </v-card-actions>
-              </v-form>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-      </v-card>
-    </div>
+    <v-card max-width="400" class="login-form pa-3">
+      <!-- Tab headers -->
+      <v-tabs v-model="tabs" fixed-tabs>
+        <v-tab>Login</v-tab>
+        <v-tab>Register</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tabs">
+        <!-- Login form -->
+        <v-tab-item>
+          <v-card flat>
+            <v-card-title class="mb-3">Login to the World of STEM.</v-card-title>
+            <v-card-text>
+              View more, learn more with your account @STEM Portal.
+              Don't have one? Get yours for free, <a @click="tabs = 1">here</a>.
+            </v-card-text>
+            <v-form v-model="loginForm">
+              <v-container>
+                <v-text-field v-model="username" :counter="20" :rules="rules.name" label="Username" outlined @keydown.enter="login" autofocus dense/>
+                <v-text-field v-model="password" :counter="26" :rules="rules.password" label="Password" outlined @keydown.enter="login" type="password" dense/>
+              </v-container>
+              <v-card-actions>
+                <v-btn text @click="reset.dialog = true">Reset Password</v-btn>
+                <div class="flex-grow-1"></div>
+                <v-btn color="primary" text @click="login">Login</v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-card>
+        </v-tab-item>
+        <!-- Register form -->
+        <v-tab-item>
+          <v-card flat>
+            <v-card-title class="mb-3">Join STEM Portal, 100% free.</v-card-title>
+            <v-card-text>Experience STEM in the way you've never tried. The community is waiting for you.</v-card-text>
+            <v-form v-model="registerForm">
+              <v-container>
+                <v-text-field outlined autofocus dense
+                  v-model="username"
+                  :counter="20"
+                  :rules="rules.name"
+                  :error-messages="usernameProps.errMsgs"
+                  :hint="usernameProps.hint"
+                  label="Username"
+                />
+                <v-text-field v-model="password" :counter="26" :rules="rules.password" label="Password" outlined type="password" dense/>
+                <v-text-field v-model="confirmPassword" :counter="26" :rules="rules.confirm" label="Re-enter password" outlined type="password" dense/>
+                <v-text-field outlined dense
+                  v-model="email"
+                  :rules="rules.email"
+                  :error-messages="emailProps.errMsgs"
+                  :hint="emailProps.hint"
+                  label="Email address"
+                  @keydown.enter="register"
+                />
+              </v-container>
+              <v-card-actions>
+                <div class="flex-grow-1"></div>
+                <v-btn v-if="canResendLink" text @click="register(true)">Resend link</v-btn>
+                <v-btn color="primary" text @click="register(false)">Register Now</v-btn>
+              </v-card-actions>
+            </v-form>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
+    </v-card>
     <!-- register success dialog -->
     <v-dialog v-model="resultDialog" max-width="400">
       <v-card class="pt-3">
@@ -143,8 +141,19 @@
 import http from '../utils/http'
 
 export default {
+  created () {
+    if (this.$route.params.next) {
+      this.next = this.$route.params.next
+    }
+  },
+  mounted () {
+    if (this.$route.query.action === 'register') {
+      this.tabs = 1
+    }
+  },
   data () {
     return {
+      next: 'home',
       tabs: 0,
       username: '',
       password: '',
@@ -244,7 +253,7 @@ export default {
           username: this.username,
           password: this.password
         }).then(() => {
-          this.$router.push({ name: 'home' })
+          this.$router.push({ name: this.next })
         }).catch(err => {
           this.loginFailDialog = true
           console.log(err)
@@ -285,21 +294,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#login-bg {
-  width: 100vw;
-  height: 100vh;
-  background: url('~@/assets/images/login-bg.jpg');
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
+  #login-bg {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 4rem);
+    background: url('~@/assets/images/login-bg.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    justify-content: center;
+    padding: .5rem;
+  }
 
-.vertical-center {
-  margin: 0;
-  position: absolute;
-  top:50vh;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
+  .login-form {
+    float: right;
+    margin-left: auto;
+    margin-right: 15%;
+  }
+
+  @media (max-width: 960px) {
+    #login-bg {
+      align-items: center;
+    }
+
+    .login-form {
+      float: initial;
+      margin: auto;
+    }
+  }
 </style>

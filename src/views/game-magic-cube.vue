@@ -1,6 +1,6 @@
 <template>
 <div class="text-center">
-  <canvas id="render-canvas" ref="render-canvas" :width="windowWidth" :height="windowHeight"></canvas>
+  <canvas id="render-canvas" ref="render-canvas"></canvas>
 </div>
 </template>
 
@@ -22,15 +22,15 @@ function initScene (engine) {
 }
 
 function createChooseLevelScene (engine, scene) {
-  const background = new BABYLON.Layer('background', require('./Photos/MainPage/background.jpg'), scene)
+  const background = new BABYLON.Layer('background', require('@/games/MagicCube/Photos/MainPage/background.jpg'), scene)
   background.alpha = 1
   // GUI set up
   const chooseLevelAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
   const buttons = []
-  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-1', require('./Photos/MainPage/game1-1.jpg')))
-  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-2', require('./Photos/MainPage/game1-2.jpg')))
-  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-3', require('./Photos/MainPage/game1-3.jpg')))
-  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-4', require('./Photos/MainPage/game1-4.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-1', require('@/games/MagicCube/Photos/MainPage/game1-1.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-2', require('@/games/MagicCube/Photos/MainPage/game1-2.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-3', require('@/games/MagicCube/Photos/MainPage/game1-3.jpg')))
+  buttons.push(BABYLON.GUI.Button.CreateImageOnlyButton('1-4', require('@/games/MagicCube/Photos/MainPage/game1-4.jpg')))
   buttons.forEach((button, index) => {
     chooseLevelAdvancedTexture.addControl(button)
     button.width = '80px'
@@ -45,7 +45,7 @@ function createChooseLevelScene (engine, scene) {
       myScene = createGameScene(engine, button.name)
     })
   })
-  const home = BABYLON.GUI.Button.CreateImageOnlyButton('home', require('./Photos/MainPage/home.jpg'))
+  const home = BABYLON.GUI.Button.CreateImageOnlyButton('home', require('@/games/MagicCube/Photos/MainPage/home.jpg'))
   chooseLevelAdvancedTexture.addControl(home)
   home.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
   home.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
@@ -68,7 +68,7 @@ function createMainScene (engine) {
   light2.intensity = 1
   const light3 = new BABYLON.DirectionalLight('light3', new BABYLON.Vector3(0, 0, 1), scene)
   light3.intensity = 0.5
-  const background = new BABYLON.Layer('background', require('./Photos/MainPage/background.jpg'), scene)
+  const background = new BABYLON.Layer('background', require('@/games/MagicCube/Photos/MainPage/background.jpg'), scene)
   background.alpha = 1
   const { purpleMaterial, redMaterial, yellowMaterial, orangeMaterial, greenMaterial, cyanMaterial, transparentMaterial } = createMaterials(scene)
   const box = createBox(0, 0, 0, scene, transparentMaterial)
@@ -118,10 +118,10 @@ function createMainScene (engine) {
   scene.beginDirectAnimation(box, [rotation], 0, 20, true)
   // GUI set up
   const mainSceneAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
-  const instructionButton = BABYLON.GUI.Button.CreateImageOnlyButton('instruction', require('./Photos/MainPage/instruction.jpg'))
+  const instructionButton = BABYLON.GUI.Button.CreateImageOnlyButton('instruction', require('@/games/MagicCube/Photos/MainPage/instruction.jpg'))
   instructionButton.cornerRadius = 500
   mainSceneAdvancedTexture.addControl(instructionButton)
-  const playButton = BABYLON.GUI.Button.CreateImageOnlyButton('play', require('./Photos/MainPage/play.jpg'))
+  const playButton = BABYLON.GUI.Button.CreateImageOnlyButton('play', require('@/games/MagicCube/Photos/MainPage/play.jpg'))
   playButton.cornerRadius = 500
   mainSceneAdvancedTexture.addControl(playButton)
   instructionButton.left = '-200px'
@@ -172,7 +172,7 @@ function createMainScene (engine) {
 
 function createGameSceneGUI (engine, scene, level) {
   let gameSceneAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, scene)
-  const music = new BABYLON.Sound('background-music', require('./Music/bgm.mp3'), scene, null)
+  const music = new BABYLON.Sound('background-music', require('@/games/MagicCube/Music/bgm.mp3'), scene, null)
   music.loop = true
   music.autoplay = true
 
@@ -182,7 +182,7 @@ function createGameSceneGUI (engine, scene, level) {
 
   const panel2 = new BABYLON.GUI.StackPanel()
   gameSceneAdvancedTexture.addControl(panel2)
-  const image = new BABYLON.GUI.Image('photoplane', require('./Photos/GameScene/game' + level + '.png'))
+  const image = new BABYLON.GUI.Image('photoplane', require('@/games/MagicCube/Photos/GameScene/game' + level + '.png'))
   image.width = '200px'
   image.height = '200px'
   panel2.addControl(image)
@@ -191,7 +191,7 @@ function createGameSceneGUI (engine, scene, level) {
   panel2.width = '200px'
   panel2.height = '300px'
 
-  const backButton = BABYLON.GUI.Button.CreateImageOnlyButton('home', require('./Photos/MainPage/home.jpg'))
+  const backButton = BABYLON.GUI.Button.CreateImageOnlyButton('home', require('@/games/MagicCube/Photos/MainPage/home.jpg'))
   gameSceneAdvancedTexture.addControl(backButton)
   backButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM
   backButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
@@ -425,7 +425,7 @@ function createGameScene (engine, level) {
   light2.intensity = 1
   const light3 = new BABYLON.DirectionalLight('light3', new BABYLON.Vector3(0, 0, 1), scene)
   light3.intensity = 0.5
-  const background = new BABYLON.Layer('background', require('./Photos/GameScene/gameBackground.jpg'), scene)
+  const background = new BABYLON.Layer('background', require('@/games/MagicCube/Photos/GameScene/gameBackground.jpg'), scene)
   background.alpha = 1
   const { panel, panel4 } = createGameSceneGUI(engine, scene, level)
 
@@ -583,12 +583,6 @@ function createGameScene (engine, level) {
 }
 
 export default {
-  data () {
-    return {
-      windowHeight: window.innerHeight,
-      windowWidth: window.innerWidth - 50
-    }
-  },
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
     myScene = createMainScene(engine)
@@ -599,10 +593,13 @@ export default {
   },
   beforeDestroy () {
     myScene.dispose()
-  },
-  onResize () {
-    this.windowHeight = window.innerHeight
-    this.windowWidth = window.innerWidth
   }
 }
 </script>
+
+<style scoped lang="scss">
+  #render-canvas {
+    width: 100%;
+    height: calc(100vh - 4rem);
+  }
+</style>

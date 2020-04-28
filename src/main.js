@@ -1,9 +1,8 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
+import App from './app.vue'
+import router from './routes'
 import store from './store'
 import Axios from 'axios'
-import { baseURL } from '@/utils/constants'
 import vuetify from './plugins/vuetify'
 import VueYoutube from 'vue-youtube'
 
@@ -16,9 +15,9 @@ if (token) {
   Axios.defaults.headers.common['Authorization'] = token
 }
 
-Axios.defaults.baseURL = baseURL
+Axios.defaults.baseURL = process.env.VUE_APP_API_BASE
 Axios.defaults.timeout = 10000
-Vue.prototype.$http = Axios.create()
+Vue.prototype.$http = Axios
 
 new Vue({
   router,
