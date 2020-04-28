@@ -141,6 +141,11 @@
 import http from '../utils/http'
 
 export default {
+  created () {
+    if (this.$route.params.next) {
+      this.next = this.$route.params.next
+    }
+  },
   mounted () {
     if (this.$route.query.action === 'register') {
       this.tabs = 1
@@ -148,6 +153,7 @@ export default {
   },
   data () {
     return {
+      next: 'home',
       tabs: 0,
       username: '',
       password: '',
@@ -247,7 +253,7 @@ export default {
           username: this.username,
           password: this.password
         }).then(() => {
-          this.$router.push({ name: 'home' })
+          this.$router.push({ name: this.next })
         }).catch(err => {
           this.loginFailDialog = true
           console.log(err)
