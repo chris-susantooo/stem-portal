@@ -29,6 +29,11 @@ export default {
   },
   destroyed () {
     this.gameInstance.destroy(false)
+  },
+  watch: {
+    gameInstance (game) {
+      if (game === null) this.$router.push({ name: 'student-games' })
+    }
   }
 }
 </script>
