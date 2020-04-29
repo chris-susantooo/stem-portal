@@ -104,9 +104,9 @@
         />
       </div>
     </div>
-    <div class="register-cta d-flex flex-column align-center">
-      <h1 class="display-2 text-center my-12">And more to come...</h1>
-      <div class="mb-12">
+    <div class="register-cta d-flex flex-column align-center justify-center">
+      <h1 class="display-2 text-center my-10">And more to come...</h1>
+      <div class="mb-10">
         <v-btn @click="$router.push({ name: 'login', query: { action: 'register' } })" color="primary" x-large depressed rounded>
           Register For Free
         </v-btn>
@@ -160,6 +160,10 @@ export default {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, .5);
+  }
+
+  .register-cta {
+    min-height: 50vh;
   }
 
   @media (max-width: 960px) {

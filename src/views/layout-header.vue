@@ -19,7 +19,7 @@
           </template>
           <template v-else>
             <v-btn rounded depressed small
-              @click="$router.push({ name: 'login' })"
+              @click="$router.push({ name: 'login', params: { next: $route.name } })"
               color="primary"
               class="nav-cta no-text-transform"
             >Sign in</v-btn>
@@ -46,7 +46,7 @@
           <li @click="logout"><a>Logout {{ user.username }}</a></li>
         </template>
         <template v-else>
-          <li><router-link :to="{ name: 'login' }">Sign In</router-link></li>
+          <li><router-link :to="{ name: 'login', params: { next: $route.name } }">Sign In</router-link></li>
           <li><router-link :to="{ name: 'login', query: { action: 'register' } }">
             Register
           </router-link></li>
@@ -82,7 +82,7 @@ export default {
             },
             {
               text: 'Courses',
-              link: { name: 'courses' }
+              link: { name: 'course-list' }
             },
             {
               text: 'Games',
@@ -97,7 +97,7 @@ export default {
             },
             {
               text: 'Courses',
-              link: { name: 'courses' }
+              link: { name: 'course-list' }
             },
             {
               text: 'Games',
@@ -131,7 +131,7 @@ export default {
             },
             {
               text: 'Courses',
-              link: { name: 'courses' }
+              link: { name: 'course-list' }
             },
             {
               text: 'Games',

@@ -15,7 +15,7 @@ const routes = [
     component: () => import('@/views/login.vue')
   },
   {
-    path: '/profile/:username',
+    path: '/profile/:username?',
     name: 'profile',
     component: () => import('@/views/profile.vue')
   },
@@ -55,7 +55,25 @@ const routes = [
     component: () => import('@/views/game-solve-them.vue')
   },
   {
-    path: '*',
+    path: '/courses',
+    name: 'course-list',
+    component: () => import('@/views/course-list.vue')
+  },
+  {
+    path: '/courses/:id/edit',
+    name: 'course-edit',
+    component: () => import('@/views/course-edit.vue')
+  },
+  {
+    path: '/courses/:id',
+    name: 'course-view'
+  },
+  {
+    path: '/tags/:name',
+    name: 'tag-view'
+  },
+  {
+    path: '*', // wildcard route-matching redirects unspecified routes
     component: () => import('@/views/home-common.vue') // todo: 404 not found page
   }
 ]
