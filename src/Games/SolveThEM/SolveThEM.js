@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 
 import StartScene from './Scenes/StartScene'
 import GameScene from './Scenes/GameScene'
+import EndScene from './Scenes/EndScene'
 
 function launch (containerId, width, height) {
   return new Phaser.Game({
@@ -9,16 +10,13 @@ function launch (containerId, width, height) {
     width,
     height,
     parent: containerId,
-    dom: {
-      createContainer: true
-    },
     physics: {
       default: 'arcade',
       arcade: {
         debug: false
       }
     },
-    scene: [StartScene, GameScene]
+    scene: [StartScene, GameScene, EndScene]
   })
 }
 
