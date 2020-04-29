@@ -6,6 +6,7 @@ const http = {
   checkCourse: name => Axios.head(`courses/${name}`),
 
   // GET requests
+<<<<<<< HEAD
   getPosts: ({ search, tags, sort, page, size = 10 }) => {
     let url = 'forum/posts?'
     if (search) url += `search=${search}&`
@@ -15,6 +16,9 @@ const http = {
     url += `size=${size}`
     return Axios.get(url)
   },
+=======
+  getPosts: () => Axios.get('forum/posts?sort=latest'),
+>>>>>>> fa9f228ca4f35d7d66bfdc119354079801c3dd5e
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: ({ id, size = 10 }) => Axios.get(`/forum/posts/${id}?size=${size}`),
   getComments: ({ id, page, reply }) => Axios.get(`/forum/posts/${id}/comments?page=${page}` + (reply ? `&reply=${reply}` : '')),
