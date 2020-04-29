@@ -89,7 +89,7 @@ import http from '@/utils/http'
 export default {
   beforeCreate () {
     if (!this.$store.getters.isLoggedIn) {
-      this.$router.push({ name: 'home' })
+      this.$router.push({ name: 'login' })
     }
   },
   created () {

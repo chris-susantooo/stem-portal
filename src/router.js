@@ -57,7 +57,7 @@ const router = new Router({
         {
           path: '/discussion-forum',
           name: 'DiscussionForum',
-          component: () => import(/* webpackChunkName: "discussionforum" */ './views/DiscussionForum.vue')
+          component: () => import(/* webpackChunkName: "discussionforum" */ './views/Forum.vue')
         },
         {
           path: '/create-post',

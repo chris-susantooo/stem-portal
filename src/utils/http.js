@@ -6,10 +6,18 @@ const http = {
   checkCourse: name => Axios.head(`courses/${name}`),
 
   // GET requests
-  getPosts: () => Axios.get('forum/posts'),
+  getPosts: ({ search, tags, sort, page, size = 10 }) => {
+    let url = 'forum/posts?'
+    if (search) url += `search=${search}&`
+    if (tags) url += `tags=${tags.join(',')}&`
+    if (sort) url += `sort=${sort}&`
+    if (page) url += `page=${page}&`
+    url += `size=${size}`
+    return Axios.get(url)
+  },
   readCourse: courseId => Axios.get(`courses/${courseId}`),
-  getPost: id => Axios.get(`/forum/posts/${id}`),
-  getComments: (id, page, reply) => Axios.get(`/forum/posts/${id}/comments` + (page && !reply ? `?page=${page}` : '') + (reply && !page ? `?reply=${reply}` : '') + (reply && page ? `?page=${page}&reply=${reply}` : '')),
+  getPost: ({ id, size = 10 }) => Axios.get(`/forum/posts/${id}?size=${size}`),
+  getComments: ({ id, page, reply }) => Axios.get(`/forum/posts/${id}/comments?page=${page}` + (reply ? `&reply=${reply}` : '')),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
@@ -23,8 +31,8 @@ const http = {
   createComment: (id, content, reply) => Axios.post(`/forum/posts/${id}/comments`, { content, reply }),
   publishCourse: _id => Axios.post(`courses/${_id}/publish`),
   unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
-  reactPost: (id, liked, disliked) => Axios.post(`forum/posts/${id}/react`, { liked, disliked }),
-  reactComment: (pid, cid, liked, disliked) => Axios.post(`forum/posts/${pid}/comments/${cid}/react`, { liked, disliked }),
+  reactPost: (id, payload) => Axios.post(`forum/posts/${id}/react`, payload),
+  reactComment: (pid, cid, payload) => Axios.post(`forum/posts/${pid}/comments/${cid}/react`, payload),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),

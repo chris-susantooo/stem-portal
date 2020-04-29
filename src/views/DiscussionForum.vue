@@ -34,7 +34,7 @@
                         </template>
                         <v-list>
                           <v-list-item-group mandatory color="indigo">
-                            <v-list-item v-for="(item, i) in items" :key="i">
+                            <v-list-item v-for="(item, i) in sorting" :key="i" v-on:click="Sorting(i)">
                               <v-list-item-icon>
                                 <v-icon v-text="item.icon"></v-icon>
                               </v-list-item-icon>
@@ -98,50 +98,61 @@
                 </v-speed-dial>
                 <!-- Choose Post Bar -->
                 <v-col cols="12" md="4">
-                  <v-card min-height="820px" height="100%" width="100%">
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title class="title text-center">Posts</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                    <v-divider></v-divider>
-                    <v-list dense nav>
-                      <v-list-item
-                        v-for="(p, i) in posts"
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title class="title text-center">Posts</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-divider></v-divider>
+                    <v-container
+                    id="scroll-target2"
+                    style="max-height: 980px"
+                    class="overflow-y-auto"
+                    >
+                      <v-row
+                        v-scroll:#scroll-target2="onScroll2"
+                        align="center"
+                        justify="center"
+                        no-gutters
+                        v-for="(p,i) in posts"
                         :key="i"
-                        link
-                        v-on:click="CurrentPosts(i)"
                       >
-                        <v-list-item-avatar :color="color">
-                          <span
-                            class="white--text headline pl-3"
-                            v-text="p.author.username.slice(0, 1).toUpperCase()"
-                          ></span>
-                        </v-list-item-avatar>
-                        <v-divider vertical></v-divider>
-                        <v-list-item-content>
-                          <v-list-item-title class="pl-3 caption">
-                            <v-row>
-                              <span class="pl-3">{{p.author.username}}</span>
-                              <span class="pl-2">{{postTime(p.updatedAt)}}</span>
-                              <v-spacer></v-spacer>
-                              <span>{{Math.abs(p.rating)}}
-                                <v-icon v-if="p.rating>=0">mdi-thumb-up-outline</v-icon>
-                                <v-icon v-if="p.rating<0">mdi-thumb-down-outline</v-icon>
-                              </span>
-                              <span class="pl-2 mr-3">{{p.nComments}}<v-icon>mdi-chat-outline</v-icon></span>
-                            </v-row>
-                          </v-list-item-title>
-                          <v-list-item-subtitle class="pl-3 body-1 bold d-inline-block text-truncate">
-                            {{p.title}}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle class="pl-3 caption text-truncate">
-                            Tags: {{p.tags.join(', ')}}
-                          </v-list-item-subtitle>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                  </v-card>
+                        <v-card>
+                          <v-list-item
+                            link
+                            v-on:click="CurrentPosts(i)"
+                          >
+                            <v-list-item-avatar :color="color">
+                              <span
+                                class="white--text headline pl-3"
+                                v-text="p.author.username.slice(0, 1).toUpperCase()"
+                              ></span>
+                            </v-list-item-avatar>
+                            <v-divider vertical></v-divider>
+                            <v-list-item-content>
+                              <v-list-item-title class="pl-3 caption">
+                                <v-row>
+                                  <span class="pl-3">{{p.author.username}}</span>
+                                  <span class="pl-2">{{postTime(p.updatedAt)}}</span>
+                                  <v-spacer></v-spacer>
+                                  <span>{{Math.abs(p.rating)}}
+                                    <v-icon v-if="p.rating>=0">mdi-thumb-up-outline</v-icon>
+                                    <v-icon v-if="p.rating<0">mdi-thumb-down-outline</v-icon>
+                                  </span>
+                                  <span class="pl-2 mr-3">{{p.nComments}}<v-icon>mdi-chat-outline</v-icon></span>
+                                </v-row>
+                              </v-list-item-title>
+                              <v-list-item-subtitle class="pl-3 body-1 bold d-inline-block text-truncate">
+                                {{p.title}}
+                              </v-list-item-subtitle>
+                              <v-list-item-subtitle class="pl-3 caption text-truncate">
+                                Tags: {{p.tags.join(', ')}}
+                              </v-list-item-subtitle>
+                            </v-list-item-content>
+                          </v-list-item>
+                        </v-card>
+                      </v-row>
+                    </v-container>
                 </v-col>
                 <!-- Post Details -->
                 <v-col cols="12" md="8">
@@ -170,10 +181,10 @@
                               <v-row>
                                   <v-list-item class="headline">{{CurrentPost.title}}</v-list-item>
                                 <v-list-item class="overline pl-4"> {{postTime(CurrentPost.createdAt)}}
-                                  <v-btn v-if="(!CurrentPost.disliked && !CurrentPost.liked) || CurrentPost.disliked" class="pl-2" v-on:click="like(true)" icon>
+                                  <v-btn v-if="((!CurrentPost.disliked && !CurrentPost.liked) || CurrentPost.disliked) && (isLoggedIn)" class="pl-2" v-on:click="like(true)" icon>
                                     <v-icon>mdi-thumb-up-outline</v-icon>
                                   </v-btn>
-                                  <v-btn v-if="(!CurrentPost.disliked && !CurrentPost.liked) || CurrentPost.liked" class="pl-2" v-on:click="dislike(true)" icon>
+                                  <v-btn v-if="((!CurrentPost.disliked && !CurrentPost.liked) || CurrentPost.liked) && (isLoggedIn)" class="pl-2" v-on:click="dislike(true)" icon>
                                     <v-icon>mdi-thumb-down-outline</v-icon>
                                   </v-btn>
                                   <span class="pl-2 mr-3">{{nComments}}<v-icon>mdi-chat-outline</v-icon></span>
@@ -273,11 +284,11 @@
                                   <v-row>
                                     <v-card class="mx ml-3" outlined>
                                       <span class="ml-1 text-center overline">{{item.nLikes}}</span>
-                                      <v-btn v-if="!item.disliked" v-on:click="like(false, i)" icon fab x-small >
+                                      <v-btn v-on:click="like(false, i)" icon fab x-small >
                                         <v-icon>mdi-thumb-up-outline</v-icon>
                                       </v-btn>
                                         <span class="ml-1 text-center overline">{{item.nDislikes}}</span>
-                                      <v-btn v-if="!item.liked" v-on:click="dislike(false, i)" icon fab x-small>
+                                      <v-btn v-on:click="dislike(false, i)" icon fab x-small>
                                         <v-icon>mdi-thumb-down-outline</v-icon>
                                       </v-btn>
                                     </v-card>
@@ -308,29 +319,24 @@
                                         style="max-height: 350px"
                                         class="overflow-y-auto"
                                       >
-                                        <v-row
-                                          v-scroll:#target1="onScroll1"
-                                          no-gutters
-                                        >
-                                          <v-col cols="12" md="12">
-                                            <v-row v-scroll:#target1="onScroll1" v-for="(replyComment, a) in allreplyComments" :key="a" v-bind:id="replyComment._id">
-                                              <v-card  width="100%">
-                                                <v-list-item three-line>
-                                                  <v-list-item-content>
-                                                    <v-list-item-title class="subtitle-1 pl-4">
-                                                      <span class="indigo--text"># {{replyComment.floor}} </span>
-                                                      <span class="pl-4">{{replyComment.author.username}}</span>
-                                                    </v-list-item-title>
-                                                    <v-list-item-subtitle class="pl-4 overline">
-                                                      {{postTime(replyComment.createdAt)}}
-                                                    </v-list-item-subtitle>
-                                                    <div class="mt-5 pl-4" v-html="replyComment.content"/>
-                                                  </v-list-item-content>
-                                                </v-list-item>
-                                              </v-card>
-                                            </v-row>
-                                          </v-col>
-                                        </v-row>
+                                        <v-col cols="12" md="12">
+                                          <v-row v-scroll:#target1="onScroll1" v-for="(replyComment, a) in allreplyComments" :key="a" v-bind:id="replyComment._id">
+                                            <v-card  width="100%">
+                                              <v-list-item three-line>
+                                                <v-list-item-content>
+                                                  <v-list-item-title class="subtitle-1 pl-4">
+                                                    <span class="indigo--text"># {{replyComment.floor}} </span>
+                                                    <span class="pl-4">{{replyComment.author.username}}</span>
+                                                  </v-list-item-title>
+                                                  <v-list-item-subtitle class="pl-4 overline">
+                                                    {{postTime(replyComment.createdAt)}}
+                                                  </v-list-item-subtitle>
+                                                  <div class="mt-5 pl-4" v-html="replyComment.content"/>
+                                                </v-list-item-content>
+                                              </v-list-item>
+                                            </v-card>
+                                          </v-row>
+                                        </v-col>
                                       </v-container>
                                       <v-container>
                                         <template>
@@ -380,15 +386,18 @@ import http from '@/utils/http'
 
 export default {
   created () {
-    http.getPosts({ page: 1, size: 10 }).then(({ data }) => {
+    if (!this.$store.getters.isLoggedIn) {
+      this.isLoggenIn = false
+    } else {
+      this.isLoggedIn = true
+    }
+    this.choosepostPage = 1
+    http.getPosts(this.choosepostPage, 10).then(({ data }) => {
       this.posts = data.posts
-      console.log('a', this.posts)
       if (this.posts) {
         http.getPost(this.posts[0]._id).then(({ data }) => {
-          console.log(data)
           this.CurrentPost = data.post
           this.allcurrentComments = data.post.comments
-          console.log(this.allcurrentComments)
           this.page = 1
           this.nComments = data.post.nComments
           this.maxPages = data.pages
@@ -410,15 +419,20 @@ export default {
     isPost: true,
     replycomment: '',
     whichcomment: '',
+    isLoggedIn: false,
     icon: 'mdi-arrow-down-bold',
-    items: [
+    sorting: [
       {
-        icon: 'mdi-fire',
-        text: 'HOT'
+        text: 'Latest',
+        icon: 'mdi-fire'
       },
       {
-        text: 'NEW',
-        icon: 'mdi-star'
+        text: 'Rating',
+        icon: 'mdi-thumb-up'
+      },
+      {
+        text: 'Popular',
+        icon: 'mdi-podium-gold'
       }
     ],
     posts: [
@@ -430,6 +444,8 @@ export default {
     parent: undefined,
     nComments: 0,
     dialogPage: 0,
+    choosepostPage: 0,
+    choosepostPages: 1,
     rating: 0,
     whichPost: 0
   }),
@@ -447,62 +463,105 @@ export default {
         this.rating = Math.abs(data.post.nLikes - data.post.nDislikes)
       })
     },
+    onScroll2 (e2) {
+      if (Math.ceil(e2.target.clientHeight + e2.target.scrollTop) >= e2.target.scrollHeight && this.choosepostPage < this.choosepostPages) {
+        console.log(e2)
+        this.choosepostPage += 1
+        http.getPosts(this.choosepostPage, 10).then(({ data }) => {
+          if (data.status === 200) {
+            console.log(data)
+            let temp = (this.posts).concat(data.posts)
+            this.posts = temp
+            if (this.posts.length % 10 !== 0) {
+              this.choosepostPages = this.choosepostPage
+            } else {
+              this.choosepostPages = this.choosepostPage + 1
+            }
+          }
+        })
+      }
+    },
     onScroll1 (e1) {
       console.log(e1.target.clientHeight)
       if (Math.ceil(e1.target.clientHeight + e1.target.scrollTop) >= e1.target.scrollHeight && this.dialogPage < this.dialogPages) {
         this.dialogPage += 1
         http.getComments(this.CurrentPost._id, this.dialogPage, this.allcurrentComments[this.whichcomment]._id).then(({ data }) => {
-          console.log(data)
           let a = (this.allreplyComments).concat(data.comments)
           this.allreplyComments = a
         })
       }
     },
     onScroll (e) {
-      console.log(e)
       if (Math.ceil(e.target.clientHeight + e.target.scrollTop) >= e.target.scrollHeight && this.page < this.maxPages) {
         this.page += 1
         http.getComments(this.CurrentPost._id, this.page).then(({ data }) => {
-          console.log(data)
           let a = (this.allcurrentComments).concat(data.comments)
           this.allcurrentComments = a
         })
       }
     },
     addnewcomments (isPost) {
-      var id = this.CurrentPost._id
-      if (isPost === false) {
-        var reply = this.allcurrentComments[this.whichcomment]._id
-        var content = this.replycomment
-        http.createComment(id, content, reply).then(({ data }) => {
-          if (data.status === 201) {
-            this.replycommentdialog = false
-            console.log(data)
-            this.allcurrentComments.push(data.comment)
-            http.getPost(this.CurrentPost._id).then(({ data }) => {
-              console.log(data)
-              this.nComments = data.post.nComments
-              this.maxPages = data.pages
-            }).catch(err => {
-              console.log(err)
-              this.errDialog = true
-            })
-          }
-        }).catch(err => {
-          console.log(err)
-          this.errorDialog = true
-        })
+      if (this.isLoggedIn === false) {
+        this.$router.push({ name: 'login' })
       } else {
-        http.createComment(id, this.comments.content).then(({ data }) => {
-          if (data.status === 201) {
-            this.allcurrentComments.push(data.comment)
-            this.dialog = false
-            http.getPost(this.CurrentPost._id).then(({ data }) => {
-              this.nComments = data.post.nComments
-            }).catch(err => {
-              console.log(err)
-              this.errDialog = true
-            })
+        var id = this.CurrentPost._id
+        if (isPost === false) {
+          var reply = this.allcurrentComments[this.whichcomment]._id
+          var content = this.replycomment
+          http.createComment(id, content, reply).then(({ data }) => {
+            if (data.status === 201) {
+              this.replycommentdialog = false
+              console.log(data)
+              this.allcurrentComments.push(data.comment)
+              http.getPost(this.CurrentPost._id).then(({ data }) => {
+                console.log(data)
+                this.nComments = data.post.nComments
+                this.posts[this.whichPost].nComments = data.post.nComments
+                this.maxPages = data.pages
+              }).catch(err => {
+                console.log(err)
+                this.errDialog = true
+              })
+            }
+          }).catch(err => {
+            console.log(err)
+            this.errorDialog = true
+          })
+        } else {
+          http.createComment(id, this.comments.content).then(({ data }) => {
+            if (data.status === 201) {
+              this.allcurrentComments.push(data.comment)
+              this.dialog = false
+              http.getPost(this.CurrentPost._id).then(({ data }) => {
+                this.posts[this.whichPost].nComments = data.post.nComments
+                this.nComments = data.post.nComments
+              }).catch(err => {
+                console.log(err)
+                this.errDialog = true
+              })
+            }
+          }).catch(err => {
+            console.log(err)
+            this.errorDialog = true
+          })
+        }
+      }
+    },
+    replyComments (i, comment) {
+      if (this.isLoggedIn === false) {
+        this.$router.push({ name: 'login' })
+      } else {
+        this.content = comment
+        this.whichcomment = i
+        const reply = this.allcurrentComments[this.whichcomment]._id
+        http.getComments(this.CurrentPost._id, null, reply).then(({ data }) => {
+          if (data.status === 200) {
+            this.parent = data.parent
+            this.allreplyComments = data.comments
+            this.dialogPage = data.page
+            this.dialogPages = data.pages
+            console.log(this.dialogPages)
+            location.href = `#${reply}`
           }
         }).catch(err => {
           console.log(err)
@@ -510,40 +569,45 @@ export default {
         })
       }
     },
-    replyComments (i, comment) {
-      this.content = comment
-      this.whichcomment = i
-      const reply = this.allcurrentComments[this.whichcomment]._id
-      http.getComments(this.CurrentPost._id, null, reply).then(({ data }) => {
-        if (data.status === 200) {
-          this.parent = data.parent
-          this.allreplyComments = data.comments
-          this.dialogPage = data.page
-          this.dialogPages = data.pages
-          location.href = `#${reply}`
-        }
-      }).catch(err => {
-        console.log(err)
-        this.errorDialog = true
-      })
-    },
     toCreatePost () {
       this.$router.push({ name: 'createpost' })
     },
+    Sorting (choice) {
+      if (choice === 0) {
+        http.getPosts(1, 10, 'latest').then(({ data }) => {
+          this.posts = data.posts
+        })
+      }
+      if (choice === 1) {
+        console.log('hihi')
+        http.getPosts(1, 10, 'rating').then(({ data }) => {
+          console.log(data)
+          this.posts = data.posts
+        })
+      }
+      if (choice === 2) {
+        console.log('hihi')
+        http.getPosts(1, 10, 'popular').then(({ data }) => {
+          this.posts = data.posts
+        })
+      }
+    },
     like (isPost, i = null) {
       if (isPost === true) {
-        this.CurrentPost.liked = true
-        this.CurrentPost.disliked = false
-        http.reactPost(this.CurrentPost._id, this.CurrentPost.liked, this.CurrentPost.disliked).then(({ data }) => {
-          this.posts[this.whichPost].rating += 1
-          console.log(this.posts[this.whichPost].rating)
-          console.log('liked post')
-        })
+        console.log(this.CurrentPost)
+        if ((this.CurrentPost.liked === false && this.CurrentPost.disliked === false) || (this.CurrentPost.liked === false && this.CurrentPost.disliked === true)) {
+          this.CurrentPost.liked = true
+          this.CurrentPost.disliked = false
+          http.reactPost(this.CurrentPost._id, this.CurrentPost.liked, this.CurrentPost.disliked).then(({ data }) => {
+            this.posts[this.whichPost].rating += 1
+            console.log('liked post')
+          })
+        }
       } else {
         const cid = this.allcurrentComments[i]._id
         const pid = this.CurrentPost._id
         http.reactComment(pid, cid, true, false).then(({ data }) => {
-          console.log(data)
+          this.allcurrentComments[i].nLikes += 1
           console.log('liked comment')
         })
       }
