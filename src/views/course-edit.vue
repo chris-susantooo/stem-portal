@@ -26,7 +26,41 @@
         Preview and Publish
         <small class="pt-2">Once you publish the course it will be publicly available</small>
       </v-stepper-step>
+      <v-stepper-content step="3">
+        <div class="d-flex px-2 align-center">
+          <span class="subtitle-1 mr-3 pb-3">Preview Your Course: </span>
+          <v-text-field solo readonly
+            class="mt-4 preview-link body-2"
+            :value="previewLink"
+            append-icon="mdi-content-copy"
+            @click:append="copyToClipboard(previewLink)"
+            ref="preview-link"
+          />
+        </div>
+        <div class="actions pa-1">
+          <v-btn depressed v-if="!course.published" color="primary" @click="showDialog('publish')">Save and Publish</v-btn>
+          <v-btn depressed v-else color="error" @click="showDialog('unpublish')">Unpublish</v-btn>
+          <v-btn text @click="step -= 1" class="ml-2">Back</v-btn>
+        </div>
+      </v-stepper-content>
     </v-stepper>
+
+    <v-dialog v-model="dialogShow" max-width="400">
+      <v-card v-if="dialogShow" class="pt-5 px-5">
+        <v-card-title class="title">{{ dialogContent[dialogType].title }}</v-card-title>
+        <v-card-text>{{ dialogContent[dialogType].text }}</v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="dialogShow = false">No</v-btn>
+          <v-btn text
+            :color="dialogType === 'publish' ? 'primary' : 'error'"
+            @click="saveAndTogglePublishCourse"
+          >
+            Yes
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -51,6 +85,9 @@ export default {
     },
     user () {
       return this.$store.getters.user
+    },
+    previewLink () {
+      return location.href.replace('edit', 'preview')
     }
   },
   data: () => ({
@@ -63,6 +100,18 @@ export default {
       description: '',
       chapters: [],
       published: false
+    },
+    dialogShow: false,
+    dialogType: '',
+    dialogContent: {
+      publish: {
+        title: 'Publish Confirmation',
+        text: 'Are you sure you would like to publish this course to the public?'
+      },
+      unpublish: {
+        title: 'Unpublish Confirmation',
+        text: 'Are you sure you would like to unpublish this course?'
+      }
     }
   }),
   methods: {
@@ -107,11 +156,39 @@ export default {
     async saveAndContinue (toStep) {
       await this.saveCourse()
       this.step = toStep
+    },
+    copyToClipboard (str) {
+      const el = document.createElement('textarea')
+      el.value = str
+      document.body.appendChild(el)
+      el.select()
+      document.execCommand('copy')
+      document.body.removeChild(el)
+    },
+    showDialog (msgType) {
+      this.dialogType = msgType
+      this.dialogShow = true
+    },
+    saveAndTogglePublishCourse () {
+      this.course.published = !this.course.published
+      this.$http.post(`courses/${this.course._id}/${this.dialogType}`)
+        .then(() => {
+          if (this.course.published) {
+            this.$router.push({ name: 'course-list' })
+          }
+        })
+        .catch(err => console.log(err))
+        .finally(() => (this.dialogShow = false))
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+  .course-edit {
+    flex-grow: 1;
+  }
+  .preview-link {
+    max-width: 500px;
+  }
 </style>

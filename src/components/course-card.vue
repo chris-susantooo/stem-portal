@@ -37,7 +37,7 @@
               </v-chip>
             </v-chip-group>
           </v-card-text>
-          <v-card-actions v-if="isAuthor">
+          <v-card-actions class="mt-n5" v-if="isAuthor && editable">
             <v-btn text color="indigo" class="mr-n1 px-n1" :to="{ name: 'course-edit', params: { id: course._id } }">
               Edit
             </v-btn>
@@ -63,6 +63,10 @@ export default {
       required: true
     },
     ratable: {
+      type: Boolean,
+      default: false
+    },
+    editable: {
       type: Boolean,
       default: false
     }

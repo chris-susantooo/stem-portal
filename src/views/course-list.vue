@@ -42,6 +42,8 @@
             :key="`course-${course._id}`"
             :course="course"
             :ratable="false"
+            :editable="true"
+            @delete="askDelete"
           />
         </div>
       </div>
@@ -203,6 +205,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="deleteDialog.show" max-width="500">
+      <v-card v-if="deleteDialog.show" class="pt-5 px-5">
+        <v-card-title class="title d-flex justify-center">
+          <span class="text-center">Are you sure to delete this Course?</span>
+          <span class="text--secondary subtitle-1">{{ deleteDialog.target.name }}</span>
+        </v-card-title>
+        <v-card-actions class="mx-n5">
+          <v-spacer />
+          <v-btn text @click="deleteDialog.show = false">Cancel</v-btn>
+          <v-btn text @click="deleteCourse(deleteDialog.target._id)" color="error">Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -296,7 +312,11 @@ export default {
     page: 1,
     pages: 1,
     coursesInProgress: [],
-    coursesCreated: []
+    coursesCreated: [],
+    deleteDialog: {
+      show: false,
+      target: {}
+    }
   }),
   methods: {
     initFromQuery ({ search = '', tags = '', sort = '', page = 1 }) {
@@ -436,6 +456,18 @@ export default {
       if (newPage < 1 || newPage > this.pages || newPage === this.page) return
       this.page = newPage
       this.fetchCourses()
+    },
+    askDelete (_courseId) {
+      this.deleteDialog = {
+        show: true,
+        target: this.coursesCreated.find(course => course._id === _courseId)
+      }
+    },
+    deleteCourse (_courseId) {
+      this.$http.delete(`courses/${_courseId}`)
+        .then(() => this.fetchTeachingCourses())
+        .catch(err => console.log(err))
+        .finally(() => (this.deleteDialog.show = false))
     }
   }
 }
@@ -495,6 +527,6 @@ export default {
     width: 300px;
     height: 100%;
     min-height: 380px;
-    max-height: 432px;
+    max-height: 414px;
   }
 </style>
