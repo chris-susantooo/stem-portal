@@ -38,6 +38,7 @@
           :numberOfComments="numberOfComments"
           @react="handleReaction"
           @denied="emitDenialMessage"
+          @action="handleAction"
           post
         />
         <template v-for="(comment, i) in post.content.comments">
@@ -104,7 +105,7 @@ export default {
       return {
         view: true, // todo
         react: this.isLoggedIn,
-        edit: this.hasPost && this.isLoggedIn && this.post.content.author._id === this.user.id
+        edit: this.hasPost && this.isLoggedIn && this.post.content.author._id === this.user._id
       }
     },
     isLoggedIn () {
@@ -203,6 +204,17 @@ export default {
           break
         case 'comment':
           this.$emit('comment', target, value)
+      }
+    },
+    handleAction (action, target) {
+      console.log('handleAction', action, target)
+      switch (action) {
+        case 'delete':
+          this.$emit('delete', target)
+          break
+        case 'edit':
+          this.$emit('edit', target)
+          break
       }
     },
     getPageNum (i) {

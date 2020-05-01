@@ -2,7 +2,10 @@
   <v-container>
     <h1 class="headers text-center">Discussion Forum</h1>
     <div class="my-2" />
-    <forum-tool-bar @home="resetPage" />
+    <forum-tool-bar
+      @home="resetPage"
+      @update-post-list="filterPosts"
+    />
     <div class="my-5" />
     <!-- forum -->
     <v-row id="forum-comp">
@@ -24,6 +27,8 @@
           @page-change="changePostPage"
           @react="handleReactPost"
           @comment="handleReplyPost"
+          @delete="handleDeletePost"
+          @edit="handleEditPost"
         />
       </v-col>
     </v-row>
@@ -61,9 +66,9 @@ export default {
       loadedPages: {},
       pages: 1,
       page: 1
-    }
+    },
+    filters: ''
   }),
-
   methods: {
     fetchPosts (options = {}, clearPosts = false) {
       const { search, tags, sort = 'latest', page = 1, size = 10 } = options
@@ -108,7 +113,12 @@ export default {
           .catch(() => reject(new Error('error fetching comments')))
       })
     },
-
+    filterPosts (query) {
+      if (query[0] && !query[1]) this.fetchPosts({ tags: query[0] }, true)
+      else if (query[1] && !query[0]) this.fetchPosts({ sort: query[1] }, true)
+      else if (query[1] && query[0]) this.fetchPosts({ tags: query[0], sort: query[1] }, true)
+      else if (!query[1] && !query[1]) this.fetchPosts(true)
+    },
     replyPost (comment) {
       return new Promise((resolve, reject) => {
         http.createComment(this.post.content._id, comment)
@@ -131,6 +141,7 @@ export default {
           .then(({ data, status }) => {
             if (status === 201) {
               console.log(data.comment)
+              console.log(data.comment._id)
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
               resolve()
@@ -225,7 +236,6 @@ export default {
     async changePostPage (newPage) {
       this.post.page = newPage
     },
-
     handleReplyPost (target, comment) {
       console.log(target, comment)
       target.type === 'post'
@@ -241,7 +251,26 @@ export default {
         ? this.reactPost(payload)
         : this.reactComment(target._id, payload)
     },
+    async handleDeletePost (target) {
+      console.log('hihihi')
+      return new Promise((resolve, reject) => {
+        http.deletePost(target)
+          .then(({ data, status }) => {
+            if (status === 204) {
+              this.resetPage()
+              resolve()
+            } else {
+              reject(new Error('error deleting post'))
+            }
+          })
+          .catch(() => reject(new Error('error deleting post')))
+      })
+    },
+    handleEditPost (target) {
+
+    },
     updateComment (comment, commentIndex) {
+      console.log('a',comment)
       const target = commentIndex !== undefined
         ? this.post.content.comments[commentIndex]
         : this.post.content
@@ -253,7 +282,6 @@ export default {
         post.nComments += 1
         this.numberOfComments = post.nComments
       }
-
       return { comments }
     },
     updateRatings (payload, commentIndex) {
