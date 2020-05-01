@@ -33,8 +33,8 @@
 
 <script>
 import ForumToolBar from '../components/forum-toolbar.vue'
-import PostList from '../components/forum-postlist.vue'
-import PostDisplay from '../components/forum-postdisplay.vue'
+import PostList from '../components/forum-post-list.vue'
+import PostDisplay from '../components/forum-post-display.vue'
 
 import http from '../utils/http'
 
@@ -190,7 +190,7 @@ export default {
       console.log(target)
       const scrollOptions = {
         duration: 1000,
-        offset: 0,
+        offset: 64,
         easing: 'easeInOutCubic'
       }
       if (container) scrollOptions.container = container

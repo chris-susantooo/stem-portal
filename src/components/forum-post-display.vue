@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100vh" outlined :class="emptyPostClasses">
+  <v-card outlined :class="{ ...emptyPostClasses, 'post-display': true }">
     <template v-if="hasPost">
       <v-row class="justify-space-between align-center mx-3" ref="post-display-header">
         <v-avatar v-if="post.content.author.avatar" size="40">
@@ -24,7 +24,7 @@
       <v-divider />
       <div
         id="post-display-container"
-        :style="`height: ${postHeight}px; background-color: #FAFAFA;`"
+        :style="`height: 100%; background-color: #FAFAFA;`"
         class="overflow-y-auto"
         ref="post-display-container"
       >
@@ -76,18 +76,11 @@
 <script>
 import NoPost from './forum-nopost.vue'
 import CommentPaginator from './paginator.vue'
-import PostCard from './forum-postcard.vue'
+import PostCard from './forum-post-card.vue'
 import utils from '@/utils/forum'
 
 export default {
   components: { NoPost, CommentPaginator, PostCard },
-  mounted () {
-    this.updatePostHeight()
-    window.addEventListener('resize', this.updatePostHeight)
-  },
-  updated () {
-    this.updatePostHeight()
-  },
   props: {
     post: {
       type: Object,
@@ -100,7 +93,6 @@ export default {
   },
   data: () => ({
     listEnd: false,
-    postHeight: 0,
     scrollHistory: {},
     showOP: true
   }),
@@ -197,11 +189,6 @@ export default {
     emitDenialMessage () {
       this.$emit('denied', 'This action is members-only. Please log-in or register to continue.')
     },
-    updatePostHeight () {
-      if (this.hasPost) {
-        this.postHeight = window.innerHeight - this.$refs['post-display-header'].clientHeight
-      }
-    },
     getComment (cid, isPost) {
       this.$emit('getcomment', cid)
     },
@@ -225,10 +212,16 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-  .truncate
-    flex: 1
-    white-space: nowrap
-    overflow: hidden
-    text-overflow: ellipsis
+<style lang="scss" scoped>
+  .truncate {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .post-display {
+    height: calc(100vh - 4rem);
+    overflow: hidden;
+  }
 </style>

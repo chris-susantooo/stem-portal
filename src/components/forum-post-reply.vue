@@ -82,7 +82,7 @@
 </template>
 <script>
 import utils from '@/utils/forum'
-import CommentCard from './forum-commentcard.vue'
+import CommentCard from './forum-comment-card.vue'
 
 export default {
   components: {
