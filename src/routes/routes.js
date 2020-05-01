@@ -73,11 +73,13 @@ const routes = [
   },
   {
     path: '/courses/:id/preview',
-    name: 'course-view'
+    name: 'course-preview',
+    component: () => import('@/views/course-view.vue')
   },
   {
     path: '/courses/:id',
-    name: 'course-view'
+    name: 'course-view',
+    component: () => import('@/views/course-view.vue')
   },
   {
     path: '/teacher-circle',
@@ -109,54 +111,4 @@ export default routes
 //   path: '/happy-corner/MATH1853',
 //   name: 'MATH1853',
 //   component: () => import(/* webpackChunkName: "MATH1853" */ './views/teachers/MATH1853.vue')
-// },
-// {
-//   path: '/teachers/courses',
-//   name: 'online-course',
-//   meta: { role: 'teacher' },
-//   component: () => import(/* webpackChunkName: "online-course" */ './views/teachers/OnlineCurriculum.vue')
-// },
-// {
-//   path: '/teachers/courses/new',
-//   name: 'new-course',
-//   meta: { role: 'teacher' },
-//   component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/CourseEditor.vue')
-// },
-// {
-//   path: '/teachers/courses/:courseId',
-//   name: 'edit-course',
-//   meta: { role: 'teacher' },
-//   component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/teachers/CourseEditor.vue')
-// },
-// {
-//   path: '/teachers/courses/:courseId/preview',
-//   name: 'preview-course',
-//   meta: { role: 'teacher' },
-//   component: () => import(/* webpackChunkName: "make-new-online-course" */ './views/students/Course.vue')
-// },
-// {
-//   path: '/games/1',
-//   name: 'MagicCube',
-//   component: () => import(/* webpackChunkName: "MagicCube" */ './Games/MagicCube/MagicCube.vue')
-// },
-// {
-//   path: '/games/2',
-//   name: 'CodeSomething',
-//   component: () => import(/* webpackChunkName: "CodeSomething" */ './Games/CodeSomething/CodeSomething.vue')
-// },
-// {
-//   path: '/students/courses',
-//   name: 'student-courses',
-//   component: () => import(/* webpackChunkName: "online-course" */ './views/students/OnlineCurriculum.vue')
-// },
-// {
-//   path: '/students/games',
-//   name: 'student-games',
-//   component: () => import(/* webpackChunkName: "online-course" */ './views/students/Games.vue')
-// },
-// {
-//   path: '/students/courses/:courseId',
-//   name: 'take-course',
-//   meta: { role: 'student' },
-//   component: () => import(/* webpackChunkName: "online-course" */ './views/students/Course.vue')
 // }
