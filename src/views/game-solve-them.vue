@@ -1,6 +1,6 @@
 <template>
   <div id="game-container">
-    <div id="game-surface">
+    <div id="game-surface" class="d-flex justify-center">
       <div :id="containerId"/>
     </div>
     <div id="download-overlay" v-if="!downloaded">
