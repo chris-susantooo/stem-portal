@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import NoPost from './NoPost.vue'
+import NoPost from './forum-nopost.vue'
 import CommentPaginator from './paginator.vue'
 import PostCard from './forum-postcard.vue'
 import utils from '@/utils/forum'

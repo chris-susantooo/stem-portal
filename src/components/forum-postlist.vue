@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import NoPosts from './NoPosts.vue'
+import NoPosts from './forum-noposts.vue'
 import utils from '@/utils/forum'
 
 export default {

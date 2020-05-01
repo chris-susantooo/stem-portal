@@ -83,7 +83,7 @@
 
 <script>
 import utils from '@/utils/forum'
-import ReplyPost from './ReplyPost.vue'
+import ReplyPost from './forum-replypost.vue'
 import http from '@/utils/http'
 import TextEditor from '@/components/text-editor/TextEditor.vue'
 
