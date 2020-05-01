@@ -50,7 +50,6 @@
         </v-card>
       </blockquote>
     </v-list-item>
-    {{commentsinDialog.page}}
     <div
       id="comment-display-container"
       class="overflow-y-auto"
