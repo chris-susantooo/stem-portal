@@ -1,5 +1,5 @@
 <template>
-  <v-menu left offset-y nudge-bottom="13" nudge-width="200" transition="slide-y-transition">
+  <v-menu left offset-y nudge-bottom="13" min-width="350" transition="slide-y-transition">
     <template v-slot:activator="{ on }">
       <a v-on="on">
         <v-avatar size="36" :color="user.avatar ? 'transparent' : 'primary'">
