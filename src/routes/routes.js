@@ -72,6 +72,10 @@ const routes = [
     component: () => import('@/views/course-edit.vue')
   },
   {
+    path: '/courses/:id/preview',
+    name: 'course-view'
+  },
+  {
     path: '/courses/:id',
     name: 'course-view'
   },
