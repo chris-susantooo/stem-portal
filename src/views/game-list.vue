@@ -39,7 +39,7 @@
             </v-card-title>
             <v-container class="d-flex justify-center">
               <v-img
-                :src="require('@/assets/images/magic-cube-screenshot.png')"
+                :src="require('@/assets/images/solve-them-screenshot.png')"
                 contain
                 width="200"
                 height="200"
