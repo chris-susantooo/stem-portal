@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100vh" outlined>
+  <v-card class="post-list" outlined>
     <div ref="post-list-header">
       <v-row class="justify-center">
         <v-card-title>Posts</v-card-title>
@@ -7,7 +7,7 @@
       <v-divider />
     </div>
     <template v-if="posts.length">
-      <v-list id="post-list-container" three-line :height="listHeight" class="overflow-y-auto py-0">
+      <v-list id="post-list-container" three-line class="overflow-y-auto py-0 post-list-container">
         <template v-for="(post, i) in posts">
           <v-list-item @click="$emit('select', { id: post._id })" :key="post._id + '-item-' + i">
             <v-list-item-avatar :color="post.author.avatar ? undefined : getPostColor(post.author)" class="d-flex justify-center my-6">
@@ -43,7 +43,7 @@
       </v-list>
     </template>
     <template v-else>
-      <div :style="`height: ${listHeight}px;`" class="d-flex justify-center align-center">
+      <div class="post-list-container d-flex justify-center align-center">
         <no-posts @refresh="$emit('refresh')" />
       </div>
     </template>
@@ -63,25 +63,23 @@ export default {
       default: () => []
     }
   },
-  mounted () {
-    this.updateListHeight()
-    window.addEventListener('resize', this.updateListHeight)
-  },
-  data: () => ({
-    listHeight: 0
-  }),
   methods: {
     getPostColor: author => utils.getPostColor(author),
     getPostTimestamp: timestamp => utils.getPostTimestamp(timestamp),
     triggerLoad (entries, observer, isIntersecting) {
       if (isIntersecting) this.$emit('more')
-    },
-    updateListHeight () {
-      this.listHeight = window.innerHeight - this.$refs['post-list-header'].clientHeight
     }
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.updateListHeight)
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .post-list {
+    height: calc(100vh - 4rem);
+    overflow: hidden;
+  }
+
+  .post-list-container {
+    height: calc(100vh - 8rem);
+  }
+</style>
