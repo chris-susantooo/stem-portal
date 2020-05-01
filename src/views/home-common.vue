@@ -6,6 +6,7 @@
 export default {
   components: {
     VisitorHome: () => import('./home-visitor.vue'),
+    TeacherHome: () => import('./home-teacher.vue'),
     StudentHome: () => import('./home-student.vue'),
     ParentHome: () => import('./home-parent.vue')
   },

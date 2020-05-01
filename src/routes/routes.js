@@ -62,11 +62,22 @@ const routes = [
   {
     path: '/courses/:id/edit',
     name: 'course-edit',
+    meta: { role: 'teacher' },
+    component: () => import('@/views/course-edit.vue')
+  },
+  {
+    path: '/courses/new',
+    name: 'course-new',
+    meta: { role: 'teacher' },
     component: () => import('@/views/course-edit.vue')
   },
   {
     path: '/courses/:id',
     name: 'course-view'
+  },
+  {
+    path: '/teacher-circle',
+    name: 'teacher-circle'
   },
   {
     path: '/tags/:name',

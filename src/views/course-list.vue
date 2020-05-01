@@ -18,9 +18,25 @@
       </div>
     </v-form>
     <div class="course-list container">
-      <div v-if="isLoggedIn && hasTeachingCourses" class="px-2 pb-2">
-        <h2 class="headline ml-2 mb-5">Here are the courses that you mangage</h2>
+      <div v-if="this.user.type === 'teacher'" class="px-2 py-3">
+        <h2 class="headline ml-2 mb-5">Here are the courses that you manage</h2>
         <div class="teaching-courses">
+          <!-- create-new-course-btn -->
+          <v-hover>
+            <template v-slot="{ hover }">
+              <div>
+                <v-card class="new-course-btn ma-2" :to="{ name: 'course-new' }" :elevation="hover ? 5 : 0" outlined>
+                  <div class="flex-grow-1">
+                    <router-link :to="{ name: 'course-new' }" class="d-flex flex-column align-center text-center">
+                      <v-icon size="128" color="primary">mdi-plus-circle</v-icon>
+                      <span class="title">Add New Course</span>
+                    </router-link>
+                  </div>
+                </v-card>
+              </div>
+            </template>
+          </v-hover>
+          <!-- other-created-courses -->
           <course-card
             v-for="course in coursesCreated"
             :key="`course-${course._id}`"
@@ -29,7 +45,7 @@
           />
         </div>
       </div>
-      <div v-if="isLoggedIn && hasUnfinishedCourses" class="px-2 pb-2">
+      <div v-if="isLoggedIn && hasUnfinishedCourses" class="px-2 py-3">
         <h2 class="headline ml-2 mb-5">{{ user.firstName }}, pick up where you left off</h2>
         <div class="in-progress-courses">
           <course-card
@@ -68,6 +84,7 @@
                 <v-list flat>
                   <v-list-item-group
                     v-model="coursesMenu.selectedFilters"
+                    @change="fetchCourses"
                     multiple
                   >
                     <v-list-item
@@ -102,6 +119,7 @@
                 <v-list flat>
                   <v-list-item-group
                     v-model="coursesMenu.selectedSorting"
+                    @change="fetchCourses"
                     color="primary"
                   >
                     <v-list-item
@@ -198,9 +216,6 @@ export default {
     $route (to, from) {
       this.initFromQuery(to.query)
       this.fetchCourses()
-    },
-    selectedOptions () {
-      this.filterCourses()
     }
   },
   async created () {
@@ -230,9 +245,6 @@ export default {
     },
     hasUnfinishedCourses () {
       return this.user.courses.inProgress && this.user.courses.inProgress.length
-    },
-    hasTeachingCourses () {
-      return this.user.role === 'teacher' && this.coursesCreated.length
     },
     selectedOptions () {
       const options = this.coursesMenu.selectedFilters.map(tag => ({ text: tag, type: 'tag', value: tag }))
@@ -310,6 +322,8 @@ export default {
             this.courses = courses
             this.page = parseInt(page)
             this.pages = pages
+            const url = location.href.split('?')[0]
+            history.pushState('', '', queryString ? `${url}?${queryString}` : url)
           })
           .catch(err => console.log(err))
           .finally(() => resolve())
@@ -328,7 +342,7 @@ export default {
     },
     fetchTeachingCourses () {
       return new Promise((resolve, reject) => {
-        if (!this.isLoggedIn || this.user.role !== 'teacher') return resolve()
+        if (!this.isLoggedIn || this.user.type !== 'teacher') return resolve()
         this.$http.get('courses/teaching?size=5')
           .then(({ data: { courses } }) => {
             this.coursesCreated = courses
@@ -360,9 +374,6 @@ export default {
         offset: 64
       }))
       this.coursesHeadline = `All courses related to "${this.query.content}"`
-
-      const url = location.href.split('?')[0]
-      history.pushState('', '', queryString ? `${url}?${queryString}` : url)
     },
     isCourseRatable (id) {
       if (!this.isLoggedIn) return false
@@ -373,9 +384,6 @@ export default {
     async filterCourses () {
       const queryString = this.generateQueryString()
       await this.fetchCourses({ queryString })
-
-      const url = location.href.split('?')[0]
-      history.pushState('', '', queryString ? `${url}?${queryString}` : url)
     },
     resetFilters () {
       this.coursesMenu = {
@@ -422,6 +430,7 @@ export default {
           this.query.content = ''
           break
       }
+      this.fetchCourses()
     },
     toPage (newPage) {
       if (newPage < 1 || newPage > this.pages || newPage === this.page) return
@@ -479,11 +488,11 @@ export default {
     overflow-y: auto;
   }
 
-  @media (max-width: 600px) {
-    .in-progress-courses {
-      overflow-x: initial;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+  .new-course-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 380px;
   }
 </style>

@@ -93,7 +93,7 @@ export default {
         : 'No ratings yet'
     },
     isAuthor () {
-      return this.user._id === this.course.author._id && this.user.role === 'teacher'
+      return this.user._id === this.course.author._id && this.user.type === 'teacher'
     },
     courseLink () {
       return {
@@ -114,16 +114,5 @@ export default {
 <style lang="scss" scoped>
   .course-card {
     width: 300px;
-  }
-
-  @media (max-width: 600px) {
-    .course-card {
-      max-width: 400px;
-      flex-grow: 1;
-    }
-
-    .card-wrapper {
-      width: 100%;
-    }
   }
 </style>
