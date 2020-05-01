@@ -103,6 +103,7 @@ export default {
     fetchComments (options = {}) {
       const { id = this.post.content._id, page, size = 10, reply } = options
       return new Promise((resolve, reject) => {
+        console.log(reply)
         http.getComments({ id, page, size, reply })
           .then(({ data }) => resolve(data))
           .catch(() => reject(new Error('error fetching comments')))
@@ -187,7 +188,6 @@ export default {
     },
 
     scroll (target, container) {
-      console.log(target)
       const scrollOptions = {
         duration: 1000,
         offset: 0,
@@ -197,29 +197,22 @@ export default {
       this.$vuetify.goTo(target, scrollOptions)
     },
 
-    async loadPostPage (page, container, operation) {
-      const { comments, page: newPage, pages } = await this.fetchComments({ page })
-      if (operation === 'pressbtn') {
-        this.post.content.comments = comments
-        this.post.loadedPages = {}
-        this.post.loadedPages[newPage] = comments
-        this.post = Object.assign({ page: this.post.page, pages }, this.post)
-        console.log(`#p-${this.post.page}-top`)
-        this.scroll(`#post-comment-0`, '#post-display-container')
-      } else if (operation === 'scroll') {
-        if (this.post.loadedPages[page]) return
-        if (newPage > this.post.page) this.post.content.comments.push(...comments)
-        if (newPage < this.post.page) this.post.content.comments = [ ...comments, ...this.post.content.comments ]
-        this.post = Object.assign({ page: this.post.page, pages }, this.post)
+    async loadPostPage (page, container) {
+      if (this.post.loadedPages[page]) return
 
-        if (newPage < this.post.page && container) {
-          const initHeight = container.scrollHeight
-          await this.$nextTick()
-          container.scrollTop = container.scrollHeight - initHeight
-        }
-        this.post.loadedPages[newPage] = comments
+      const { comments, page: newPage, pages } = await this.fetchComments({ page })
+
+      if (newPage > this.post.page) this.post.content.comments.push(...comments)
+      if (newPage < this.post.page) this.post.content.comments = [ ...comments, ...this.post.content.comments ]
+      this.post = Object.assign({ page: this.post.page, pages }, this.post)
+
+      if (newPage < this.post.page && container) {
+        const initHeight = container.scrollHeight
+        await this.$nextTick()
+        container.scrollTop = container.scrollHeight - initHeight
       }
-      this.post.page = newPage
+
+      this.post.loadedPages[newPage] = comments
     },
 
     async changePostPage (newPage) {
