@@ -1,18 +1,59 @@
 <template>
   <v-card v-if="hasContent" flat tile>
     <!-- headers -->
-    <v-card-subtitle>
-      <span :class="{ 'floor-master': content.floor === 1 }">#{{ content.floor }}</span>
-      &nbsp;·&nbsp;
-      <router-link
-        :to="`/${content.author.type}s/${content.author.username}`"
-        :style="`color: ${contentColor} !important;`"
+    <v-row>
+      <v-card-subtitle>
+        <span :class="{ 'floor-master': content.floor === 1 }">#{{ content.floor }}</span>
+        &nbsp;·&nbsp;
+        <router-link
+          :to="`/${content.author.type}s/${content.author.username}`"
+          :style="`color: ${contentColor} !important;`"
+        >
+          {{ content.author.username }}
+        </router-link>
+        &nbsp;·&nbsp;
+        {{ timestamp }}
+      </v-card-subtitle>
+      <v-spacer/>
+      <v-btn icon small depressed
+        @click="handleAction('edit', content._id)"
+        :color="contentColor"
+        class="mr-3 mt-3"
+        v-if="editable && post"
       >
-        {{ content.author.username }}
-      </router-link>
-      &nbsp;·&nbsp;
-      {{ timestamp }}
-    </v-card-subtitle>
+        <v-icon size="30">mdi-pencil</v-icon>
+      </v-btn>
+      <v-dialog :scrollable="false" v-model="deleteDialogShow" max-width="410px" :retain-focus="false">
+        <template v-slot:activator="{ on1 }">
+          <v-btn icon small depressed
+            v-on="on1"
+            slot = "activator"
+            @click="openDeleteDialog()"
+            v-if="editable && post"
+            :color="contentColor"
+            class="mr-3 mt-3"
+          >
+            <v-icon size="30">mdi-delete</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            Are you sure want to delete the post?
+          </v-card-title>
+          <v-card-subtitle>
+            Please press YES to confirm.
+          </v-card-subtitle>
+          <v-btn
+            text
+            @click="handleAction('delete', content._id)"
+            :color="contentColor"
+            class="ml-2"
+          >
+            Yes
+          </v-btn>
+        </v-card>
+      </v-dialog>
+    </v-row>
     <!-- if content is quoting a reply -->
     <blockquote v-if="content.parent" class="px-4">
       <v-card color="#F5F5F5" outlined>
@@ -40,7 +81,7 @@
         <span class="pl-n2 pr-2">{{ content.nDislikes }}</span>
       </v-card>
       <v-card color="#F5F5F5" class="caption" outlined>
-        <v-dialog :fullscreen="true" v-if="reactable" :scrollable="false" v-model="show" max-width="800px" :retain-focus="false">
+        <v-dialog :fullscreen="true" v-if="reactable" :scrollable="false" v-model="replyDialogShow" max-width="800px" :retain-focus="false">
           <template v-slot:activator="{ on }">
             <v-btn v-on="on" slot = "activator" icon small depressed v-on:click="openDialog(content._id, post)">
               <v-icon size="15">mdi-chat</v-icon>
@@ -156,7 +197,8 @@ export default {
       liked: false,
       disliked: false
     },
-    show: false,
+    replyDialogShow: false,
+    deleteDialogShow: false,
     comment: ''
   }),
   computed: {
@@ -199,7 +241,7 @@ export default {
     async openDialog (cid, isPost) {
       this.cid = cid
       if (this.reactable === true) {
-        this.show = true
+        this.replyDialogShow = true
       }
       if (isPost === false) {
         return new Promise((resolve, reject) => {
@@ -226,7 +268,7 @@ export default {
     },
     replyPost (reaction, target, comment) {
       if (this.comment.length !== 0) {
-        this.show = false
+        this.replyDialogShow = false
         this.reactable
           ? this.$emit('react', reaction, { _id: target, type: this.post ? 'post' : 'comment' }, comment)
           : this.$emit('denied')
@@ -234,7 +276,6 @@ export default {
       }
     },
     async changeCommentPage (newPage) {
-      console.log('chagePostPage', newPage)
       this.commentsinDialog.page = newPage
     },
     scroll (target) {
@@ -248,8 +289,15 @@ export default {
       this.$vuetify.goTo(target, scrollOptions)
     },
     closeDialog () {
-      this.show = false
+      this.replyDialogShow = false
       this.comment = ''
+    },
+    openDeleteDialog () {
+      this.deleteDialogShow = true
+    },
+    handleAction (action, target) {
+      this.$emit('action', action, target)
+      if (action === 'delete') this.deleteDialogShow = false
     }
   },
   watch: {

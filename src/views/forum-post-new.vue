@@ -121,7 +121,7 @@ export default {
               this.updateSuccess = true
               this.snackbar = true
               this.$refs.form.reset()
-              this.$router.push({ name: 'DiscussionForum' })
+              this.$router.push({ name: 'forum' })
             }
           }).catch(err => {
             console.log(err)
