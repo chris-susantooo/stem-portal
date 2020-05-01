@@ -49,9 +49,15 @@
             <span v-else class="pl-n2 pr-2"> {{ content.nComments}} </span>
           </template>
           <v-card>
-            <v-card-title primary-title class="justify-center">
-              Replies
-            </v-card-title>
+            <div class="row">
+              <v-card-title primary-title class="ml-3">
+                Replies
+              </v-card-title>
+              <v-spacer></v-spacer>
+              <v-btn class="mr-12 mt-3" :color="contentColor" icon large  v-on:click="closeDialog()">
+                <v-icon size="50">mdi-close</v-icon>
+              </v-btn>
+            </div>
             <v-divider></v-divider>
             <reply-post
               :cid="cid"
@@ -219,10 +225,13 @@ export default {
         : this.$emit('denied')
     },
     replyPost (reaction, target, comment) {
-      this.show = false
-      this.reactable
-        ? this.$emit('react', reaction, { _id: target, type: this.post ? 'post' : 'comment' }, comment)
-        : this.$emit('denied')
+      if (this.comment.length !== 0) {
+        this.show = false
+        this.reactable
+          ? this.$emit('react', reaction, { _id: target, type: this.post ? 'post' : 'comment' }, comment)
+          : this.$emit('denied')
+        this.comment = ''
+      }
     },
     async changeCommentPage (newPage) {
       console.log('chagePostPage', newPage)
@@ -237,6 +246,10 @@ export default {
       }
       console.log(target)
       this.$vuetify.goTo(target, scrollOptions)
+    },
+    closeDialog () {
+      this.show = false
+      this.comment = ''
     }
   },
   watch: {
