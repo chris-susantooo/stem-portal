@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import TextEditor from '@/components/text-editor/TextEditor.vue'
+import TextEditor from '@/components/text-editor.vue'
 import http from '@/utils/http'
 
 export default {

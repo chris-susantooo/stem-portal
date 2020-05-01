@@ -493,6 +493,8 @@ export default {
     justify-content: center;
     align-items: center;
     width: 300px;
-    height: 380px;
+    height: 100%;
+    min-height: 380px;
+    max-height: 432px;
   }
 </style>

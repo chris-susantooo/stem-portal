@@ -80,7 +80,7 @@
         </v-menu>
         <v-menu offset-y dark :open-on-hover="chapterSelected" :open-on-click="false">
           <template v-slot:activator="{ on }">
-            <v-btn icon @click="!chapterSelected ? $emit('add', 'chapter') : null">
+            <v-btn icon v-on="on" @click="!chapterSelected ? $emit('add', 'chapter') : null">
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </template>
@@ -105,7 +105,7 @@
       </div>
     </div>
   </v-toolbar>
-  </template>
+</template>
 
 <script>
 export default {
