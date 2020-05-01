@@ -1,8 +1,10 @@
 import Phaser from 'phaser'
 
-import StartScene from './Scenes/StartScene'
-import GameScene from './Scenes/GameScene'
-import EndScene from './Scenes/EndScene'
+import StartScene from './scenes/StartScene'
+import GameAddScene from './scenes/GameAddScene'
+import GameMinusScene from './scenes/GameMinusScene'
+import GameMixedScene from './scenes/GameMixedScene'
+import EndScene from './scenes/EndScene'
 
 function launch (containerId, width, height) {
   return new Phaser.Game({
@@ -16,7 +18,7 @@ function launch (containerId, width, height) {
         debug: false
       }
     },
-    scene: [StartScene, GameScene, EndScene]
+    scene: [StartScene, GameAddScene, GameMinusScene, GameMixedScene, EndScene]
   })
 }
 
