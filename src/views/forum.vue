@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import ForumToolBar from '../components/forum/ToolBar.vue'
-import PostList from '../components/forum/PostList.vue'
-import PostDisplay from '../components/forum/PostDisplay.vue'
+import ForumToolBar from '../components/forum-toolbar.vue'
+import PostList from '../components/forum-postlist.vue'
+import PostDisplay from '../components/forum-postdisplay.vue'
 
 import http from '../utils/http'
 
