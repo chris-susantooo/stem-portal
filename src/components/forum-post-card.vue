@@ -83,7 +83,7 @@
       <v-card color="#F5F5F5" class="caption" outlined>
         <v-dialog :fullscreen="true" v-if="reactable" :scrollable="false" v-model="replyDialogShow" max-width="800px" :retain-focus="false">
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" slot = "activator" icon small depressed v-on:click="openDialog(content._id, post)">
+            <v-btn v-on="on" slot = "activator" icon small depressed @click="openDialog(content._id, post)">
               <v-icon size="15">mdi-chat</v-icon>
             </v-btn>
             <span v-if="numberOfComments" class="pl-n2 pr-2">{{ numberOfComments }}</span>
@@ -132,7 +132,7 @@
 import utils from '@/utils/forum'
 import ReplyPost from './forum-post-reply.vue'
 import http from '@/utils/http'
-import TextEditor from '@/components/text-editor/TextEditor.vue'
+import TextEditor from '@/components/text-editor.vue'
 
 export default {
   components: {

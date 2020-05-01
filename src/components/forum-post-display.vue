@@ -24,8 +24,8 @@
       <v-divider />
       <div
         id="post-display-container"
-        :style="`height: 100%; background-color: #FAFAFA;`"
-        class="overflow-y-auto"
+        :style="`background-color: #FAFAFA;`"
+        class="post-content overflow-y-auto"
         ref="post-display-container"
       >
         <div id="top" v-intersect.quiet="atListTop" />
@@ -235,5 +235,9 @@ export default {
   .post-display {
     height: calc(100vh - 4rem);
     overflow: hidden;
+  }
+
+  .post-content {
+    height: calc(100vh - 8rem);
   }
 </style>

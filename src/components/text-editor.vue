@@ -231,9 +231,17 @@ export default {
   position: absolute
   z-index: 100
 
+.ProseMirror
+  padding: 1rem
+  border: 1px solid #1976d2
+  border-radius: .3rem
+
 .editor-content a
   text-decoration: underline !important
   font-size: 16px !important
+
+.editor-content p
+  margin-bottom: 0
 
 .link-btns
   margin-top: 2px
