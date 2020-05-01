@@ -24,8 +24,8 @@
           <!-- create-new-course-btn -->
           <v-hover>
             <template v-slot="{ hover }">
-              <div>
-                <v-card class="new-course-btn ma-2" :to="{ name: 'course-new' }" :elevation="hover ? 5 : 0" outlined>
+              <div class="pa-2">
+                <v-card class="new-course-btn" :to="{ name: 'course-new' }" :elevation="hover ? 5 : 0" outlined>
                   <div class="flex-grow-1">
                     <router-link :to="{ name: 'course-new' }" class="d-flex flex-column align-center text-center">
                       <v-icon size="128" color="primary">mdi-plus-circle</v-icon>
