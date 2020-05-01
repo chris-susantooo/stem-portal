@@ -93,6 +93,7 @@ export default {
   methods: {
     jump (page) {
       if (page >= 1 && page <= this.length && page !== this.value) {
+        console.log('zzzzz')
         this.$emit('input', page)
       }
     },

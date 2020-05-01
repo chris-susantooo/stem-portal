@@ -9,7 +9,7 @@
         </span>
     </v-list-item-avatar>
     <blockquote>
-      <v-card color="#F5F5F5" outlined raised>
+      <v-card color="#F5F5F5" outlined >
         <v-row>
           <router-link
             :to="`/${ content.author.type}s/${ content.author.username}`"

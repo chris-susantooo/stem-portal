@@ -28,7 +28,7 @@
         class="overflow-y-auto"
         ref="post-display-container"
       >
-        <div id="p-1-top" v-intersect.quiet="atListTop" />
+        <div id="top" v-intersect.quiet="atListTop" />
         <post-card
           v-if="showOP"
           :content="post.content"
@@ -42,15 +42,11 @@
         />
         <template v-for="(comment, i) in post.content.comments">
           <div
-            v-if="i + 1 === post.content.comments.length"
-            v-intersect.quiet="atListEnd"
-            :key="`trigger-${i}`"
-          />
-          <div
-            v-if="(i + 1) % 10 === 0 && i !== 0"
-            :id="`p-${getPageNum(i)}-top`"
+            v-if="(i  % 10 )=== 0"
             v-intersect.quiet="atPageIntersect"
+            :id="`p-${getPageNum(i)}-top`"
             :key="`ptop-${getPageNum(i)}`"
+            class="mt-6"
           />
           <post-card
             :postinfo="post.content"
@@ -59,14 +55,16 @@
             :editable="permissions.edit"
             @react="handleReaction"
             @denied="emitDenialMessage"
+            :id="'post-comment-' + i"
             :key="'post-comment-' + i"
             class="mt-2"
           />
           <div
-            v-if="(i + 1) % 10 === 9"
+            v-if="(i ) % 10 === 9"
             :id="`p-${getPageNum(i)}-bot`"
-            v-intersect.quiet="atPageIntersect"
+            v-intersect.quiet="atListEnd"
             :key="`pbot-${getPageNum(i)}`"
+            class="mb-6"
           />
         </template>
       </div>
@@ -101,6 +99,7 @@ export default {
     }
   },
   data: () => ({
+    listEnd: false,
     postHeight: 0,
     scrollHistory: {},
     showOP: true
@@ -137,26 +136,42 @@ export default {
       if (newPost.page === 1) this.showOP = true
     },
     scrollHistory (newHistory, oldHistory) {
+      console.log(newHistory, oldHistory)
       if (newHistory.page === oldHistory.page) return
       if (newHistory.position === oldHistory.position) return
-      this.$emit('page-change', newHistory.page)
+      if (newHistory.page) this.$emit('page-change', newHistory.page)
+      else this.$emit('page-change', oldHistory.page)
     }
   },
   methods: {
     atListTop (entries, observer, isIntersecting) {
+      console.log('atListTop', isIntersecting)
       const newPage = this.post.page - 1
-      if (isIntersecting && !this.post.loadedPages[newPage]) {
+      const isLoadedBefore = this.post.loadedPages[newPage]
+      if (isIntersecting && !isLoadedBefore && newPage !== 0) {
         const container = this.$refs['post-display-container']
-        this.loadPage(newPage, container)
+        this.loadPage(newPage, container, 'scroll')
       }
     },
     atListEnd (entries, observer, isIntersecting) {
+      console.log('atListEnd', isIntersecting)
+      let s = ''
+      entries
+        .map(e => {
+          s = e.target.id.split('-')
+          const [, page, position] = e.target.id.split('-')
+          return { page: parseInt(page), position, time: e.time }
+        })
+        .sort((a, b) => a.time - b.time)
+        .forEach(e => (this.scrollHistory = e))
       const newPage = this.post.page + 1
-      if (isIntersecting && !this.post.loadedPages[newPage]) {
-        this.loadPage(newPage)
+      if (isIntersecting && !this.post.loadedPages[newPage] && parseInt(s[1]) === this.post.page) {
+        const container = this.$refs['post-display-container']
+        this.loadPage(newPage, container, 'scroll')
       }
     },
     atPageIntersect (entries, observer, isIntersecting) {
+      console.log('atpageintersect', isIntersecting)
       entries
         .map(e => {
           const [, page, position] = e.target.id.split('-')
@@ -165,18 +180,18 @@ export default {
         .sort((a, b) => a.time - b.time)
         .forEach(e => (this.scrollHistory = e))
     },
-    loadPage (page, container) {
+    loadPage (page, container, operation) {
       if (page < 1 || page > this.post.pages || page === this.post.page) return
-      this.$emit('load-page', page, container)
+      console.log(this.post.loadedPages)
+      this.$emit('load-page', page, container, operation)
     },
     toPage (page) {
       if (page < 1 || page > this.post.pages || page === this.post.page) return
-
-      const loadedBefore = !!this.post.loadedPages[page]
-      if (loadedBefore) {
-        return this.$emit('scroll-page', `#p-${page}-top`, '#post-display-container')
-      }
-
+      console.log(page)
+      console.log('LoadedPages:', this.post.loadedPages)
+      this.scrollHistory = {}
+      // const loadedBefore = this.post.loadedPages[page]
+      return this.$emit('load-page', page, '#post-display-container', 'pressbtn')
       // const isSkip = Math.abs(page - this.post.page) > 1
     },
     emitDenialMessage () {
@@ -188,7 +203,6 @@ export default {
       }
     },
     getComment (cid, isPost) {
-      console.log(cid)
       this.$emit('getcomment', cid)
     },
     handleReaction (reaction, target, value) {
@@ -204,7 +218,9 @@ export default {
           this.$emit('comment', target, value)
       }
     },
-    getPageNum: i => Math.floor((i + 1) / 10) + 1
+    getPageNum (i) {
+      return Math.floor((this.post.content.comments[i].floor - 2) / 10) + 1
+    }
   }
 }
 </script>

@@ -40,9 +40,9 @@
         <span class="pl-n2 pr-2">{{ content.nDislikes }}</span>
       </v-card>
       <v-card color="#F5F5F5" class="caption" outlined>
-        <v-dialog :scrollable="false" v-model="show" max-width="800px" :retain-focus="false">
+        <v-dialog :fullscreen="true" v-if="reactable" :scrollable="false" v-model="show" max-width="800px" :retain-focus="false">
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" slot = "activator" icon small depressed v-on:click="loadComments(content._id, post)">
+            <v-btn v-on="on" slot = "activator" icon small depressed v-on:click="openDialog(content._id, post)">
               <v-icon size="15">mdi-chat</v-icon>
             </v-btn>
             <span v-if="numberOfComments" class="pl-n2 pr-2">{{ numberOfComments }}</span>
@@ -54,9 +54,12 @@
             </v-card-title>
             <v-divider></v-divider>
             <reply-post
+              :cid="cid"
               :commentsinDialog="commentsinDialog"
               :post="post"
               :content="content"
+              @load-page="loadCommentPage"
+              @page-change="changeCommentPage"
               class="mt-2 mb-2"
             />
             <v-container>
@@ -65,7 +68,7 @@
                   <text-editor v-model="comment"/>
                 </v-col>
                 <v-col cols="12" md="1" align-self="end">
-                  <v-btn class="ml-2 mt-5" fab dark small :color="contentColor" v-on:click="replyPost('comment', content._id, comment)">
+                  <v-btn class="ml-2 mt-5" icon small depressed :color="contentColor" v-on:click="replyPost('comment', content._id, comment)">
                     <v-icon dark>mdi-send</v-icon>
                   </v-btn>
                 </v-col>
@@ -118,6 +121,8 @@ export default {
     }
   },
   data: () => ({
+    cid: 0,
+    commentscrollHistory: {},
     commentsinDialog: {
       comments: [],
       parent: {
@@ -137,6 +142,7 @@ export default {
         disliked: false,
         floor: 1
       },
+      loadedPages: {},
       page: 1,
       pages: 1
     },
@@ -159,8 +165,36 @@ export default {
     }
   },
   methods: {
-    async loadComments (cid, isPost) {
-      this.show = true
+    async loadCommentPage (page, container) {
+      console.log(this.commentsinDialog.page)
+      const result = await this.fetchComments({ id: this.postinfo._id, page: page, reply: this.cid })
+      console.log(result)
+      console.log(this.commentsinDialog)
+      if (result.page > this.commentsinDialog.page) this.commentsinDialog.comments.push(...result.comments)
+      if (result.page < this.commentsinDialog.page) this.commentsinDialog.comments = [ ...result.comments, ...this.commentsinDialog.comments ]
+      console.log(this.commentsinDialog.comments)
+      if (result.page < this.commentsinDialog.page && container) {
+        const initHeight = container.scrollHeight
+        await this.$nextTick()
+        container.scrollTop = container.scrollHeight - initHeight
+      }
+      // this.scroll('#post-comment-0', '#post-display-container')
+      this.commentsinDialog.loadedPages[result.page] = result.comments
+      this.commentsinDialog.page = result.page
+    },
+    async fetchComments (options = {}) {
+      const { id, page, size = 10, reply } = options
+      return new Promise((resolve, reject) => {
+        http.getComments({ id, page, size, reply })
+          .then(({ data }) => resolve(data))
+          .catch(() => reject(new Error('error fetching comments')))
+      })
+    },
+    async openDialog (cid, isPost) {
+      this.cid = cid
+      if (this.reactable === true) {
+        this.show = true
+      }
       if (isPost === false) {
         return new Promise((resolve, reject) => {
           http.getComments({ id: this.postinfo._id, page: 1, size: 10, reply: cid })
@@ -169,17 +203,17 @@ export default {
                 comments: data.comments,
                 page: data.page,
                 pages: data.pages,
-                parent: data.parent
+                parent: data.parent,
+                loadedPages: { 1: data.comments }
               }
-              console.log(this.commentsinDialog.parent)
-              resolve()
+              console.log(data)
+              resolve(data)
             })
-            .catch(() => reject(new Error('error fetching post')))
+            .catch(() => reject(new Error('error fetching comments')))
         })
       }
     },
     emitReaction (reaction, target, value) {
-      console.log(this.numberOfComments)
       this.reactable
         ? this.$emit('react', reaction, { _id: target, type: this.post ? 'post' : 'comment' }, value)
         : this.$emit('denied')
@@ -189,6 +223,20 @@ export default {
       this.reactable
         ? this.$emit('react', reaction, { _id: target, type: this.post ? 'post' : 'comment' }, comment)
         : this.$emit('denied')
+    },
+    async changeCommentPage (newPage) {
+      console.log('chagePostPage', newPage)
+      this.commentsinDialog.page = newPage
+    },
+    scroll (target) {
+      const scrollOptions = {
+        duration: 1000,
+        offset: 0,
+        easing: 'easeInOutCubic',
+        container: '#comment-display-container'
+      }
+      console.log(target)
+      this.$vuetify.goTo(target, scrollOptions)
     }
   },
   watch: {
