@@ -75,8 +75,8 @@
 
 <script>
 import NoPost from './NoPost.vue'
-import CommentPaginator from './Paginator.vue'
-import PostCard from './PostCard.vue'
+import CommentPaginator from './paginator.vue'
+import PostCard from './forum-postcard.vue'
 import utils from '@/utils/forum'
 
 export default {
