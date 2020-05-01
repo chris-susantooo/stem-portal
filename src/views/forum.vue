@@ -270,7 +270,7 @@ export default {
 
     },
     updateComment (comment, commentIndex) {
-      console.log('a',comment)
+      console.log('a', comment)
       const target = commentIndex !== undefined
         ? this.post.content.comments[commentIndex]
         : this.post.content

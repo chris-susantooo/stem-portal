@@ -527,6 +527,6 @@ export default {
     width: 300px;
     height: 100%;
     min-height: 380px;
-    max-height: 414px;
+    max-height: 412px;
   }
 </style>
