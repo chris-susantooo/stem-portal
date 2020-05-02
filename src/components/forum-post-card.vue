@@ -288,7 +288,7 @@ export default {
         this.replyDialogShow = true
       }
       if (isPost === false) {
-        http.getComments({ id: this.postinfo._id, page: 2, reply: cid }).then(({ data }) => {
+        http.getComments({ id: this.postinfo._id, reply: cid }).then(({ data }) => {
           if (data.status === 200) {
             this.commentsinDialog.comments = data.comments
             this.commentsinDialog.page = data.page

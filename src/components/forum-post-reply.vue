@@ -30,7 +30,7 @@
         :length="commentsinDialog.pages"
         :color="contentColor"
         @input="toPage"
-        class="mr-1"
+        class="mr-12"
       />
     </v-list-item>
     <v-list-item v-else class="grow">
