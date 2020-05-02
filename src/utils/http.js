@@ -24,6 +24,8 @@ const http = {
     else if (reply && page) url += `page=${page}&reply=${reply}`
     return Axios.get(url)
   },
+  magicCubeFinished: _id => Axios.get(`game/${_id}/magic-cube`),
+  solveThemFinished: _id => Axios.get(`game/${_id}/solve-them`),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),

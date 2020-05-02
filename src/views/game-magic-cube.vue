@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import http from '../utils/http'
+
 import * as BABYLON from 'babylonjs'
 import * as GUI from 'babylonjs-gui'
 
@@ -583,6 +585,11 @@ function createGameScene (engine, level) {
 }
 
 export default {
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
+  },
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
     myScene = createMainScene(engine)
@@ -593,6 +600,11 @@ export default {
   },
   beforeDestroy () {
     myScene.dispose()
+    http.magicCubeFinished(this.user._id)
+      .then(() => {
+        this.$store.dispatch('fetchUser')
+      })
+      .catch(err => console.log(err))
   }
 }
 </script>
