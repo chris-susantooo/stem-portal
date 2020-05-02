@@ -17,7 +17,13 @@ const http = {
   },
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: ({ id, size = 10 }) => Axios.get(`/forum/posts/${id}?size=${size}`),
-  getComments: ({ id, page, reply }) => Axios.get(`/forum/posts/${id}/comments?page=${page}` + (reply ? `&reply=${reply}` : '')),
+  getComments: ({ id, page, reply }) => {
+    let url = `/forum/posts/${id}/comments?`
+    if (page) url += `page=${page}&`
+    else if (reply) url += `reply=${reply}&`
+    else if (reply && page) url += `page=${page}&reply=${reply}`
+    return Axios.get(url)
+  },
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
@@ -39,7 +45,7 @@ const http = {
 
   // DELETE request
   deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
-  deletePost: postId => Axios.delete(`/forum/posts/${postId}`)
+  deletePost: postId => Axios.delete(`posts/${postId}`)
 
 }
 export default http

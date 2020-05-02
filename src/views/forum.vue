@@ -21,6 +21,7 @@
         <post-display
           :post="post"
           :numberOfComments="numberOfComments"
+          :numberOfReplies="numberOfReplies"
           :comments="result"
           @load-page="loadPostPage"
           @scroll-page="scroll"
@@ -55,6 +56,7 @@ export default {
   },
 
   data: () => ({
+    numberOfReplies: 0,
     numberOfComments: 0,
     result: undefined,
     posts: {
@@ -76,7 +78,13 @@ export default {
         http.getPosts({ search, tags, sort, page, size })
           .then(({ data }) => {
             if (data.posts) {
-              clearPosts ? this.posts.content = data.posts : this.posts.content.push(...data.posts)
+              if (clearPosts) {
+                this.posts.content = data.posts
+                this.post = {}
+                console.log(this.post)
+              } else {
+                this.posts.content.push(...data.posts)
+              }
               this.posts.page = data.page
             }
             resolve()
@@ -98,7 +106,6 @@ export default {
               page: 1
             }
             this.numberOfComments = data.post.comments.length
-            console.log(this.post)
             resolve()
           })
           .catch(() => reject(new Error('error fetching post')))
@@ -141,8 +148,9 @@ export default {
         http.createComment(this.post.content._id, comment, _commentId)
           .then(({ data, status }) => {
             if (status === 201) {
-              console.log(data.comment)
-              console.log(data.comment._id)
+              const comment = this.post.content.comments.find(c => c._id === _commentId)
+              comment.nComments += 1
+              this.numberOfReplies = comment.nComments
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
               this.$store.dispatch('fetchUser')
@@ -217,7 +225,6 @@ export default {
         this.post.loadedPages = {}
         this.post.loadedPages[newPage] = comments
         this.post = Object.assign({ page: this.post.page, pages }, this.post)
-        console.log(`#p-${this.post.page}-top`)
         this.scroll(`#post-comment-0`, '#post-display-container')
       } else if (operation === 'scroll') {
         if (this.post.loadedPages[page]) return

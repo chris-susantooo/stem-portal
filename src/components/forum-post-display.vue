@@ -50,10 +50,12 @@
             class="mt-6"
           />
           <post-card
+            :commentIndex="i"
             :postinfo="post.content"
             :content="comment"
             :reactable="permissions.react"
             :editable="permissions.edit"
+            :numberOfReplies="numberOfReplies"
             @react="handleReaction"
             @denied="emitDenialMessage"
             :id="'post-comment-' + i"
@@ -88,6 +90,10 @@ export default {
       required: true
     },
     numberOfComments: {
+      type: Number,
+      required: false
+    },
+    numberOfReplies: {
       type: Number,
       required: false
     }
@@ -129,7 +135,6 @@ export default {
       if (newPost.page === 1) this.showOP = true
     },
     scrollHistory (newHistory, oldHistory) {
-      console.log(newHistory, oldHistory)
       if (newHistory.page === oldHistory.page) return
       if (newHistory.position === oldHistory.position) return
       if (newHistory.page) this.$emit('page-change', newHistory.page)
@@ -138,7 +143,6 @@ export default {
   },
   methods: {
     atListTop (entries, observer, isIntersecting) {
-      console.log('atListTop', isIntersecting)
       const newPage = this.post.page - 1
       const isLoadedBefore = this.post.loadedPages[newPage]
       if (isIntersecting && !isLoadedBefore && newPage !== 0) {
@@ -147,7 +151,6 @@ export default {
       }
     },
     atListEnd (entries, observer, isIntersecting) {
-      console.log('atListEnd', isIntersecting)
       let s = ''
       entries
         .map(e => {
@@ -164,7 +167,6 @@ export default {
       }
     },
     atPageIntersect (entries, observer, isIntersecting) {
-      console.log('atpageintersect', isIntersecting)
       entries
         .map(e => {
           const [, page, position] = e.target.id.split('-')
@@ -175,13 +177,10 @@ export default {
     },
     loadPage (page, container, operation) {
       if (page < 1 || page > this.post.pages || page === this.post.page) return
-      console.log(this.post.loadedPages)
       this.$emit('load-page', page, container, operation)
     },
     toPage (page) {
       if (page < 1 || page > this.post.pages || page === this.post.page) return
-      console.log(page)
-      console.log('LoadedPages:', this.post.loadedPages)
       this.scrollHistory = {}
       // const loadedBefore = this.post.loadedPages[page]
       return this.$emit('load-page', page, '#post-display-container', 'pressbtn')
