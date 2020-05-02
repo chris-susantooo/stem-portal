@@ -127,6 +127,7 @@ export default {
               console.log(data.comment)
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
+              this.$store.dispatch('fetchUser')
               resolve()
             } else {
               reject(new Error('error replying'))
@@ -144,6 +145,7 @@ export default {
               console.log(data.comment._id)
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
+              this.$store.dispatch('fetchUser')
               resolve()
             } else {
               reject(new Error('error replying'))
