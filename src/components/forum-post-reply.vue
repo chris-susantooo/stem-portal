@@ -24,6 +24,14 @@
           </v-row>
         </v-card>
       </blockquote>
+      <v-spacer/>
+      <comment-paginator
+        :value="commentsinDialog.page"
+        :length="commentsinDialog.pages"
+        :color="contentColor"
+        @input="toPage"
+        class="mr-1"
+      />
     </v-list-item>
     <v-list-item v-else class="grow">
       <v-list-item-avatar v-if="content.author.avatar" size="30">
@@ -50,46 +58,44 @@
         </v-card>
       </blockquote>
     </v-list-item>
-    <div
+    <v-container
       id="comment-display-container"
       class="overflow-y-auto"
       ref="comment-display-container"
-      style="height:400px;"
+      style="max-height: 450px;"
     >
-      <template v-for="(comment, i) in commentsinDialog.comments">
-        <div
-          v-if="(i  % 10 )=== 0"
-          v-intersect.quiet="atPageIntersect"
-          :id="`p-${commentsinDialog.page}-top`"
-          :key="`ptop-${(i)}`"
-        />
-        <comment-card
-          :content="comment"
-          :key="'comment-comment-' + i"
-          :id="`${cid}`"
-          class="mt-2"
-        />
-        <div
-          v-if="(i ) % 10 === 9"
-          :id="`p-${(commentsinDialog.page)}-bot`"
-          v-intersect.quiet="atListEnd"
-          :key="`pbot-${(i)}`"
-        />
-      </template>
-    </div>
+      <v-row
+        v-scroll:#comment-display-container="onScroll"
+        align="center"
+        justify="center"
+        no-gutters
+      >
+        <div id="top" class="mb-6"/>
+        <template v-for="(comment, i) in commentsinDialog.comments">
+          <comment-card
+            :content="comment"
+            :key="'comment-reply-' + i"
+            :id="`post-comment-` + i"
+            class="mt-2"
+          />
+        </template>
+      </v-row>
+    </v-container>
   </div>
 </template>
 <script>
 import utils from '@/utils/forum'
 import CommentCard from './forum-comment-card.vue'
+import CommentPaginator from './paginator.vue'
 
 export default {
   components: {
-    CommentCard
+    CommentCard, CommentPaginator
   },
   data: () => ({
     comment: '',
-    show: false
+    show: false,
+    scrollHistory: {}
   }),
   props: {
     cid: {
@@ -139,57 +145,12 @@ export default {
     }
   },
   methods: {
-    atListTop (entries, observer, isIntersecting) {
-      console.log('atListTop', isIntersecting)
-      const newPage = this.commentsinDialog.page - 1
-      const isLoadedBefore = this.commentsinDialog.loadedPages[newPage]
-      if (isIntersecting && !isLoadedBefore && newPage !== 0) {
-        const container = this.$refs['comment-display-container']
-        this.loadPage(newPage, container)
-      }
-    },
-    atListEnd (entries, observer, isIntersecting) {
-      console.log('atListEnd', isIntersecting)
-      console.log(this.commentsinDialog.page)
-      let s = ''
-      entries
-        .map(e => {
-          s = e.target.id.split('-')
-          const [, page, position] = e.target.id.split('-')
-          return { page: parseInt(page), position, time: e.time }
-        })
-        .sort((a, b) => a.time - b.time)
-        .forEach(e => (this.scrollHistory = e))
-      const newPage = this.commentsinDialog.page + 1
-      if (isIntersecting && !this.commentsinDialog.loadedPages[newPage] && parseInt(s[1]) === this.commentsinDialog.page) {
-        const container = this.$refs['comment-display-container']
-        this.loadPage(newPage, container)
-      }
-    },
-    atPageIntersect (entries, observer, isIntersecting) {
-      console.log('atpageintersect', isIntersecting)
-      console.log(entries)
-      console.log(observer)
-      entries
-        .map(e => {
-          const [, page, position] = e.target.id.split('-')
-          return { page: parseInt(page), position, time: e.time }
-        })
-        .sort((a, b) => a.time - b.time)
-        .forEach(e => (this.scrollHistory = e))
-    },
-    loadPage (page, container) {
+    toPage (page, container) {
       if (page < 1 || page > this.commentsinDialog.pages || page === this.commentsinDialog.page) return
-      this.$emit('load-page', page, container)
-    }
-  },
-  watch: {
-    scrollHistory (newHistory, oldHistory) {
-      console.log(newHistory, oldHistory)
-      if (newHistory.page === oldHistory.page) return
-      if (newHistory.position === oldHistory.position) return
-      if (newHistory.page) this.$emit('page-change', newHistory.page)
-      else this.$emit('page-change', oldHistory.page)
+      this.$emit('load-page', page, '#comment-display-container')
+    },
+    onScroll (e) {
+
     }
   }
 }
