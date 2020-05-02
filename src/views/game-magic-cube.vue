@@ -16,6 +16,7 @@ let spheres = []
 let transparentSpheres = {}
 let answers = {}
 let myScene
+let user
 
 function initScene (engine) {
   const scene = new BABYLON.Scene(engine)
@@ -413,6 +414,7 @@ function checkAnswer (answer, panel4) {
     panel4.height = '50px'
     panel4.width = '200px'
     panel4.background = 'green'
+    magicCubeFinished()
   }
 }
 
@@ -584,27 +586,24 @@ function createGameScene (engine, level) {
   return scene
 }
 
+function magicCubeFinished () {
+  http.magicCubeFinished(user._id)
+    .catch(err => console.log(err))
+}
+
 export default {
-  computed: {
-    user () {
-      return this.$store.getters.user
-    }
-  },
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
     myScene = createMainScene(engine)
+    user = this.$store.getters.user
 
     engine.runRenderLoop(function () {
       myScene.render()
     })
   },
   beforeDestroy () {
+    this.$store.dispatch('fetchUser')
     myScene.dispose()
-    http.magicCubeFinished(this.user._id)
-      .then(() => {
-        this.$store.dispatch('fetchUser')
-      })
-      .catch(err => console.log(err))
   }
 }
 </script>
