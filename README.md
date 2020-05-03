@@ -11,14 +11,12 @@ yarn install
 ```
 This will install the neccesary dependencies and modules into the root folder so that you can run the project.
 ## Project setup
-```
-yarn install
-```
-5. In your project root folder, create a file named `.env` and put the following code in the file.
+5. In your project root folder, create a file named `.env` and put the following code in the file and save the file.
 ```
 VUE_APP_API_BASE=http://localhost:8000/api
 ```
 This tells that all the API requests from the frontend will then be directed to the `8000` port.
+
 6. You now should be ready to serve the project. Type in:
 ```
 yarn serve
