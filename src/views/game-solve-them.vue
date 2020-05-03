@@ -10,9 +10,15 @@
 </template>
 
 <script>
+import http from '../utils/http'
 
 export default {
   name: 'Game',
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
+  },
   data () {
     return {
       downloaded: false,
@@ -24,11 +30,18 @@ export default {
     const game = await import('@/games/SolveThEM/SolveThEM')
     this.downloaded = true
     this.$nextTick(() => {
-      this.gameInstance = game.launch(this.containerId, 897, 689)
+      if (this.gameInstance === null) {
+        this.gameInstance = game.launch(this.containerId, 897, 689)
+      }
     })
   },
-  destroyed () {
-    this.gameInstance.destroy(false)
+  beforeDestroy () {
+    this.gameInstance = null
+    http.solveThemFinished(this.user._id)
+      .then(() => {
+        this.$store.dispatch('fetchUser')
+      })
+      .catch(err => console.log(err))
   }
 }
 </script>

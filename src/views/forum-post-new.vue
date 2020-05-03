@@ -134,6 +134,7 @@ export default {
               this.updateSuccess = true
               this.snackbar = true
               this.$refs.form.reset()
+              this.$store.dispatch('fetchUser')
               this.$router.push({ name: 'forum' })
             }
           }).catch(err => {

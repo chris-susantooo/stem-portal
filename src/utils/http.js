@@ -24,12 +24,16 @@ const http = {
     else if (reply && page) url += `page=${page}&reply=${reply}`
     return Axios.get(url)
   },
+  magicCubeFinished: _id => Axios.get(`game/${_id}/magic-cube`),
+  solveThemFinished: _id => Axios.get(`game/${_id}/solve-them`),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
   verifyUser: (username, token, cancel) => Axios.post(`auth/verify/${username}`, { token, cancel }),
   activateUser: (username, role, firstName, lastName, gender, school, interests) => Axios.post(`auth/activate/${username}`, { role, firstName, lastName, gender, school, interests }),
   forgotPassword: (username, email) => Axios.post('auth/forgot-password', { username, email }),
+  updateUser: (username, email, firstName, lastName, school, interests) => Axios.post(`users/update/${username}`, { email, firstName, lastName, school, interests }),
+  updateUserWithPassword: (username, password, email, firstName, lastName, school, interests) => Axios.post(`users/update-with-password/${username}`, { password, email, firstName, lastName, school, interests }),
   cancelToken: (username, token) => Axios.post(`auth/cancel-token/${token}`, { username }),
   resetPassword: (username, password, token) => Axios.post('auth/reset-password', { username, password, token }),
   createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
