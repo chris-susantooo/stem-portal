@@ -23,5 +23,5 @@ yarn serve
 ```
 The server will be started listening at port `8080`. Open up your browser and visit `localhost:8080` to visit the portal!
 
-### Customize configuration
+## Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
