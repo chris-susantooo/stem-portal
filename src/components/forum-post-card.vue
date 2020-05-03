@@ -16,14 +16,14 @@
       </v-card-subtitle>
       <v-spacer/>
       <v-btn icon small depressed
-        @click="handleAction('edit', content._id)"
-        :color="contentColor"
-        class="mr-3 mt-3"
+        color="indigo"
+        :to="{ name: 'post-edit', params: { id: content._id}}"
+        class="mr-2 mt-3"
         v-if="editable && post"
       >
-        <v-icon size="30">mdi-pencil</v-icon>
+        <v-icon size="20">mdi-pencil</v-icon>
       </v-btn>
-      <v-dialog :scrollable="false" v-model="deleteDialogShow" max-width="410px" :retain-focus="false">
+      <v-dialog v-model="deleteDialogShow" max-width="500" >
         <template v-slot:activator="{ on1 }">
           <v-btn icon small depressed
             v-on="on1"
@@ -33,24 +33,21 @@
             :color="contentColor"
             class="mr-3 mt-3"
           >
-            <v-icon size="30">mdi-delete</v-icon>
+            <v-icon size="20">mdi-delete</v-icon>
           </v-btn>
         </template>
-        <v-card>
-          <v-card-title>
-            Are you sure want to delete the post?
+        <v-card class="pt-5 px-5">
+          <v-card-title class="title d-flex justify-center">
+            <span class="text-center">Are you sure to delete this Post?</span>
           </v-card-title>
           <v-card-subtitle>
-            Please press YES to confirm.
+            <span class="text--secondary d-flex justify-center subtitle-1">{{ content.title }} </span>
           </v-card-subtitle>
-          <v-btn
-            text
-            @click="handleAction('delete', content._id)"
-            :color="contentColor"
-            class="ml-2"
-          >
-            Yes
-          </v-btn>
+          <v-card-actions class="mx-n5">
+            <v-spacer/>
+            <v-btn text @click="handleAction('delete', content._id)" :color="contentColor">Delete</v-btn>
+            <v-btn text @click="deleteDialogShow = false" :color="contentColor">Cancel</v-btn>
+          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-row>
@@ -206,12 +203,12 @@ export default {
     },
     reactable: {
       type: Boolean,
-      required: false,
+      required: true,
       default: false
     },
     editable: {
       type: Boolean,
-      required: false,
+      required: true,
       default: false
     },
     postinfo: {
@@ -302,21 +299,6 @@ export default {
           this.errorDialog = true
         })
       }
-      /* return new Promise((resolve, reject) => {
-        http.getComments({ id: this.postinfo._id, reply: cid })
-          .then(({ data }) => {
-            this.commentsinDialog = {
-              comments: data.comments,
-              page: data.page,
-              pages: data.pages,
-              parent: data.parent,
-              loadedPages: { 1: data.comments }
-            }
-            console.log(data)
-            resolve(data)
-          })
-          .catch(() => reject(new Error('error fetching comments')))
-      }) */
     },
     emitReaction (reaction, target, value) {
       this.reactable
@@ -355,6 +337,7 @@ export default {
       this.deleteDialogShow = true
     },
     handleAction (action, target) {
+      console.log('hihi')
       this.$emit('action', action, target)
       if (action === 'delete') this.deleteDialogShow = false
     }

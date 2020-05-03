@@ -42,10 +42,11 @@ const http = {
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
+  updatePost: ({ id, title, content, tags }) => Axios.patch(`forum/posts/${id}`, { title, content, tags }),
 
   // DELETE request
   deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
-  deletePost: postId => Axios.delete(`posts/${postId}`)
+  deletePost: postId => Axios.delete(`forum/posts/${postId}`)
 
 }
 export default http

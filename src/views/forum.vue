@@ -29,7 +29,6 @@
           @react="handleReactPost"
           @comment="handleReplyPost"
           @delete="handleDeletePost"
-          @edit="handleEditPost"
         />
       </v-col>
     </v-row>
@@ -51,6 +50,9 @@ export default {
     this.$emit('childBusy')
     await this.fetchPosts()
     if (this.posts.content.length) await this.fetchPost({ id: this.posts.content[0]._id })
+    console.log(this.post.content)
+    console.log(this.$store.getters.isLoggedIn)
+    console.log(this.post.content.author._id)
     this.$emit('childReady')
     setTimeout(() => this.scroll('#forum-comp'), 1000)
   },
@@ -80,7 +82,6 @@ export default {
             if (data.posts) {
               if (clearPosts) {
                 this.posts.content = data.posts
-                this.post = {}
                 console.log(this.post)
               } else {
                 this.posts.content.push(...data.posts)
@@ -124,7 +125,7 @@ export default {
       if (query[0] && !query[1]) this.fetchPosts({ tags: query[0] }, true)
       else if (query[1] && !query[0]) this.fetchPosts({ sort: query[1] }, true)
       else if (query[1] && query[0]) this.fetchPosts({ tags: query[0], sort: query[1] }, true)
-      else if (!query[1] && !query[1]) this.fetchPosts(true)
+      else if (!query[1] && !query[1]) this.fetchPosts()
     },
     replyPost (comment) {
       return new Promise((resolve, reject) => {
@@ -264,7 +265,7 @@ export default {
         http.deletePost(target)
           .then(({ data, status }) => {
             if (status === 204) {
-              this.resetPage()
+              console.log(data)
               resolve()
             } else {
               reject(new Error('error deleting post'))
@@ -272,9 +273,6 @@ export default {
           })
           .catch(() => reject(new Error('error deleting post')))
       })
-    },
-    handleEditPost (target) {
-
     },
     updateComment (comment, commentIndex) {
       console.log('a', comment)

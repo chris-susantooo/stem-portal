@@ -40,6 +40,11 @@ const routes = [
     component: () => import('@/views/forum-post-new.vue')
   },
   {
+    path: '/forum/:id/edit',
+    name: 'post-edit',
+    component: () => import('@/views/forum-post-new.vue')
+  },
+  {
     path: '/games',
     name: 'game-list',
     component: () => import('@/views/game-list.vue')
