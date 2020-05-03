@@ -194,7 +194,7 @@ export default {
       this.updatePostList()
     },
     createPost () {
-      if (this.$store.getters.user) this.$router.push({ name: 'login' })
+      if (!this.$store.getters.isLoggedIn) this.$router.push({ name: 'login' })
       else this.$router.push({ name: 'forum-new-post' })
     }
   }
