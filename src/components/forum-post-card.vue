@@ -280,7 +280,6 @@ export default {
     },
     async openDialog (cid, isPost) {
       this.cid = cid
-      console.log(this.commentIndex)
       if (this.reactable === true) {
         this.replyDialogShow = true
       }
@@ -324,7 +323,6 @@ export default {
         offset: 0,
         easing: 'easeInOutCubic'
       }
-      console.log(target)
       scrollOptions.container = '#comment-display-container'
       this.$vuetify.goTo(target, scrollOptions)
     },
@@ -337,7 +335,6 @@ export default {
       this.deleteDialogShow = true
     },
     handleAction (action, target) {
-      console.log('hihi')
       this.$emit('action', action, target)
       if (action === 'delete') this.deleteDialogShow = false
     }

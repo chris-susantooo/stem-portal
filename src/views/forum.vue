@@ -50,9 +50,6 @@ export default {
     this.$emit('childBusy')
     await this.fetchPosts()
     if (this.posts.content.length) await this.fetchPost({ id: this.posts.content[0]._id })
-    console.log(this.post.content)
-    console.log(this.$store.getters.isLoggedIn)
-    console.log(this.post.content.author._id)
     this.$emit('childReady')
     setTimeout(() => this.scroll('#forum-comp'), 1000)
   },
@@ -82,7 +79,6 @@ export default {
             if (data.posts) {
               if (clearPosts) {
                 this.posts.content = data.posts
-                console.log(this.post)
               } else {
                 this.posts.content.push(...data.posts)
               }
@@ -132,7 +128,6 @@ export default {
         http.createComment(this.post.content._id, comment)
           .then(({ data, status }) => {
             if (status === 201) {
-              console.log(data.comment)
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
               this.$store.dispatch('fetchUser')
@@ -209,7 +204,6 @@ export default {
     },
 
     scroll (target, container) {
-      console.log(target)
       const scrollOptions = {
         duration: 1000,
         offset: 64,
@@ -247,13 +241,11 @@ export default {
       this.post.page = newPage
     },
     handleReplyPost (target, comment) {
-      console.log(target, comment)
       target.type === 'post'
         ? this.replyPost(comment)
         : this.replyComment(target._id, comment)
     },
     handleReactPost (target, reaction, value) {
-      console.log(target, reaction, value)
       const payload = { liked: false, disliked: false }
       payload[reaction] = value
 
@@ -262,12 +254,10 @@ export default {
         : this.reactComment(target._id, payload)
     },
     async handleDeletePost (target) {
-      console.log('hihihi')
       return new Promise((resolve, reject) => {
         http.deletePost(target)
           .then(({ data, status }) => {
             if (status === 204) {
-              console.log(data)
               resolve()
             } else {
               reject(new Error('error deleting post'))
@@ -277,7 +267,6 @@ export default {
       })
     },
     updateComment (comment, commentIndex) {
-      console.log('a', comment)
       const target = commentIndex !== undefined
         ? this.post.content.comments[commentIndex]
         : this.post.content

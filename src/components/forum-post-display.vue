@@ -206,7 +206,6 @@ export default {
       }
     },
     handleAction (action, target) {
-      console.log('handleAction', action, target)
       switch (action) {
         case 'delete':
           this.$emit('delete', target)
