@@ -238,7 +238,6 @@ export default {
 
 .editor-content a
   text-decoration: underline !important
-  font-size: 16px !important
 
 .editor-content p
   margin-bottom: 0

@@ -74,6 +74,7 @@ const routes = [
   {
     path: '/courses/:id/preview',
     name: 'course-preview',
+    meta: { role: 'teacher' },
     component: () => import('@/views/course-view.vue')
   },
   {

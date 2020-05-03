@@ -25,7 +25,7 @@
       <div
         id="post-display-container"
         :style="`background-color: #FAFAFA;`"
-        class="post-content overflow-y-auto"
+        class="post-content overflow-y-auto overflow-x-hidden"
         ref="post-display-container"
       >
         <div id="top" v-intersect.quiet="atListTop" />
