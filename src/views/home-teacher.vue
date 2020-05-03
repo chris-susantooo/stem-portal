@@ -8,10 +8,10 @@
           </v-avatar>
         </div>
         <div class="row justify-center mt-5 mb-5">
-          <h3>Ricola Osas</h3>
+          <h3>{{ user.firstName + ' ' + user.lastName }}</h3>
         </div>
         <div class="row justify-center mt-5 mb-2">
-          <h5>Lv.2</h5>
+          <h5>Lv.{{ getUserLevel }}</h5>
         </div>
         <div class="row justify-center">
           <div class="col">
@@ -19,12 +19,13 @@
           </div>
           <div class="col">
             <v-progress-linear
-                color="green"
-                height="20px"
-                rounded
-                :value="50"
+              class="meter-bar"
+              color="green"
+              height="20px"
+              rounded
+              :value="meterEXP"
             >
-            <h6>50%</h6>
+            <h6>{{ meterEXP }}%</h6>
             </v-progress-linear>
           </div>
         </div>
@@ -187,11 +188,30 @@
 <script>
 
 export default {
-  //
+  computed: {
+    user () {
+      return this.$store.getters.user
+    },
+    getUserLevel () {
+      return Math.floor(this.user.meterEXP / 100)
+    }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.meterEXP = this.user.meterEXP % 100
+    }, 1000)
+  },
   data: () => ({
     news: [],
     ongoingCourses: [],
-    posts: []
+    posts: [],
+    meterEXP: 0
   })
 }
 </script>
+
+<style lang="scss" scoped>
+.meter-bar {
+  transition: .8s all ease-in-out !important
+}
+</style>

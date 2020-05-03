@@ -174,6 +174,7 @@ export default {
       this.$http.post(`courses/${this.course._id}/${this.dialogType}`)
         .then(() => {
           if (this.course.published) {
+            this.$store.dispatch('fetchUser')
             this.$router.push({ name: 'course-list' })
           }
         })

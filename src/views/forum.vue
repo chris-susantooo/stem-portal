@@ -21,6 +21,7 @@
         <post-display
           :post="post"
           :numberOfComments="numberOfComments"
+          :numberOfReplies="numberOfReplies"
           :comments="result"
           @load-page="loadPostPage"
           @scroll-page="scroll"
@@ -28,7 +29,6 @@
           @react="handleReactPost"
           @comment="handleReplyPost"
           @delete="handleDeletePost"
-          @edit="handleEditPost"
         />
       </v-col>
     </v-row>
@@ -50,11 +50,15 @@ export default {
     this.$emit('childBusy')
     await this.fetchPosts()
     if (this.posts.content.length) await this.fetchPost({ id: this.posts.content[0]._id })
+    console.log(this.post.content)
+    console.log(this.$store.getters.isLoggedIn)
+    console.log(this.post.content.author._id)
     this.$emit('childReady')
     setTimeout(() => this.scroll('#forum-comp'), 1000)
   },
 
   data: () => ({
+    numberOfReplies: 0,
     numberOfComments: 0,
     result: undefined,
     posts: {
@@ -76,7 +80,12 @@ export default {
         http.getPosts({ search, tags, sort, page, size })
           .then(({ data }) => {
             if (data.posts) {
-              clearPosts ? this.posts.content = data.posts : this.posts.content.push(...data.posts)
+              if (clearPosts) {
+                this.posts.content = data.posts
+                console.log(this.post)
+              } else {
+                this.posts.content.push(...data.posts)
+              }
               this.posts.page = data.page
             }
             resolve()
@@ -98,7 +107,6 @@ export default {
               page: 1
             }
             this.numberOfComments = data.post.comments.length
-            console.log(this.post)
             resolve()
           })
           .catch(() => reject(new Error('error fetching post')))
@@ -117,7 +125,7 @@ export default {
       if (query[0] && !query[1]) this.fetchPosts({ tags: query[0] }, true)
       else if (query[1] && !query[0]) this.fetchPosts({ sort: query[1] }, true)
       else if (query[1] && query[0]) this.fetchPosts({ tags: query[0], sort: query[1] }, true)
-      else if (!query[1] && !query[1]) this.fetchPosts(true)
+      else if (!query[1] && !query[1]) this.fetchPosts()
     },
     replyPost (comment) {
       return new Promise((resolve, reject) => {
@@ -127,6 +135,7 @@ export default {
               console.log(data.comment)
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
+              this.$store.dispatch('fetchUser')
               resolve()
             } else {
               reject(new Error('error replying'))
@@ -140,10 +149,12 @@ export default {
         http.createComment(this.post.content._id, comment, _commentId)
           .then(({ data, status }) => {
             if (status === 201) {
-              console.log(data.comment)
-              console.log(data.comment._id)
+              const comment = this.post.content.comments.find(c => c._id === _commentId)
+              comment.nComments += 1
+              this.numberOfReplies = comment.nComments
               const newcomments = this.updateComment(data.comment)
               Object.assign(this.post.content, newcomments)
+              this.$store.dispatch('fetchUser')
               resolve()
             } else {
               reject(new Error('error replying'))
@@ -215,7 +226,6 @@ export default {
         this.post.loadedPages = {}
         this.post.loadedPages[newPage] = comments
         this.post = Object.assign({ page: this.post.page, pages }, this.post)
-        console.log(`#p-${this.post.page}-top`)
         this.scroll(`#post-comment-0`, '#post-display-container')
       } else if (operation === 'scroll') {
         if (this.post.loadedPages[page]) return
@@ -257,7 +267,7 @@ export default {
         http.deletePost(target)
           .then(({ data, status }) => {
             if (status === 204) {
-              this.resetPage()
+              console.log(data)
               resolve()
             } else {
               reject(new Error('error deleting post'))
@@ -265,9 +275,6 @@ export default {
           })
           .catch(() => reject(new Error('error deleting post')))
       })
-    },
-    handleEditPost (target) {
-
     },
     updateComment (comment, commentIndex) {
       console.log('a', comment)

@@ -17,13 +17,23 @@ const http = {
   },
   readCourse: courseId => Axios.get(`courses/${courseId}`),
   getPost: ({ id, size = 10 }) => Axios.get(`/forum/posts/${id}?size=${size}`),
-  getComments: ({ id, page, reply }) => Axios.get(`/forum/posts/${id}/comments?page=${page}` + (reply ? `&reply=${reply}` : '')),
+  getComments: ({ id, page, reply }) => {
+    let url = `/forum/posts/${id}/comments?`
+    if (page) url += `page=${page}&`
+    else if (reply) url += `reply=${reply}&`
+    else if (reply && page) url += `page=${page}&reply=${reply}`
+    return Axios.get(url)
+  },
+  magicCubeFinished: _id => Axios.get(`game/${_id}/magic-cube`),
+  solveThemFinished: _id => Axios.get(`game/${_id}/solve-them`),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
   verifyUser: (username, token, cancel) => Axios.post(`auth/verify/${username}`, { token, cancel }),
   activateUser: (username, role, firstName, lastName, gender, school, interests) => Axios.post(`auth/activate/${username}`, { role, firstName, lastName, gender, school, interests }),
   forgotPassword: (username, email) => Axios.post('auth/forgot-password', { username, email }),
+  updateUser: (username, email, firstName, lastName, school, interests) => Axios.post(`users/update/${username}`, { email, firstName, lastName, school, interests }),
+  updateUserWithPassword: (username, password, email, firstName, lastName, school, interests) => Axios.post(`users/update-with-password/${username}`, { password, email, firstName, lastName, school, interests }),
   cancelToken: (username, token) => Axios.post(`auth/cancel-token/${token}`, { username }),
   resetPassword: (username, password, token) => Axios.post('auth/reset-password', { username, password, token }),
   createCourse: ({ name, description, tags, chapters }) => Axios.post('courses', { name, description, tags, chapters }),
@@ -36,10 +46,11 @@ const http = {
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
+  updatePost: ({ id, title, content, tags }) => Axios.patch(`forum/posts/${id}`, { title, content, tags }),
 
   // DELETE request
   deleteCourse: courseId => Axios.delete(`courses/${courseId}`),
-  deletePost: postId => Axios.delete(`/forum/posts/${postId}`)
+  deletePost: postId => Axios.delete(`forum/posts/${postId}`)
 
 }
 export default http

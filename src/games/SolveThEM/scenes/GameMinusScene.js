@@ -81,7 +81,7 @@ class GameMinusScene extends Phaser.Scene {
           } else if (num === 'Cancel' && displayAnswer.length > 0) {
             displayAnswer = displayAnswer.substr(0, displayAnswer.length - 1)
             playerText.text = 'Your answer: ' + displayAnswer
-          } else if (displayAnswer.length < 3) {
+          } else if (num !== 'Cancel' && displayAnswer.length < 3) {
             displayAnswer = displayAnswer.concat(num)
             playerText.text = 'Your answer: ' + displayAnswer
           }
@@ -92,7 +92,7 @@ class GameMinusScene extends Phaser.Scene {
     // Capture Keyboard inputs
     this.input.keyboard.on(Phaser.Input.Keyboard.Events.ANY_KEY_DOWN, (event) => {
       if (event.code) { // Digit1, KeyQ, Enter, Backspace
-        if (event.code === 'Enter') {
+        if (event.code === 'Enter' || event.code === 'NumpadEnter') {
           if (displayAnswer === answer.toString()) {
             console.log('Correct')
             this.score += 10
@@ -110,6 +110,9 @@ class GameMinusScene extends Phaser.Scene {
         } else if (displayAnswer.length < 3) {
           if (event.code.substr(0, 5) === 'Digit') {
             displayAnswer = displayAnswer.concat(event.code.substr(5, 1))
+            playerText.text = 'Your answer: ' + displayAnswer
+          } else if (event.code.substr(0, 6) === 'Numpad') {
+            displayAnswer = displayAnswer.concat(event.code.substr(6, 1))
             playerText.text = 'Your answer: ' + displayAnswer
           }
         }

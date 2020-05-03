@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import http from '../utils/http'
+
 import * as BABYLON from 'babylonjs'
 import * as GUI from 'babylonjs-gui'
 
@@ -14,6 +16,7 @@ let spheres = []
 let transparentSpheres = {}
 let answers = {}
 let myScene
+let user
 
 function initScene (engine) {
   const scene = new BABYLON.Scene(engine)
@@ -411,6 +414,7 @@ function checkAnswer (answer, panel4) {
     panel4.height = '50px'
     panel4.width = '200px'
     panel4.background = 'green'
+    magicCubeFinished()
   }
 }
 
@@ -582,16 +586,23 @@ function createGameScene (engine, level) {
   return scene
 }
 
+function magicCubeFinished () {
+  http.magicCubeFinished(user._id)
+    .catch(err => console.log(err))
+}
+
 export default {
   mounted () {
     const engine = new BABYLON.Engine(this.$refs['render-canvas'])
     myScene = createMainScene(engine)
+    user = this.$store.getters.user
 
     engine.runRenderLoop(function () {
       myScene.render()
     })
   },
   beforeDestroy () {
+    this.$store.dispatch('fetchUser')
     myScene.dispose()
   }
 }
