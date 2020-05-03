@@ -1,6 +1,6 @@
 <template>
   <div class="course-basic-info-editor">
-    <v-form v-model="form.valid" lazy-validation class="mt-2">
+    <v-form v-model="form.valid" @submit.prevent lazy-validation class="mt-2">
       <v-text-field outlined required autofocus
         :error-messages="nameProps.errMsgs"
         :count="60"

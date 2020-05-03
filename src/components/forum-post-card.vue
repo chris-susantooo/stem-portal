@@ -23,13 +23,12 @@
       >
         <v-icon size="20">mdi-pencil</v-icon>
       </v-btn>
-      <v-dialog v-model="deleteDialogShow" max-width="500" >
-        <template v-slot:activator="{ on1 }">
+      <v-dialog v-if="editable && post" :scrollable="false" v-model="deleteDialogShow" max-width="410px" :retain-focus="false">
+        <template v-slot:activator="{ on }">
           <v-btn icon small depressed
-            v-on="on1"
+            v-on="on"
             slot = "activator"
             @click="openDeleteDialog()"
-            v-if="editable && post"
             :color="contentColor"
             class="mr-3 mt-3"
           >

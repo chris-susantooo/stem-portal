@@ -1,7 +1,7 @@
 <template>
   <div class="course-edit-chapter">
     <tool-bar :options="toolBarOptions" @add="createItem" @delete="deleteItem" />
-    <v-form v-model="areChaptersValid" :lazy-validation="false">
+    <v-form v-model="areChaptersValid" @submit.prevent :lazy-validation="false">
       <v-expansion-panels accordion focusable v-model="chapterIndex" class="px-2">
         <draggable :list="chapters" handle=".handle" class="reset-draggable">
           <v-expansion-panel v-for="(chapter, ci) in chapters" :key="'c' + ci">

@@ -23,9 +23,9 @@
               color="green"
               height="20px"
               rounded
-              :value="getUserExcessEXP"
+              :value="meterEXP"
             >
-              <h6>{{ getUserExcessEXP }}%</h6>
+              <h6>{{ meterEXP }}%</h6>
             </v-progress-linear>
           </div>
         </div>
@@ -180,15 +180,18 @@ export default {
     },
     getUserLevel () {
       return Math.floor(this.user.meterEXP / 100)
-    },
-    getUserExcessEXP () {
-      return this.user.meterEXP % 100
     }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.meterEXP = this.user.meterEXP % 100
+    }, 1000)
   },
   data: () => ({
     news: [],
     upcomingEvents: [],
-    ongoingCourses: []
+    ongoingCourses: [],
+    meterEXP: 0
   })
 }
 </script>
