@@ -34,7 +34,7 @@
         <v-card class="pt-3">
           <v-card-title class="headline mb-3">Something went wrong...</v-card-title>
           <v-card-text>
-            There is an error at the moment. Please try your input and try again later!
+            There is an error at the moment. Please check your input and try again later!
           </v-card-text>
           <v-card-actions>
             <v-spacer />

@@ -3,437 +3,280 @@
     fluid
   >
     <h1 align="center">Profile</h1>
-    <v-row justify="center">
-       <v-col
-        cols="12"
-        md="3"
-      >
-        <material-card class="v-card-profile">
-          <v-avatar
-            slot="offset"
-            class="mx-auto d-block elevation-6"
-            size="130"
-          >
-            <img
-              src="https://cdn2.iconfinder.com/data/icons/business-management-52/96/Artboard_20-512.png"
-            >
-            <v-row justify="center">
-            <v-dialog v-model="dialog" persistent max-width="600px">
-              <template v-slot:activator="{ on }">
-                <v-btn color="primary"
-                dark v-on="on"
-                min-width="300px"
-                >
-                Change Profile Picture</v-btn>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">User Profile</span>
-                </v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field label="Legal first name*" required></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          label="Legal last name*"
-                          hint="example of persistent helper text"
-                          persistent-hint
-                          required
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field label="Email*" required></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field label="Password*" type="password" required></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-select
-                          :items="['0-17', '18-29', '30-54', '54+']"
-                          label="Age*"
-                          required
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-autocomplete
-                          :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                          label="Interests"
-                          multiple
-                        ></v-autocomplete>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                  <small>*indicates required field</small>
-                </v-card-text>
-                <v-card-actions>
-                  <div class="flex-grow-1"></div>
-                  <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                  <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
+    <div class="row">
+      <div class="col-3">
+        <div class="row justify-center">
+          <v-avatar color="indigo" size="100">
+            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
           </v-avatar>
-          <div class="text-center">
-            <v-rating v-model="rating">
-              <template v-slot:item="props">
-                <v-icon
-                  :color="props.isFilled ? genColor(props.index) : 'grey lighten-1'"
-                  large
-                  @click="props.click"
-                >
-                  {{ props.isFilled ? 'mdi-star-circle' : 'mdi-circle-outline' }}
-                </v-icon>
-              </template>
-            </v-rating>
-          </div>
           <v-card-text class="text-center">
             <h6 class="overline mb-3">
-              Role:   Student
+              Role:   {{ user.type.toUpperCase() }}
             </h6>
-            <h4 class="font-weight-light">
-              Name:   Wong Lok Hei
-            </h4>
-            <p class="font-weight-light text-left">
-              I am a Computer Science student. STEM Portal is good!!!
-            </p>
           </v-card-text>
-        </material-card>
-      </v-col>
-      <v-col
-        cols="12"
-        md="9"
-      >
+        </div>
+      </div>
+      <div class="col-9">
         <div class="container">
-          <material-card >
-            <v-form >
-              <v-container class="py-0">
-                <v-row>
-                  <v-col
-                    cols="12"
-                    md="4"
-                  >
-                    <v-text-field
-                      label="School Name"
-                      value="The University of Hong Kong"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="4"
-                  >
-                    <v-text-field
-                      label="User Name"
-                      value="TestingStem"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="4"
-                  >
-                    <v-text-field
-                      label="Email Address"
-                      value="stemportal123@gamil.com"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="6"
-                  >
-                    <v-text-field
-                      label="First Name"
-                      value="Brian"
-                    />
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    md="6"
-                  >
-                    <v-text-field
-                      label="Last Name"
-                      value="Wong"
-                    />
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Address"
-                      value="The University of Hong Kong, Pokfulam"
-                    />
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-form>
-            <v-card>
-              <v-tabs
-                grow=true
-                background-color="primary"
-                dark
-                v-model="tabs"
-              >
-                <v-tab>
-                  Edit Account Details
-                </v-tab>
-                <v-tab>
-                  Edit Organisation Details
-                </v-tab>
-              </v-tabs>
-              <v-tabs-items v-model="tabs">
-                <v-tab-item>
-                  <v-card flat>
-                    <v-card-title>
-                      <span class="headline">Account Details</span>
-                    </v-card-title>
-                    <v-card-text>
-                      <v-container>
-                        <v-row>
-                          <v-col cols="12" >
-                            <v-text-field
-                              solo="solo"
-                              label="Username*"
-                              hint="Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores."
-                              persistent-hint
-                              required
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12">
-                            <v-text-field
-                              solo="solo"
-                              label="Current Password"
-                              hint="Enter your current password to change the Email address or Password."
-                              persistent-hint
-                              required
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12">
-                            <v-text-field
-                              solo="solo"
-                              label="Email*"
-                              hint="A valid email address. All emails from the system will be sent to this address."
-                              persistent-hint
-                              required
-                            ></v-text-field>
-                          </v-col>
-                          <v-col cols="12">
-                            <v-card
-                            color="blue-grey lighten-5"
-                            class="mx-auto"
-                            >
+          <v-card>
+            <v-tabs
+              grow
+              background-color="primary"
+              dark
+              v-model="tabs"
+            >
+              <v-tab>
+                Edit Account Details
+              </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="tabs">
+              <v-tab-item>
+                <v-card flat>
+                  <v-card-title>
+                    <span class="headline">Account Details</span>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12">
+                          <v-text-field
+                            label="*Email"
+                            required
+                            v-model="email"
+                            :rules="rules.email"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="8">
+                          <v-text-field
+                            label="*First Name"
+                            required
+                            v-model="firstName"
+                            :rules="rules.name"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="4">
+                          <v-text-field
+                            label="*Last Name"
+                            required
+                            v-model="lastName"
+                            :rules="rules.name"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            label="*School Name"
+                            required
+                            v-model="school"
+                            :rules="rules.school"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-card
+                          color="blue-grey lighten-5"
+                          class="mx-auto"
+                          >
                             <v-row>
                               <v-col cols="12" md="8">
                                 <v-col cols="12">
-                                  <v-card-text>Password</v-card-text>
+                                  <v-card-text class="font-weight-bold">Change Password</v-card-text>
                                 </v-col>
                                 <v-col cols="12">
                                   <v-text-field
-                                    outlined="outlined"
                                     label="New Password"
                                     required
+                                    v-model="newPassword"
+                                    outlined type="password"
                                   ></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                  <v-card-text>Confirm Password</v-card-text>
-                                </v-col>
-                                <v-col cols="12">
                                   <v-text-field
-                                    outlined="outlined"
                                     label="Confrim Password"
                                     required
+                                    v-model="confirmPassword"
+                                    :rules="rules.confirm"
+                                    outlined type="password"
                                   ></v-text-field>
                                 </v-col>
                               </v-col>
-                               <v-col cols="12" md="4"
-                              align-self="center"
+                              <v-col
+                                class="text-center"
+                                cols="12"
                               >
                                 <h3>To make your password stronger:</h3>
-                                <p>1. Make it at least 6 characters
-                                  <br>2. Add lowercase letters
-                                  <br>3. Add uppercase letters
-                                  <br>4. Add numbers
-                                  <br>5. Add punctuation
+                                <p>
+                                  1. Make it at least 6 characters<br>
+                                  2. Include lowercase letters<br>
+                                  3. Include uppercase letters<br>
+                                  4. Include numbers
                                 </p>
                               </v-col>
                             </v-row>
-                            </v-card>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                      <v-card-title>
-                        <span class="headline">Area of Interests</span>
-                      </v-card-title>
-                      <v-container fluid>
-                        <v-row>
-                          <v-col cols="12">
-                            <v-combobox
-                              v-model="select"
-                              :items="items"
-                              label="Interested Topic"
-                              multiple
-                              chips
-                            >
-                              <template v-slot:selection="data">
-                                <v-chip
-                                  :key="JSON.stringify(data.item)"
-                                  v-bind="data.attrs"
-                                  :input-value="data.selected"
-                                  :disabled="data.disabled"
-                                  @click:close="data.parent.selectItem(data.item)"
-                                >
-                                  <v-avatar
-                                    class="accent white--text"
-                                    left
-                                    v-text="data.item.slice(0, 1).toUpperCase()"
-                                  ></v-avatar>
-                                  {{ data.item }}
-                                </v-chip>
-                              </template>
-                            </v-combobox>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                      <small>*indicates required field</small>
-                    </v-card-text>
-                    <v-card-actions>
-                      <div class="flex-grow-1"></div>
-                      <v-btn color="primary"
-                        dark v-on="on"
-                        min-width="300px"
-                      >
-                      Save Cheange</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-tab-item>
-                <v-tab-item>
-                  <v-card flat>
-                    <v-card-title class="headline">Organisation Details</v-card-title>
-                    <v-card-text>
-                      <span class="headline">Employer type*</span>
-                    </v-card-text>
+                          </v-card>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-card-title>
+                      <span class="headline">Area of Interests</span>
+                    </v-card-title>
                     <v-container fluid>
                       <v-row>
                         <v-col cols="12">
                           <v-combobox
-                            v-model="select"
-                            :items="item2"
-                            label="Choose your employer Type"
-                          ></v-combobox>
+                            v-model="selectedInterests"
+                            :items="interests"
+                            label="*Interested Topic"
+                            multiple
+                            chips
+                          >
+                            <template v-slot:selection="data">
+                              <v-chip
+                                :key="JSON.stringify(data.item)"
+                                v-bind="data.attrs"
+                                :input-value="data.selected"
+                                :disabled="data.disabled"
+                                @click:close="data.parent.selectItem(data.item)"
+                              >
+                                <v-avatar
+                                  class="accent white--text"
+                                  left
+                                  v-text="data.item.slice(0, 1).toUpperCase()"
+                                ></v-avatar>
+                                {{ data.item }}
+                              </v-chip>
+                            </template>
+                          </v-combobox>
                         </v-col>
                       </v-row>
                     </v-container>
-                    <v-col cols="12">
-                      <v-text-field
-                        solo="solo"
-                        label="Job Title (Role)"
-                        hint="Please also specify your role"
-                        persistent-hint
-                        required
-                        ></v-text-field>
-                      </v-col>
-                      <v-card-title class="headline">Address</v-card-title>
-                      <v-divider
-                      horizontal>
-                      </v-divider>
-                      <v-container fluid>
-                        <v-row>
-                          <v-card-text>
-                            <span class="headline">Address1*</span>
-                          </v-card-text>
-                          <v-col cols="12">
-                            <v-text-field
-                            solo="solo"
-                            label="Address1"
-                            required
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-card-text>
-                            <span class="headline">Address2</span>
-                          </v-card-text>
-                          <v-col cols="12">
-                            <v-text-field
-                            solo="solo"
-                            label="Address2"
-                            required
-                            ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <v-row>
-                          <v-col cols="12" md="6">
-                            <v-card-text>
-                              <span class="headline">District*</span>
-                            </v-card-text>
-                              <v-text-field
-                              solo="solo"
-                              label="District"
-                              required
-                              ></v-text-field>
-                          </v-col>
-                          <v-col cols="12" md="6">
-                            <v-card-text>
-                              <span class="headline">Country*</span>
-                            </v-card-text>
-                              <v-text-field
-                              solo="solo"
-                              label="Country"
-                              required
-                              ></v-text-field>
-                          </v-col>
-                        </v-row>
-                        <small>*indicates required field</small>
-                      </v-container>
-                    <v-card-actions>
-                      <div class="flex-grow-1"></div>
-                      <v-btn color="primary"
-                        dark v-on="on"
-                        min-width="300px"
-                      >
-                      Save Cheange</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-tab-item>
-              </v-tabs-items>
-            </v-card>
-          </material-card>
+                    <small>*indicates required field</small>
+                  </v-card-text>
+                  <v-card-actions>
+                    <div class="flex-grow-1"></div>
+                    <v-btn color="primary"
+                      min-width="300px"
+                      @click="updateUserInfo"
+                    >
+                    Save Changes</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card>
         </div>
-      </v-col>
-      <v-row justify="end">
-      </v-row>
-    </v-row>
+        <v-row justify="end">
+        </v-row>
+        <!-- update user info success dialog -->
+        <v-dialog v-model="updateSuccess" max-width="500">
+          <v-card class="pt-3">
+            <v-card-title class="headline mb-3">Hurray!</v-card-title>
+            <v-card-text>
+              You have successfully updated your account information!
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn text color="primary" @click="updateSuccess = false" :to="{ name: 'profile' }">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!-- update user info error dialog -->
+        <v-dialog v-model="errorDialog" max-width="500">
+          <v-card class="pt-3">
+            <v-card-title class="headline mb-3">Something went wrong...</v-card-title>
+            <v-card-text>
+              There is an error at the moment. Please check your input and try again later!
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn text color="primary" @click="errorDialog = false">OK</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
+    </div>
   </v-container>
 </template>
+
 <script>
+import http from '@/utils/http'
+
 export default {
+  computed: {
+    user () {
+      return this.$store.getters.user
+    }
+  },
+  async created () {
+    await Promise.all([
+      this.fetchUser()
+    ])
+  },
   data () {
     return {
+      email: '',
+      newPassword: '',
+      confirmPassword: '',
+      firstName: '',
+      lastName: '',
+      school: '',
       dialog: false,
       tabs: null,
-      select: [],
-      items: [
-        'Computer Science',
-        'Civil Engineering',
-        'Mechanical Engineering',
-        'Electrical Engineering',
-        'Industrial Engineering',
-        'Mathematics',
-        'Chemistry',
-        'Biology',
-        'Physics',
-        'Latest Technology'
-      ],
-      item2: [
-        'Subsidized School',
-        'Private School',
-        'College',
-        'Parents',
-        'Other',
-        'Unemployment'
-      ]
+      selectedInterests: [],
+      interests: ['Science', 'Technology', 'Engineering', 'Mathematics'],
+      rules: {
+        confirm: [
+          v => v === this.newPassword || 'Must match the above password'
+        ],
+        select: [
+          v => !!v || 'This field is required'
+        ],
+        school: [
+          v => !!v || 'This field is required',
+          v => (v.length >= 6 && v.length <= 50) || 'Must be between 6 to 50 characters'
+        ],
+        email: [
+          v => !!v || 'This field is required',
+          v => /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Must be a valid email'
+        ],
+        name: [
+          v => !!v || 'This field is required'
+        ]
+      },
+      updateSuccess: false,
+      errorDialog: false
+    }
+  },
+  methods: {
+    updateUserInfo () {
+      if (this.newPassword) {
+        http.updateUserWithPassword(this.user.username, this.newPassword, this.email, this.firstName, this.lastName, this.school, this.selectedInterests)
+          .then(({ status }) => {
+            if (status === 204) this.updateSuccess = true
+            this.newPassword = ''
+            this.confirmPassword = ''
+            this.$store.dispatch('fetchUser')
+          })
+          .catch(err => {
+            console.log(err)
+            this.errorDialog = true
+          })
+      } else {
+        http.updateUser(this.user.username, this.email, this.firstName, this.lastName, this.school, this.selectedInterests)
+          .then(({ status }) => {
+            if (status === 204) this.updateSuccess = true
+            this.$store.dispatch('fetchUser')
+          })
+          .catch(err => {
+            console.log(err)
+            this.errorDialog = true
+          })
+      }
+    },
+    fetchUser () {
+      this.email = this.user.email
+      this.firstName = this.user.firstName
+      this.lastName = this.user.lastName
+      this.school = this.user.school
+      this.selectedInterests = this.user.interests
     }
   }
 }

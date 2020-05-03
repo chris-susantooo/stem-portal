@@ -19,10 +19,11 @@
           </div>
           <div class="col">
             <v-progress-linear
-                color="green"
-                height="20px"
-                rounded
-                :value="getUserExcessEXP"
+              class="meter-bar"
+              color="green"
+              height="20px"
+              rounded
+              :value="getUserExcessEXP"
             >
             <h6>{{ getUserExcessEXP }}%</h6>
             </v-progress-linear>
@@ -161,3 +162,9 @@ export default {
   })
 }
 </script>
+
+<style lang="scss" scoped>
+.meter-bar {
+  transition: .8s all ease-in-out !important
+}
+</style>

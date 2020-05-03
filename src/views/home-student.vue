@@ -19,6 +19,7 @@
           </div>
           <div class="col">
             <v-progress-linear
+              class="meter-bar"
               color="green"
               height="20px"
               rounded
@@ -191,3 +192,9 @@ export default {
   })
 }
 </script>
+
+<style lang="scss" scoped>
+.meter-bar {
+  transition: .8s all ease-in-out !important
+}
+</style>
