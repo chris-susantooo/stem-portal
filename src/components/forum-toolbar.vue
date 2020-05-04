@@ -84,6 +84,9 @@
       <v-btn large icon @click="$emit('home')" class="mx-2">
         <v-icon color="#ea9085">mdi-home</v-icon>
       </v-btn>
+      <v-btn large icon @click="createPost()" class="mx-2">
+        <v-icon color="#5C6BC0">mdi-chat</v-icon>
+      </v-btn>
     </v-row>
     <v-row>
       <v-chip-group show-arrows>
@@ -173,7 +176,6 @@ export default {
       return new Promise((resolve, reject) => {
         this.$http.get('tags/posts')
           .then(({ data: { tags } }) => {
-            console.log(tags)
             this.postsMenu.filters = tags
           })
           .catch(err => console.log(err))
@@ -190,6 +192,10 @@ export default {
           break
       }
       this.updatePostList()
+    },
+    createPost () {
+      if (!this.$store.getters.isLoggedIn) this.$router.push({ name: 'login' })
+      else this.$router.push({ name: 'forum-new-post' })
     }
   }
 }

@@ -143,7 +143,6 @@ export default {
           })
       } else if (this.$refs.form.validate() && !this.isPostNew) {
         if (!this.form.content) this.form.content = this.post.content
-        console.log(this.form.content, this.post._id, this.form.title, this.form.content, this.form.tags)
         http.updatePost({ id: this.post._id, title: this.form.title, content: this.form.content, tags: this.form.tags })
           .then(({ status, data }) => {
             if (status === 204) {
@@ -167,7 +166,6 @@ export default {
             this.form.tags = post.tags
             this.post.content = post.content
             this.post = post
-            console.log(this.post._id)
           })
           .catch(err => console.log(err))
           .finally(() => resolve())
