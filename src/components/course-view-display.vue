@@ -161,6 +161,7 @@ export default {
       return !!this.course._id
     },
     ratable () {
+      if (!this.isLoggedIn) return false
       const course = this.user.courses.inProgress
         .find(({ _courseId }) => this.course._id === _courseId)
       return course && !this.isPreview && !this.isAuthor
