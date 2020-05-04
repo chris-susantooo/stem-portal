@@ -13,7 +13,7 @@
             <v-btn icon v-text="'...'" v-on="on" class="mr-1" />
           </template>
 
-          <v-list height="30vh" class="overflow-y-auto">
+          <v-list class="pages-menu overflow-y-auto">
             <v-list-item v-for="p in page" @click="jump(p)" :key="'p' + 'i' + p">
               <v-list-item-subtitle v-text="p" class="text-center" />
             </v-list-item>
@@ -105,3 +105,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .pages-menu {
+    max-height: 30vh;
+  }
+</style>

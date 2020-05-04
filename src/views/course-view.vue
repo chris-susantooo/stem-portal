@@ -4,6 +4,7 @@
       :course="course"
       :page="display"
       :progress="progress"
+      @complete="markSectionComplete"
     />
     <chapter-list
       :chapters="course.chapters"
@@ -90,6 +91,17 @@ export default {
         type: contentType,
         ...options
       }
+    },
+    markSectionComplete () {
+      const chapterProgress = this.progress[this.display.chapterIndex]
+      if (!chapterProgress) {
+        this.progress[this.display.chapterIndex] = [this.display.sectionIndex]
+        return
+      }
+      if (!chapterProgress.includes(this.display.sectionIndex)) {
+        chapterProgress.push(this.display.sectionIndex)
+      }
+      this.progress = { ...this.progress }
     }
   }
 }
