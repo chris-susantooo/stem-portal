@@ -43,7 +43,8 @@ export default {
     },
     isLoggedIn () {
       return this.$store.getters.isLoggedIn
-    }
+    },
+    baseURL: () => process.env.VUE_APP_API_BASE
   },
   methods: {
     uploadFiles () {
@@ -54,7 +55,10 @@ export default {
       const headers = { Authorization: `Bearer ${this.token}` }
       this.$refs.uploader.upload(url, headers, this.files)
         .then(res => {
-          this.$emit('finish', res.map(({ data }) => data ? data.file : null))
+          this.$emit('finish', res
+            .map(({ data }) => data ? `${this.baseURL}/download/${data.file.filename}` : null)
+            .filter(link => !!link)
+          )
         })
         .catch(err => console.log(err))
         .finally(() => {
