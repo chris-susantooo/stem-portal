@@ -1,17 +1,17 @@
 <template>
   <div class="attachment-list">
-    <v-card v-for="(file, i) in files" :key="file._id" class="attachment pa-4 ma-2" outlined>
+    <v-card v-for="(filename, i) in filenames" :key="filename" class="attachment pa-4 ma-2" outlined>
       <div class="d-flex align-center">
         <div class="flex-grow-1 d-flex text-truncate">
           <v-icon color="primary">mdi-file-document</v-icon>
           <a class="d-inline-block ml-2 subtitle-2 text-truncate"
-            :href="baseURL + '/download/' + file.filename"
+            @click="fetchAttachment(files[i])"
             target="_blank"
           >
-            {{ file.filename.substring(33) }}
+            {{ filename.substring(33) }}
           </a>
         </div>
-        <v-icon class="ml-2 grey--text" @click="$emit('delete', files[i])">mdi-close</v-icon>
+        <v-icon v-if="deletable" class="ml-2 grey--text" @click="$emit('delete', files[i])">mdi-close</v-icon>
       </div>
     </v-card>
   </div>
@@ -23,10 +23,33 @@ export default {
     files: {
       type: Array,
       required: true
+    },
+    deletable: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
+    filenames () {
+      return this.files.map(link => link.replace(`${this.baseURL}/download/`, ''))
+    },
     baseURL: () => process.env.VUE_APP_API_BASE
+  },
+  methods: {
+    fetchAttachment (link) {
+      this.$http.get({
+        url: link,
+        responseType: 'blob'
+      })
+        .then(res => {
+          const url = window.URL.createObjectURL(new Blob([res.data]))
+          const a = document.createElement('a')
+          a.href = url
+          a.setAttribute('download', link.replace(`${this.baseURL}/download/`, ''))
+          document.body.appendChild(a)
+          a.click()
+        })
+    }
   }
 }
 </script>

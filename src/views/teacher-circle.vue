@@ -1,6 +1,6 @@
 <template>
   <div class="teacher-circle container">
-    <attachment-list :files="uploadedAttachments" @delete="deleteAttachment" />
+    <attachment-list :files="attachmentLinks" :deletable="true" @delete="deleteAttachment" />
     <v-btn text rounded depressed large @click="showUploader = true">
       <v-icon>mdi-paperclip</v-icon>
       <span class="ml-2">Upload new files</span>
@@ -17,17 +17,17 @@ export default {
   components: { FileUploader, AttachmentList },
   data: () => ({
     showUploader: false,
-    uploadedAttachments: []
+    attachmentLinks: []
   }),
   methods: {
-    receiveAttachments (responseBodies) {
-      this.uploadedAttachments = responseBodies
+    receiveAttachments (links) {
+      this.attachmentLinks = links
     },
-    deleteAttachment (file) {
-      this.$http.delete(`uploads/${file.filename}`)
+    deleteAttachment (link) {
+      this.$http.delete(link.replace('download', 'uploads'))
         .then(() => {
-          const deleteIndex = this.uploadedAttachments.indexOf(file)
-          this.uploadedAttachments.splice(deleteIndex, 1)
+          const deleteIndex = this.attachmentLinks.indexOf(link)
+          this.attachmentLinks.splice(deleteIndex, 1)
         })
     }
   }
