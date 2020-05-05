@@ -14,7 +14,7 @@
             <v-col cols="11">
               <v-text-field outlined required autofocus
                 v-model="form.title"
-                :counter="50"
+                :counter="60"
                 :rules="rules.title"
                 label=" Post Title"
                 chips
@@ -74,6 +74,7 @@
 
 <script>
 import TextEditor from '@/components/text-editor.vue'
+
 import http from '@/utils/http'
 
 export default {
@@ -121,9 +122,11 @@ export default {
       tag: [ v => !!v.length || 'At least a tag is required' ],
       title: [
         v => !!v || 'Title is required',
-        v => (v && v.length <= 50) || 'Title must be less than 60 characters'
+        v => (v && v.length <= 60) || 'Title must be less than 60 characters'
       ]
-    }
+    },
+    showUploader: false,
+    uploadedAttachments: []
   }),
   methods: {
     createPost () {
