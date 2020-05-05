@@ -258,6 +258,7 @@ export default {
         http.deletePost(target)
           .then(({ data, status }) => {
             if (status === 204) {
+              this.resetPage()
               resolve()
             } else {
               reject(new Error('error deleting post'))
