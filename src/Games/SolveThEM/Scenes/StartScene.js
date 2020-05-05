@@ -5,10 +5,8 @@ class StartScene extends Phaser.Scene {
     super('StartScene')
   }
   init () {
-    console.log('Startscene starts')
   }
   preload () {
-    console.log('preload ends')
   }
   create () {
     const camera = this.cameras.main
@@ -37,9 +35,8 @@ class StartScene extends Phaser.Scene {
 
     // get pointer x and y
     this.input.on('pointerup', function (pointer) {
-      console.log(pointer.x, pointer.y)
+      // console.log(pointer.x, pointer.y)
     })
-    console.log('created ends')
   }
 }
 function setUpAdditionButtonListener (additionButton, game) {
