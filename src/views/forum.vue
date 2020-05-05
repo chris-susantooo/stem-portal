@@ -29,6 +29,7 @@
           @react="handleReactPost"
           @comment="handleReplyPost"
           @delete="handleDeletePost"
+          @following="handleFollowUser"
         />
       </v-col>
     </v-row>
@@ -75,7 +76,7 @@ export default {
       pages: 1,
       page: 1
     },
-    filters: ''
+    filters: '',
   }),
   methods: {
     initFromParam (param) {
@@ -310,6 +311,19 @@ export default {
       }
 
       return { nLikes, nDislikes }
+    },
+    handleFollowUser (reaction, target) {
+      if (reaction === 'unfollow') {
+        http.unfollowUser(target)
+          .then(({ data, status }) => {
+            this.$store.dispatch('fetchUser')
+          })
+      } else {
+        http.followUser(target)
+          .then(({ data, status }) => {
+            this.$store.dispatch('fetchUser')
+          })
+      }
     }
   }
 }
