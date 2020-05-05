@@ -26,6 +26,7 @@ const http = {
   },
   magicCubeFinished: _id => Axios.get(`game/${_id}/magic-cube`),
   solveThemFinished: _id => Axios.get(`game/${_id}/solve-them`),
+  getFollowingActivities: () => Axios.get('user/updates'),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),

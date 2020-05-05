@@ -64,35 +64,6 @@
           </v-col>
         </div>
         <div class="row justify-left ml-5">
-          <strong>Upcoming Events</strong>
-        </div>
-        <div class="row">
-          <v-col>
-            <v-card>
-              <v-card-title>HKU Hackathon</v-card-title>
-              <v-card-text>30 February 2046 9:30am</v-card-text>
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn text color="indigo">
-                  View More
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card>
-              <v-card-title>ABC Primary School STEM Display</v-card-title>
-              <v-card-text>32 December 2046 10:30am</v-card-text>
-              <v-card-actions>
-                <div class="flex-grow-1"></div>
-                <v-btn text color="indigo">
-                  View More
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </div>
-        <div class="row justify-left ml-5">
           <strong>Discussion Forum</strong>
         </div>
         <div class="row">
@@ -136,6 +107,22 @@
             </v-card>
           </v-col>
         </div>
+        <template v-if="followingActivities.length">
+          <div v-for="(follower, i) in followingActivities" :key="i">
+            <div class="row justify-left ml-5">
+              <strong>{{ follower.username }}'s Recent Activities</strong>
+            </div>
+            <div class="row">
+              <home-activity-card
+                v-for="(activity, j) in follower.activities"
+                :key="j"
+                :activity="activity"
+                :follower="follower"
+              />
+            </div>
+          </div>
+        </template>
+        <!-- Level Up Dialog -->
         <v-dialog v-model="levelUpDialog" max-width="600">
           <v-card class="pt-3 px-5">
             <v-card-title class="headline mb-3">Congratulations!</v-card-title>
@@ -165,8 +152,10 @@
 
 <script>
 import http from '../utils/http'
+import HomeActivityCard from '@/components/home-activity-card.vue'
 
 export default {
+  components: { HomeActivityCard },
   computed: {
     user () {
       return this.$store.getters.user
@@ -174,6 +163,15 @@ export default {
     getUserLevel () {
       return Math.floor(this.user.meterEXP / 100)
     }
+  },
+  created () {
+    http.getFollowingActivities()
+      .then(({ status, data }) => {
+        if (status === 200) {
+          this.followingActivities = data.activities
+        }
+      })
+      .catch(err => console.log(err))
   },
   mounted () {
     setTimeout(() => {
@@ -190,7 +188,8 @@ export default {
     posts: [],
     meterEXP: 0,
     meterFullEXP: 0,
-    levelUpDialog: false
+    levelUpDialog: false,
+    followingActivities: []
   }),
   methods: {
     updateUserMeterLevel () {
