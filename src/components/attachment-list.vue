@@ -37,10 +37,7 @@ export default {
   },
   methods: {
     fetchAttachment (link) {
-      this.$http.get({
-        url: link,
-        responseType: 'blob'
-      })
+      this.$http.get(link)
         .then(res => {
           const url = window.URL.createObjectURL(new Blob([res.data]))
           const a = document.createElement('a')
