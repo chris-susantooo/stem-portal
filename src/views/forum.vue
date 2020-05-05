@@ -76,7 +76,7 @@ export default {
       pages: 1,
       page: 1
     },
-    filters: '',
+    filters: ''
   }),
   methods: {
     initFromParam (param) {
