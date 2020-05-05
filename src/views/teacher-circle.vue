@@ -1,10 +1,20 @@
 <template>
-  <div></div>
+  <div class="teacher-circle container">
+    <v-btn text rounded depressed large @click="showUploader = true">
+      Upload new files
+    </v-btn>
+    <file-uploader v-model="showUploader" />
+  </div>
 </template>
 
 <script>
-export default {
+import FileUploader from '@/components/file-uploader.vue'
 
+export default {
+  components: { FileUploader },
+  data: () => ({
+    showUploader: false
+  })
 }
 </script>
 

@@ -74,6 +74,7 @@ export default new Vuex.Store({
       return isExpired
     },
     isLoggedIn: (state, getters) => !!state.token && !getters.isTokenExpired,
-    user: state => state.user
+    user: state => state.user,
+    token: state => state.token
   }
 })

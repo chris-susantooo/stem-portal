@@ -4,8 +4,12 @@ import router from './routes'
 import store from './store'
 import Axios from 'axios'
 import vuetify from './plugins/vuetify'
-import VueYoutube from 'vue-youtube'
 
+import VueYoutube from 'vue-youtube'
+import VueFileAgent from 'vue-file-agent'
+import 'vue-file-agent/dist/vue-file-agent.css'
+
+Vue.use(VueFileAgent)
 Vue.use(VueYoutube)
 
 Vue.config.productionTip = false

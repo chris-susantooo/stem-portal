@@ -8982,6 +8982,13 @@ vue-eslint-parser@^5.0.0:
     esquery "^1.0.1"
     lodash "^4.17.11"
 
+vue-file-agent@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/vue-file-agent/-/vue-file-agent-1.7.0.tgz#bd40fc16d926bf62fa273a12a7b9fcf78046dfee"
+  integrity sha512-CGifJbr08HHa/LdpsPfnOJhkUVPU1efqWTy8rwj4NN3Fv5QTXXizkbIfqdfyBoeijK6aD456z2+ZwsqNxpRCqw==
+  dependencies:
+    vue "^2.6.11"
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
@@ -9037,7 +9044,7 @@ vue-youtube@^1.4.0:
     get-youtube-id "^1.0.0"
     youtube-player "^5.4.0"
 
-vue@^2.6.10:
+vue@^2.6.10, vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==

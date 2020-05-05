@@ -89,7 +89,8 @@ const routes = [
   },
   {
     path: '/teacher-circle',
-    name: 'teacher-circle'
+    name: 'teacher-circle',
+    component: () => import('@/views/teacher-circle.vue')
   },
   {
     path: '/tags/:name',
