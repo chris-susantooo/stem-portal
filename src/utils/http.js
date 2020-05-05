@@ -43,6 +43,7 @@ const http = {
   unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
   reactPost: (id, payload) => Axios.post(`forum/posts/${id}/react`, payload),
   reactComment: (pid, cid, payload) => Axios.post(`forum/posts/${pid}/comments/${cid}/react`, payload),
+  updateUserMeterLevel: (userId, level) => Axios.post(`users/${userId}/update-level`, { level }),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
