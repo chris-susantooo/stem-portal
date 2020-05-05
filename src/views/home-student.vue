@@ -166,12 +166,35 @@
             </v-card>
           </div>
         </div>
+        <v-dialog v-model="levelUpDialog" max-width="600">
+          <v-card class="pt-3 px-5">
+            <v-card-title class="headline mb-3">Congratulations!</v-card-title>
+            <v-card-text>
+              You have leveled up from {{ user.meterLevel }} to {{ getUserLevel }}!.<br>
+              Keep your work and aim for higher levels!
+            </v-card-text>
+            <v-progress-linear
+              class="meter-bar-full"
+              color="green"
+              height="20px"
+              rounded
+              :value="meterFullEXP"
+            >
+            <h6>{{ meterFullEXP }}%</h6>
+            </v-progress-linear>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn text color="primary" @click="updateUserMeterLevel">Yeah!</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import http from '../utils/http'
 
 export default {
   computed: {
@@ -185,19 +208,36 @@ export default {
   mounted () {
     setTimeout(() => {
       this.meterEXP = this.user.meterEXP % 100
+      this.meterFullEXP = 100
     }, 1000)
+    if (Math.floor(this.user.meterEXP / 100) > this.user.meterLevel) {
+      this.levelUpDialog = true
+    }
   },
   data: () => ({
     news: [],
     upcomingEvents: [],
     ongoingCourses: [],
-    meterEXP: 0
-  })
+    meterEXP: 0,
+    meterFullEXP: 0,
+    levelUpDialog: false
+  }),
+  methods: {
+    updateUserMeterLevel () {
+      this.levelUpDialog = false
+      http.updateUserMeterLevel(this.user._id, Math.floor(this.user.meterEXP / 100))
+        .then(this.$store.dispatch('fetchUser'))
+        .catch(err => console.log(err))
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .meter-bar {
   transition: .8s all ease-in-out !important
+}
+.meter-bar-full {
+  transition: 1.8s all ease-in-out !important
 }
 </style>
