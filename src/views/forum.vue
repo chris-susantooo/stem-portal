@@ -121,7 +121,7 @@ export default {
       if (query[0] && !query[1]) this.fetchPosts({ tags: query[0] }, true)
       else if (query[1] && !query[0]) this.fetchPosts({ sort: query[1] }, true)
       else if (query[1] && query[0]) this.fetchPosts({ tags: query[0], sort: query[1] }, true)
-      else if (!query[1] && !query[1]) this.fetchPosts()
+      else if (!query[1] && !query[1]) this.fetchPosts({}, true)
     },
     replyPost (comment) {
       return new Promise((resolve, reject) => {
@@ -258,6 +258,7 @@ export default {
         http.deletePost(target)
           .then(({ data, status }) => {
             if (status === 204) {
+              this.resetPage()
               resolve()
             } else {
               reject(new Error('error deleting post'))

@@ -12,13 +12,11 @@ class GameMinusScene extends Phaser.Scene {
     this.music = null
   }
   init (data) {
-    console.log('Gamescene starts')
     this.score = data.score
     this.music = data.music
   }
   preload () {
     this.load.audio('bgm', bgm)
-    console.log('preload ends')
   }
   create () {
     const camera = this.cameras.main
@@ -68,10 +66,8 @@ class GameMinusScene extends Phaser.Scene {
         if (num !== undefined) {
           if (num === 'Enter') {
             if (displayAnswer === answer.toString()) {
-              console.log('Correct')
               this.score += 10
             } else {
-              console.log('Wrong')
               this.score -= 5
             }
             emitter.emit('newQuestion', numberA, symbol, numberB)
@@ -94,10 +90,8 @@ class GameMinusScene extends Phaser.Scene {
       if (event.code) { // Digit1, KeyQ, Enter, Backspace
         if (event.code === 'Enter' || event.code === 'NumpadEnter') {
           if (displayAnswer === answer.toString()) {
-            console.log('Correct')
             this.score += 10
           } else {
-            console.log('Wrong')
             this.score -= 5
           }
           emitter.emit('newQuestion', numberA, symbol, numberB)
@@ -121,9 +115,8 @@ class GameMinusScene extends Phaser.Scene {
 
     // get pointer x and y
     this.input.on('pointerup', function (pointer) {
-      console.log(pointer.x, pointer.y)
+      // console.log(pointer.x, pointer.y)
     })
-    console.log('created ends')
   }
 
   update () {
@@ -165,7 +158,6 @@ function newQuestion (numberA, symbol, numberB) {
 }
 
 function gameOver () {
-  console.log('Time\'s up')
   this.scene.pause()
   this.scene.start('EndScene', { score: this.score, music: this.music, lastScene: this })
 }

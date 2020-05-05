@@ -175,7 +175,6 @@ export default {
       return new Promise((resolve, reject) => {
         this.$http.get('tags/posts')
           .then(({ data: { tags } }) => {
-            console.log(tags)
             this.tagList = tags
           })
           .catch(err => console.log(err))
