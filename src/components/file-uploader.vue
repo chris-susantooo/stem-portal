@@ -54,7 +54,7 @@ export default {
       const headers = { Authorization: `Bearer ${this.token}` }
       this.$refs.uploader.upload(url, headers, this.files)
         .then(res => {
-          this.$emit('finish', res.map(res => res.body))
+          this.$emit('finish', res.map(({ data }) => data ? data.file : null))
         })
         .catch(err => console.log(err))
         .finally(() => {
