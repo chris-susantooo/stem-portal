@@ -352,7 +352,7 @@ export default {
     fetchInProgressCourses () {
       return new Promise((resolve, reject) => {
         if (!this.isLoggedIn) return resolve()
-        this.$http.get('courses/in-progress?size=5')
+        this.$http.get('courses/in-progress')
           .then(({ data: { courses } }) => {
             this.coursesInProgress = courses
           })
@@ -363,7 +363,7 @@ export default {
     fetchTeachingCourses () {
       return new Promise((resolve, reject) => {
         if (!this.isLoggedIn || this.user.type !== 'teacher') return resolve()
-        this.$http.get('courses/teaching?size=5')
+        this.$http.get('courses/teaching')
           .then(({ data: { courses } }) => {
             this.coursesCreated = courses
           })

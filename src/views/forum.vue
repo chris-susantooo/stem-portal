@@ -29,6 +29,7 @@
           @react="handleReactPost"
           @comment="handleReplyPost"
           @delete="handleDeletePost"
+          @following="handleFollowUser"
         />
       </v-col>
     </v-row>
@@ -48,12 +49,19 @@ export default {
 
   async created () {
     this.$emit('childBusy')
+    let id = ''
+    if (this.$route.params.id) this.initFromParam(this.$route.params.id)
+
     await this.fetchPosts()
-    if (this.posts.content.length) await this.fetchPost({ id: this.posts.content[0]._id })
+    if (this.id !== undefined) id = this.id
+    else id = this.posts.content[0]._id
+
+    if (this.posts.content.length) await this.fetchPost({ id: id })
     this.$emit('childReady')
     setTimeout(() => this.scroll('#forum-comp'), 1000)
   },
-
+  computed: {
+  },
   data: () => ({
     numberOfReplies: 0,
     numberOfComments: 0,
@@ -71,6 +79,9 @@ export default {
     filters: ''
   }),
   methods: {
+    initFromParam (param) {
+      this.id = param
+    },
     fetchPosts (options = {}, clearPosts = false) {
       const { search, tags, sort = 'latest', page = 1, size = 10 } = options
       return new Promise((resolve, reject) => {
@@ -92,6 +103,7 @@ export default {
 
     fetchPost (options = {}) {
       const { id, size = 10 } = options
+      let param = id
       if (this.post.content._id === id) return
       return new Promise((resolve, reject) => {
         http.getPost({ id, size })
@@ -102,7 +114,8 @@ export default {
               pages: data.pages,
               page: 1
             }
-            this.numberOfComments = data.post.comments.length
+            const url = location.href.split('/')[0] + '//' + location.href.split('/')[2] + '/forum/post/'
+            history.replaceState('', '', `${url}${param}`)
             resolve()
           })
           .catch(() => reject(new Error('error fetching post')))
@@ -298,6 +311,19 @@ export default {
       }
 
       return { nLikes, nDislikes }
+    },
+    handleFollowUser (reaction, target) {
+      if (reaction === 'unfollow') {
+        http.unfollowUser(target)
+          .then(({ data, status }) => {
+            this.$store.dispatch('fetchUser')
+          })
+      } else {
+        http.followUser(target)
+          .then(({ data, status }) => {
+            this.$store.dispatch('fetchUser')
+          })
+      }
     }
   }
 }

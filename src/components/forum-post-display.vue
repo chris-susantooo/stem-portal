@@ -56,6 +56,7 @@
             :reactable="permissions.react"
             :editable="permissions.edit"
             :numberOfReplies="numberOfReplies"
+            :isFollowed="null"
             @react="handleReaction"
             @denied="emitDenialMessage"
             :id="'post-comment-' + i"
@@ -199,7 +200,8 @@ export default {
           this.$emit('react', target, reaction, value)
           break
         case 'follow':
-          this.$emit('follow', this.post.content._id)
+        case 'unfollow':
+          this.$emit('following', reaction, target)
           break
         case 'comment':
           this.$emit('comment', target, value)
