@@ -135,7 +135,8 @@ export default {
           this.$http.post('courses', serialized)
             .then(({ data: { course } }) => {
               this.course = course
-              const url = location.href.split('?')[0]
+              const url = location.href.split('/new')[0]
+              console.log(url)
               history.pushState('', '', `${url}/${this.course._id}`)
             })
             .catch(err => console.log(err))

@@ -145,11 +145,11 @@ export default {
           this.chapterIndex = this.chapters.length - 1
           break
         case 'section':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Section', title: 'Untitled Section', content: { video: '', text: '<p>Your section content...</p>' } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Section', title: 'Untitled Section', content: { video: '', text: '<p>Your section content...</p>', attachments: [] } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'checkpoint':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '<p>Your checkpoint description...</p>' } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '<p>Your checkpoint description...</p>', attachments: [] } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'question':
