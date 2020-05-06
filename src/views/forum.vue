@@ -53,12 +53,13 @@ export default {
     if (this.$route.params.id) this.initFromParam(this.$route.params.id)
 
     await this.fetchPosts()
-    if (this.id !== undefined) id = this.id
-    else id = this.posts.content[0]._id
+    if (this.posts.content.length) {
+      if (this.id !== undefined) id = this.id
+      else id = this.posts.content[0]._id
 
-    if (this.posts.content.length) await this.fetchPost({ id: id })
+      if (this.posts.content.length) await this.fetchPost({ id: id })
+    }
     this.$emit('childReady')
-    setTimeout(() => this.scroll('#forum-comp'), 1000)
   },
   computed: {
   },
