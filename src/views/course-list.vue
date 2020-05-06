@@ -475,6 +475,7 @@ export default {
         .finally(() => (this.deleteDialog.show = false))
     },
     followable (_authorId) {
+      if (!this.followedUsers) return false
       return !this.followedUsers.find(id => id === _authorId || _authorId === this.user._id)
     }
   }

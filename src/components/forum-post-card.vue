@@ -273,6 +273,7 @@ export default {
       return utils.getPostTimestamp(this.content.createdAt)
     },
     isFollowing () {
+      if (!this.user.following) return false
       return (this.user.following.includes(this.content.author._id) && (this.$store.getters.user._id !== this.content.author._id))
     }
   },

@@ -20,7 +20,7 @@
             <router-link :to="{ name: 'profile', params: { username: course.author.username } }">
               {{ course.author.username }}
             </router-link>
-            <v-btn v-if="course.author._id !== user._id" icon x-small @click="toggleFollow">
+            <v-btn v-if="course.author._id !== user._id && isLoggedIn" icon x-small @click="toggleFollow">
               <v-icon :color="followable ? '#BDBDBD' : '#ea9085'">mdi-heart</v-icon>
             </v-btn>
             <v-row align="center" class="mx-0">
