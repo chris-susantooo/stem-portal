@@ -21,7 +21,7 @@ export default {
   }),
   methods: {
     receiveAttachments (links) {
-      this.attachmentLinks = links
+      this.attachmentLinks = [ ...this.attachmentLinks, ...links ]
     },
     deleteAttachment (link) {
       this.$http.delete(link.replace('download', 'uploads'))

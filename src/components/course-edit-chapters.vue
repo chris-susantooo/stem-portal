@@ -27,6 +27,9 @@
                         <v-text-field outlined :rules="linkRules" label="YouTube link or video ID" v-model="section.content.video" required />
                         <text-editor v-model="section.content.text" />
                         <div class="mt-4" />
+                        <v-btn class="my-3" depressed rounded @click="showUploader = true">Upload Attachments</v-btn>
+                        <attachment-list :files="section.content.attachments" @delete="deleteAttachment($event, ci, si)" :deletable="true" />
+                        <file-uploader v-model="showUploader" @finish="saveLinks($event, ci, si)" />
                       </template>
                       <template v-else>
                         <text-editor v-model="section.content.text" />
@@ -84,9 +87,11 @@
 import ToolBar from '@/components/course-edit-toolbar.vue'
 import Draggable from 'vuedraggable'
 import TextEditor from '@/components/text-editor.vue'
+import FileUploader from '@/components/file-uploader.vue'
+import AttachmentList from '@/components/attachment-list.vue'
 
 export default {
-  components: { Draggable, ToolBar, TextEditor },
+  components: { Draggable, ToolBar, TextEditor, FileUploader, AttachmentList },
   props: {
     sourceChapters: {
       type: Array,
@@ -101,7 +106,8 @@ export default {
     questionIndex: undefined,
     linkRules: [
       v => !!v || 'A YouTube link or video ID is required'
-    ]
+    ],
+    showUploader: false
   }),
   computed: {
     toolBarTitle () {
@@ -149,7 +155,7 @@ export default {
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'checkpoint':
-          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '<p>Your checkpoint description...</p>', attachments: [] } })
+          this.chapters[this.chapterIndex].sections.push({ type: 'Checkpoint', title: 'Untitled Checkpoint', content: { questions: [], text: '<p>Your checkpoint description...</p>' } })
           this.sectionIndex = this.chapters[this.chapterIndex].sections.length - 1
           break
         case 'question':
@@ -200,6 +206,18 @@ export default {
     },
     emitPrevIfValid () {
       if (this.areChaptersValid) this.$emit('previous')
+    },
+    saveLinks (links, chapterIndex, sectionIndex) {
+      this.chapters[chapterIndex].sections[sectionIndex].content.attachments = [
+        ...this.chapters[chapterIndex].sections[sectionIndex].content.attachments, ...links
+      ]
+    },
+    deleteAttachment (link, chapterIndex, sectionIndex) {
+      this.$http.delete(link.replace('download', 'uploads'))
+        .then(() => {
+          const deleteIndex = this.chapters[chapterIndex].sections[sectionIndex].content.attachments.indexOf(link)
+          this.chapters[chapterIndex].sections[sectionIndex].content.attachments.splice(deleteIndex, 1)
+        })
     }
   },
   watch: {

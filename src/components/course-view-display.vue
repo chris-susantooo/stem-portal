@@ -48,7 +48,8 @@
       <div class="container pa-5">
         <h1 class="text-center mb-5">{{ `Chapter ${page.chapterIndex + 1}: ${chapter.title}` }}</h1>
         <h2 class="title">{{ `Section ${page.sectionIndex + 1}: ${section.title}` }}</h2>
-        <div v-html="section.content.text" class="mt-5" />
+        <div v-html="section.content.text" class="mt-5 mb-3" />
+        <attachment-list :files="section.content.attachments" />
       </div>
     </div>
 
@@ -128,8 +129,10 @@
 
 <script>
 import _ from 'lodash'
+import AttachmentList from '@/components/attachment-list.vue'
 
 export default {
+  components: { AttachmentList },
   props: {
     course: {
       type: Object,
