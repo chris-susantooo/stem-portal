@@ -55,6 +55,7 @@
             :key="`course-${course._id}`"
             :course="course"
             :ratable="isCourseRatable(course._id)"
+            :followable="followable(course.author._id)"
             @rate="showRateCourseDialog"
           />
         </div>
@@ -164,6 +165,7 @@
               :key="`course-${course._id}`"
               :course="course"
               :ratable="isCourseRatable(course._id)"
+              :followable="followable(course.author._id)"
               @rate="showRateCourseDialog"
             />
           </template>
@@ -279,6 +281,9 @@ export default {
         })
       }
       return options
+    },
+    followedUsers () {
+      return this.user.following
     }
   },
   data: () => ({
@@ -468,6 +473,9 @@ export default {
         .then(() => this.fetchTeachingCourses())
         .catch(err => console.log(err))
         .finally(() => (this.deleteDialog.show = false))
+    },
+    followable (_authorId) {
+      return !this.followedUsers.find(id => id === _authorId || _authorId === this.user._id)
     }
   }
 }
