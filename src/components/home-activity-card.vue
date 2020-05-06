@@ -68,7 +68,7 @@ export default {
         }
       } else {
         return {
-          name: 'forum',
+          name: 'forum-post',
           params: { id: this.activity._id }
         }
       }
