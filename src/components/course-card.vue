@@ -20,6 +20,9 @@
             <router-link :to="{ name: 'profile', params: { username: course.author.username } }">
               {{ course.author.username }}
             </router-link>
+            <v-btn v-if="course.author._id !== user._id && isLoggedIn" icon x-small @click="toggleFollow">
+              <v-icon :color="followable ? '#BDBDBD' : '#ea9085'">mdi-heart</v-icon>
+            </v-btn>
             <v-row align="center" class="mx-0">
               <v-rating dense half-increments hover
                 :key="`${course._id}-rating-${refreshRating}`"
@@ -69,6 +72,10 @@ export default {
     editable: {
       type: Boolean,
       default: false
+    },
+    followable: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -110,6 +117,11 @@ export default {
     emitRating (rating) {
       this.refreshRating = !this.refreshRating
       this.$emit('rate', rating, this.course, this.ratingByUser)
+    },
+    toggleFollow () {
+      const url = `users/${this.course.author._id}/followers`;
+      (this.followable ? this.$http.post(url) : this.$http.put(url))
+        .then(() => this.$store.dispatch('fetchUser'))
     }
   }
 }

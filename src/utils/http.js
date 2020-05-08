@@ -26,6 +26,7 @@ const http = {
   },
   magicCubeFinished: _id => Axios.get(`game/${_id}/magic-cube`),
   solveThemFinished: _id => Axios.get(`game/${_id}/solve-them`),
+  getFollowingActivities: () => Axios.get('user/updates'),
 
   // POST request
   registerUser: (username, password, email, resend) => Axios.post('users', { username, password, email, resend }),
@@ -43,10 +44,13 @@ const http = {
   unpublishCourse: _id => Axios.post(`courses/${_id}/unpublish`),
   reactPost: (id, payload) => Axios.post(`forum/posts/${id}/react`, payload),
   reactComment: (pid, cid, payload) => Axios.post(`forum/posts/${pid}/comments/${cid}/react`, payload),
+  updateUserMeterLevel: (userId, level) => Axios.post(`users/${userId}/update-level`, { level }),
+  followUser: (id) => Axios.post(`/users/${id}/followers`),
 
   // PUT request
   updateCourse: ({ _id, name, description, tags, chapters }) => Axios.put(`courses/${_id}`, { name, description, tags, chapters }),
   updatePost: ({ id, title, content, tags }) => Axios.patch(`forum/posts/${id}`, { title, content, tags }),
+  unfollowUser: (id) => Axios.put(`/users/${id}/followers`),
 
   // DELETE request
   deleteCourse: courseId => Axios.delete(`courses/${courseId}`),

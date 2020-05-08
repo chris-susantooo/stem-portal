@@ -10,14 +10,12 @@ class EndScene extends Phaser.Scene {
   }
 
   init (data) {
-    console.log('EndScene starts')
     this.score = data.score
     this.music = data.music
     this.lastScene = data.lastScene
   }
 
   preload () {
-    console.log('Preload ends')
   }
 
   create () {

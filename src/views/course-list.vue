@@ -55,6 +55,7 @@
             :key="`course-${course._id}`"
             :course="course"
             :ratable="isCourseRatable(course._id)"
+            :followable="followable(course.author._id)"
             @rate="showRateCourseDialog"
           />
         </div>
@@ -164,6 +165,7 @@
               :key="`course-${course._id}`"
               :course="course"
               :ratable="isCourseRatable(course._id)"
+              :followable="followable(course.author._id)"
               @rate="showRateCourseDialog"
             />
           </template>
@@ -279,6 +281,9 @@ export default {
         })
       }
       return options
+    },
+    followedUsers () {
+      return this.user.following
     }
   },
   data: () => ({
@@ -352,7 +357,7 @@ export default {
     fetchInProgressCourses () {
       return new Promise((resolve, reject) => {
         if (!this.isLoggedIn) return resolve()
-        this.$http.get('courses/in-progress?size=5')
+        this.$http.get('courses/in-progress')
           .then(({ data: { courses } }) => {
             this.coursesInProgress = courses
           })
@@ -363,7 +368,7 @@ export default {
     fetchTeachingCourses () {
       return new Promise((resolve, reject) => {
         if (!this.isLoggedIn || this.user.type !== 'teacher') return resolve()
-        this.$http.get('courses/teaching?size=5')
+        this.$http.get('courses/teaching')
           .then(({ data: { courses } }) => {
             this.coursesCreated = courses
           })
@@ -468,6 +473,10 @@ export default {
         .then(() => this.fetchTeachingCourses())
         .catch(err => console.log(err))
         .finally(() => (this.deleteDialog.show = false))
+    },
+    followable (_authorId) {
+      if (!this.followedUsers) return false
+      return !this.followedUsers.find(id => id === _authorId || _authorId === this.user._id)
     }
   }
 }

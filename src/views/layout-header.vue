@@ -73,7 +73,7 @@ export default {
         case 'teacher':
           return [
             {
-              text: 'Teacher Circle',
+              text: 'Teachers\' Circle',
               link: { name: 'teacher-circle' }
             },
             {

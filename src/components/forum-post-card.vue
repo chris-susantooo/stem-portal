@@ -11,6 +11,12 @@
         >
           {{ content.author.username }}
         </router-link>
+        <v-btn x-small icon @click="emitAction('unfollow', content.author._id)" v-if="isFollowing" class="mx-2">
+          <v-icon color='#ea9085' >mdi-heart</v-icon>
+        </v-btn>
+        <v-btn v-else-if="$store.getters.user._id !== content.author._id" @click="emitAction('follow', content.author._id)" x-small icon class="mx-2">
+          <v-icon color="#BDBDBD">mdi-heart</v-icon>
+        </v-btn>
         &nbsp;·&nbsp;
         {{ timestamp }}
       </v-card-subtitle>
@@ -179,6 +185,10 @@ export default {
     ReplyPost, TextEditor
   },
   props: {
+    isFollowed: {
+      type: Boolean,
+      required: false
+    },
     commentIndex: {
       type: Number,
       required: false
@@ -250,6 +260,9 @@ export default {
     comment: ''
   }),
   computed: {
+    user () {
+      return this.$store.getters.user
+    },
     hasContent () {
       return !!Object.keys(this.content).length
     },
@@ -258,6 +271,10 @@ export default {
     },
     timestamp () {
       return utils.getPostTimestamp(this.content.createdAt)
+    },
+    isFollowing () {
+      if (!this.user.following) return false
+      return (this.user.following.includes(this.content.author._id) && (this.$store.getters.user._id !== this.content.author._id))
     }
   },
   methods: {
@@ -297,6 +314,11 @@ export default {
           this.errorDialog = true
         })
       }
+    },
+    emitAction (action, target) {
+      this.reactable
+        ? this.$emit('react', action, target, null)
+        : this.$emit('denied')
     },
     emitReaction (reaction, target, value) {
       this.reactable

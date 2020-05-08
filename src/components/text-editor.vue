@@ -239,9 +239,6 @@ export default {
 .editor-content a
   text-decoration: underline !important
 
-.editor-content p
-  margin-bottom: 0
-
 .link-btns
   margin-top: 2px
 </style>
