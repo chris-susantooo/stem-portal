@@ -25,7 +25,7 @@ Vue.prototype.$http = Axios
 
 Vue.mixin({
   created: () => {
-    const redirect = sessionStorage.redirect
+    const redirect = sessionStorage.getItem('redirect')
     console.log('pushing to', redirect)
     delete sessionStorage.redirect
     this.$router.push(redirect)
