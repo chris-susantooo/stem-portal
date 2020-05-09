@@ -108,19 +108,3 @@ const routes = [
 ]
 
 export default routes
-
-// {
-//   path: '/happy-corner',
-//   name: 'corner',
-//   component: () => import(/* webpackChunkName: "corner" */ './views/teachers/Teacher_corner.vue')
-// },
-// {
-//   path: '/happy-corner/upload',
-//   name: 'upload-corner',
-//   component: () => import(/* webpackChunkName: "upload-corner" */ './views/teachers/Upload_corner.vue')
-// },
-// {
-//   path: '/happy-corner/MATH1853',
-//   name: 'MATH1853',
-//   component: () => import(/* webpackChunkName: "MATH1853" */ './views/teachers/MATH1853.vue')
-// }
