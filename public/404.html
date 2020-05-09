@@ -17,11 +17,8 @@
         .join('/')
       )
 
-      console.log('redirect', sessionStorage.getItem('redirect'))
-      console.log('replace', location.pathname
-        .split('/')
-        .slice(0, 1 + segment)
-        .join('/'))
+      sessionStorage.setItem('query', location.search)
+
       location.replace(location.pathname
         .split('/')
         .slice(0, 1 + segment)

@@ -12,11 +12,13 @@ export default {
     //
   }),
   beforeCreate () {
+    console.log(location.href)
     const redirect = sessionStorage.getItem('redirect')
     console.log('pushing to', redirect)
     if (redirect) {
       sessionStorage.removeItem(redirect)
-      this.$router.push(redirect)
+      const query = sessionStorage.getItem('query')
+      this.$router.push(query ? `${redirect}?${query}` : redirect)
     }
   }
 }
