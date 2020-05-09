@@ -4,12 +4,12 @@ An interactive online platform which focuses on STEM education, powered by [Vue]
 Demo here: https://sca1998.github.io/stem-portal/
 ## Demo Limitations
 New account registrations may be rejected since only 5 user accounts may exist in the current build. Here are some accounts for logging in to try out the restricted features:
-1. Teacher account
-  Username: `teacher1`, Password: `TeacherDemo1`
-2. Student account
-  Username: `student1`, Password: `StudentDemo1`
-3. Parent account
-  Username: `parent1`, Password: `ParentDemo1`
+- Teacher account
+Username: `teacher1`, Password: `TeacherDemo1`
+- Student account
+Username: `student1`, Password: `StudentDemo1`
+- Parent account
+Username: `parent1`, Password: `ParentDemo1`
  
 If you wish to create your instance of STEM Portal, which overcomes these limitations, see [Installation](https://github.com/sca1998/stem-portal/blob/master/README.md/#installation).
 ## Installation
