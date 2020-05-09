@@ -71,7 +71,7 @@ import ChapterEditor from '@/components/course-edit-chapters.vue'
 export default {
   components: { BasicInfoEditor, ChapterEditor },
   async created () {
-    if (this.isCourseNew) {
+    if (!this.$route.params.id) {
       this.course.author = this.user._id
       return
     }
@@ -80,9 +80,6 @@ export default {
     this.$emit('childReady')
   },
   computed: {
-    isCourseNew () {
-      return !this.$route.params.id
-    },
     user () {
       return this.$store.getters.user
     },
@@ -91,6 +88,7 @@ export default {
     }
   },
   data: () => ({
+    isCourseNew: true,
     step: 1,
     course: {
       _id: '',
@@ -117,9 +115,9 @@ export default {
   methods: {
     fetchCourse () {
       return new Promise((resolve, reject) => {
-        if (this.isCourseNew) resolve()
         this.$http.get(`courses/${this.$route.params.id}`)
           .then(({ data: { course } }) => {
+            this.isCourseNew = false
             this.course = course
           })
           .catch(err => console.log(err))
@@ -137,6 +135,7 @@ export default {
               this.course = course
               const url = location.href.split('/new')[0]
               history.pushState('', '', `${url}/${this.course._id}`)
+              this.isCourseNew = false
             })
             .catch(err => console.log(err))
             .finally(() => resolve())
