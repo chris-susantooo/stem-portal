@@ -1,5 +1,5 @@
-# STEM Portal
-An interactive online platform which focuses on STEM education, made with Node.js, Express, Vue.js
+# STEM Portal Frontend
+An interactive online platform which focuses on STEM education, powered by Vue.js.
 
 ## Installation
 1. Clone this repository to your computer. If you are using [Visual Studio Code](https://code.visualstudio.com/download), press `Ctrl+Shift+P` for Windows or `Command+Shift+P` for MacOS to open the Command Palette.
