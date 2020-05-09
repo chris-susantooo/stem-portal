@@ -1,6 +1,6 @@
 # STEM Portal Frontend
-An interactive online platform which focuses on STEM education, powered by Vue[https://vuejs.org/].
-
+An interactive online platform which focuses on STEM education, powered by [Vue](https://vuejs.org).
+Demo here: https://sca1998.github.io/stem-portal/
 ## Installation
 1. Clone this repository to your computer. If you are using [Visual Studio Code](https://code.visualstudio.com/download), press `Ctrl+Shift+P` for Windows or `Command+Shift+P` for MacOS to open the Command Palette.
 2. Type in `Git: clone` and press enter, then copy and paste in this repo's url, and choose a local folder of your choice.
