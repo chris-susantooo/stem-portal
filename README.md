@@ -7,14 +7,17 @@ New account registrations may be rejected since only 5 user accounts may exist i
 - Teacher account:
 
    Username: `teacher1`
+   
    Password: `TeacherDemo1`
 - Student account:
 
    Username: `student1`
+   
    Password: `StudentDemo1`
 - Parent account:
 
    Username: `parent1`
+   
    Password: `ParentDemo1`
  
 If you wish to create your instance of STEM Portal, which overcomes these limitations, see [Installation](https://github.com/sca1998/stem-portal/blob/master/README.md/#installation).
