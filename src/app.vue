@@ -10,6 +10,14 @@ export default {
   name: 'App',
   data: () => ({
     //
-  })
+  }),
+  beforeCreate () {
+    const redirect = sessionStorage.getItem('redirect')
+    console.log('pushing to', redirect)
+    if (redirect) {
+      sessionStorage.removeItem(redirect)
+      this.$router.push(redirect)
+    }
+  }
 }
 </script>

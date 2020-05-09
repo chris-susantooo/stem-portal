@@ -23,15 +23,6 @@ Axios.defaults.baseURL = process.env.VUE_APP_API_BASE
 Axios.defaults.timeout = 10000
 Vue.prototype.$http = Axios
 
-Vue.mixin({
-  created: () => {
-    const redirect = sessionStorage.getItem('redirect')
-    console.log('pushing to', redirect)
-    delete sessionStorage.redirect
-    this.$router.push(redirect)
-  }
-})
-
 new Vue({
   router,
   store,
