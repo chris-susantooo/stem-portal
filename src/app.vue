@@ -16,8 +16,9 @@ export default {
     const redirect = sessionStorage.getItem('redirect')
     console.log('pushing to', redirect)
     if (redirect) {
-      sessionStorage.removeItem(redirect)
       const query = sessionStorage.getItem('query')
+      sessionStorage.removeItem('redirect')
+      sessionStorage.removeItem('query')
       this.$router.push(query ? `${redirect}?${query}` : redirect)
     }
   }
