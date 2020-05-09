@@ -17,7 +17,10 @@
         .join('/')
 
       console.log('redirect', sessionStorage.redirect)
-
+      console.log('replace', location.pathname
+        .split('/')
+        .slice(0, 1 + segment)
+        .join('/'))
       location.replace(location.pathname
         .split('/')
         .slice(0, 1 + segment)
