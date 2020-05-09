@@ -42,11 +42,11 @@ yarn install
 ```
 This will install all neccesary dependencies to run STEM Portal.
 ## Project setup
-In your project root folder, create a file named `.env` and put the following code in the file and save the file.
+In your project root folder, create a file named `.env` and put the following code in the file and save:
 ```
 VUE_APP_API_BASE=http://localhost:8000/api
 ```
-This tells that all the API requests from the frontend will then be directed to the `8000` port.
+This tells STEM Portal to send all API requests to this URL.
 
 You should now be ready to serve the project. Type in:
 ```
