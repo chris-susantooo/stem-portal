@@ -8,11 +8,8 @@
 
 export default {
   name: 'App',
-  data: () => ({
-    //
-  }),
+  // if page is redirected from 404, restore the original url
   beforeCreate () {
-    console.log(location.href)
     const redirect = sessionStorage.getItem('redirect')
     if (redirect) {
       const query = sessionStorage.getItem('query')
