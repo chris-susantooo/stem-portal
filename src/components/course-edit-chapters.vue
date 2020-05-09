@@ -248,7 +248,7 @@ export default {
     width: 100% !important;
   }
   .handle {
-    flex-grow: 0;
+    flex-grow: 0 !important;
     margin-right: 15px;
     cursor: grab;
   }
