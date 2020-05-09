@@ -23,19 +23,23 @@ New account registrations may be rejected since only 5 user accounts may exist i
    Password: `ParentDemo1`
  
 If you wish to create your instance of STEM Portal, which overcomes these limitations, see [Installation](https://github.com/sca1998/stem-portal/blob/master/README.md/#installation).
-## Prerequisites
+## Prerequisites for Installation
 You will need the latest [Node.js](https://nodejs.org/en/) LTS installed on your system.
 
 [Yarn](https://classic.yarnpkg.com/en/) is recommended as the package manager.
 ## Installation
-1. Clone this repository to your computer. If you are using [Visual Studio Code](https://code.visualstudio.com/download), press `Ctrl+Shift+P` for Windows or `Command+Shift+P` for MacOS to open the Command Palette.
-2. Type in `Git: clone` and press enter, then copy and paste in this repo's url, and choose a local folder of your choice.
-3. If you haven't install [Yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable), please download Yarn (version 1.X) instead of version 2.X.
-4. After downloading Yarn, open a Terminal by pressing `Ctrl+~` or `Ctrl+~` for MacOS, navigate to your local folder and type:
+1. Clone this repo to your system. In terminal, run:
+```
+git clone https://github.com/sca1998/stem-portal.git
+```
+   ... Or download the zipped source code [here](https://github.com/sca1998/stem-portal/archive/master.zip).
+
+   If you are using [Visual Studio Code](https://code.visualstudio.com/download), select `Git: clone` in the command palette by `Ctrl+Shift+P` (Windows) or `Command+Shift+P` (MacOS). Paste in this repo's URL and choose a local folder of your choice.
+2. Navigate to the project root and run in terminal:
 ```
 yarn install
 ```
-This will install the neccesary dependencies and modules into the root folder so that you can run the project.
+This will install all neccesary dependencies to run STEM Portal.
 ## Project setup
 5. In your project root folder, create a file named `.env` and put the following code in the file and save the file.
 ```
