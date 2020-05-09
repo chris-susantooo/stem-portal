@@ -5,7 +5,7 @@ An interactive online platform which focuses on STEM education, powered by [Vue]
 
 Demo here: https://sca1998.github.io/stem-portal/ (NOTE: In development)
 ## Demo Limitations
-New account registrations may be rejected since only 5 user accounts may exist in the current build. Here are some accounts for logging in to try out the restricted features:
+New account registrations may be rejected since only a maximum of 5 user accounts may exist in the current build. Here are some accounts for logging in to try out the restricted features:
 - Teacher account:
 
    Username: `teacher1`
