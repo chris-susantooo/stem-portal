@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import FileUploader from '@/components/file-uploader.vue'
-import AttachmentList from '@/components/attachment-list.vue'
+import FileUploader from '@/components/upload-dialog.vue'
+import AttachmentList from '@/components/upload-file-list.vue'
 
 export default {
   components: { FileUploader, AttachmentList },

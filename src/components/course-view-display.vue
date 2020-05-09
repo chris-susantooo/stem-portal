@@ -129,7 +129,7 @@
 
 <script>
 import _ from 'lodash'
-import AttachmentList from '@/components/attachment-list.vue'
+import AttachmentList from '@/components/upload-file-list.vue'
 
 export default {
   components: { AttachmentList },

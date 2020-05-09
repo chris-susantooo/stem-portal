@@ -7,27 +7,27 @@ const routes = [
   {
     path: '/features',
     name: 'features-intro',
-    component: () => import('@/views/features-intro.vue')
+    component: () => import('@/views/user-features.vue')
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/login.vue')
+    component: () => import('@/views/user-login.vue')
   },
   {
     path: '/profile/:username?',
     name: 'profile',
-    component: () => import('@/views/profile.vue')
+    component: () => import('@/views/user-profile.vue')
   },
   {
     path: '/register/:username',
     name: 'register',
-    component: () => import('@/views/first-register.vue')
+    component: () => import('@/views/user-first-register.vue')
   },
   {
     path: '/reset-password/:username',
     name: 'reset-password',
-    component: () => import('@/views/forgot-password.vue')
+    component: () => import('@/views/user-forgot-pw.vue')
   },
   {
     path: '/forum',

@@ -87,8 +87,8 @@
 import ToolBar from '@/components/course-edit-toolbar.vue'
 import Draggable from 'vuedraggable'
 import TextEditor from '@/components/text-editor.vue'
-import FileUploader from '@/components/file-uploader.vue'
-import AttachmentList from '@/components/attachment-list.vue'
+import FileUploader from '@/components/upload-dialog.vue'
+import AttachmentList from '@/components/upload-file-list.vue'
 
 export default {
   components: { Draggable, ToolBar, TextEditor, FileUploader, AttachmentList },
