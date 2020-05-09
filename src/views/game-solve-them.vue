@@ -27,7 +27,7 @@ export default {
     }
   },
   async mounted () {
-    const game = await import('@/games/SolveThEM/SolveThEM')
+    const game = await import('../games/SolveThEM/SolveThEM')
     this.downloaded = true
     this.$nextTick(() => {
       if (this.gameInstance === null) {

@@ -6,7 +6,6 @@ const fs = require('fs');
     await execa('git', ['checkout', '--orphan', 'gh-pages'])
     console.log('Building...')
     await execa('yarn', ['build'])
-    // Understand if it's dist or build folder
     await execa('git', ['--work-tree', 'dist', 'add', '--all'])
     await execa('git', ['--work-tree', 'dist', 'commit', '-m', 'gh-pages'])
     console.log('Pushing to gh-pages...')
