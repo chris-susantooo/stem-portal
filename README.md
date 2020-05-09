@@ -2,6 +2,16 @@
 An interactive online platform which focuses on STEM education, powered by [Vue](https://vuejs.org).
 
 Demo here: https://sca1998.github.io/stem-portal/
+## Demo Limitations
+New account registrations may be rejected since only 5 user accounts may exist in the current build. Here are some accounts for logging in to try out the restricted features:
+1. Teacher account
+  Username: `teacher1`, Password: `TeacherDemo1`
+2. Student account
+  Username: `student1`, Password: `StudentDemo1`
+3. Parent account
+  Username: `parent1`, Password: `ParentDemo1`
+ 
+If you wish to create your instance of STEM Portal, which overcomes these limitations, see [Installation](https://github.com/sca1998/stem-portal/blob/master/README.md/#installation).
 ## Installation
 1. Clone this repository to your computer. If you are using [Visual Studio Code](https://code.visualstudio.com/download), press `Ctrl+Shift+P` for Windows or `Command+Shift+P` for MacOS to open the Command Palette.
 2. Type in `Git: clone` and press enter, then copy and paste in this repo's url, and choose a local folder of your choice.
