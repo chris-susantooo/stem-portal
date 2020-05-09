@@ -18,9 +18,11 @@ jobs:
       - name: Clean install dependencies
         uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: install --frozen-lockfile # will run `yarn install` command
+          cmd: install --frozen-lockfile
 
       - name: Run deploy script
         run: |
           git config user.name sca1998 && git config user.email sca1998@gmail.com
-          npm run gh-pages-deploy
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd:  gh-pages-deploy.js
