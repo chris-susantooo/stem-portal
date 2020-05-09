@@ -1,6 +1,8 @@
 # STEM Portal Frontend
 An interactive online platform which focuses on STEM education, powered by [Vue](https://vuejs.org).
 
+NOTE: IN-DEVELOPMENT
+
 Demo here: https://sca1998.github.io/stem-portal/
 ## Demo Limitations
 New account registrations may be rejected since only 5 user accounts may exist in the current build. Here are some accounts for logging in to try out the restricted features:
