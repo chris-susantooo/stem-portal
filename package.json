@@ -20,7 +20,7 @@
     "tiptap": "1.27.1",
     "tiptap-extensions": "1.29.1",
     "vue": "2.6.11",
-    "vue-file-agent": "1.7.0",
+    "vue-file-agent": "1.7.3",
     "vue-router": "3.1.6",
     "vue-upload-component": "2.8.20",
     "vue-youtube": "1.4.0",
