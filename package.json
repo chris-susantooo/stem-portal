@@ -19,7 +19,7 @@
     "phaser": "3.24.1",
     "tiptap": "1.29.1",
     "tiptap-extensions": "1.31.1",
-    "vue": "2.6.11",
+    "vue": "3.5.12",
     "vue-file-agent": "1.7.3",
     "vue-router": "3.3.4",
     "vue-upload-component": "2.8.20",
