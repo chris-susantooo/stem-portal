@@ -19,7 +19,7 @@
     "phaser": "3.24.1",
     "tiptap": "1.29.1",
     "tiptap-extensions": "1.31.1",
-    "vue": "2.6.11",
+    "vue": "2.7.16",
     "vue-file-agent": "1.7.3",
     "vue-router": "3.3.4",
     "vue-upload-component": "2.8.20",
@@ -41,7 +41,7 @@
     "sass": "1.26.10",
     "sass-loader": "8.0.2",
     "vue-cli-plugin-vuetify": "2.0.7",
-    "vue-template-compiler": "2.6.11",
+    "vue-template-compiler": "2.7.16",
     "vuetify-loader": "1.6.0"
   }
 }
